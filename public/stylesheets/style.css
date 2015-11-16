@@ -1,0 +1,26 @@
+body {
+  font: 20px "Gill Sans",sans-serif;
+  background-color:  #fafafa;
+}
+
+h1 {
+  font-size: 1.3em;
+}
+
+a {
+  color: #C0392B;
+}
+
+#main-container {
+  padding-left: 50px;
+  padding-top: 50px;
+  margin: 0 auto;
+  width: 600px;
+}
+
+#footer {
+	text-align: center;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+}
