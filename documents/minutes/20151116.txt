@@ -1,0 +1,63 @@
+﻿question: how to get started with coding?
+	can just have someone add the express code, commit to repository
+	from there start working on authentication, models, etc. separately
+mvp
+	commenting on posts isn't an essential feature
+	trending projects also keep out
+think more about what we realistically can complete, and take out things that are non-essential
+concepts need to be novel?
+	not really too important
+	just make sure concepts are actually concepts, e.g. asset not a concept
+navigation bars
+	not really pages
+	alternatives
+	if user is logged in can do things instead
+		textual explanation maybe instead
+		or enclose it all in box
+		two boxes, one for guest pages and one for logged in pages
+			can share some of the pages between the overlay boxes maybe
+			sort of modularize by different screen, and inside a screen have several views
+reset password rate limiting
+	add a bit more description to that so it's more clear
+	non-essential: don't need rate limiting necessarily
+focus on threat model and those attacks
+	don't just think about basic web applications
+	e.g. recruiters make account on application to find people
+	talk about how people use app and do bad things
+design challenges: votes stored separately
+	not really about performance, as long as fast enough
+	just store as one way, and support count function in the model
+	actual web applications might store as user+IP address set and also have separate count for display
+	(data storage depends on what you think is important, e.g. if voting correctly very important then don’t have redundant structure, but if don’t care off the one and performance more important then store another way)
+revised design
+	try to address the issues with design, also look over it for other problems
+	make any updates if our design has changed
+following and favoriting
+	follow user: user activity shows up on activity feed
+	favorite project: show up on some bookmark-like set of projects
+one owner per project
+don’t need to submit new team plan, just discuss (but ofc do submit new design)
+stuff to do in future
+	agenda: set of topics we want to discuss
+	report: summarizes the progress since last meeting
+	we’ll create google doc to work on these things
+
+
+(post-meeting meeting)
+go with handlebars for templating
+meet at 2:30 pm on Wednesday
+kairat doing the skeleton
+implementing votes
+	project stores the set of users who have voted for it
+	has functions for voting, checking whether given user has voted, and counting upvotes
+
+
+who wants to fix what for the design document
+Design challenges  - Eric
+Concepts and data model - Kairat
+	data model: mainly to change around favorite/follow
+Security - Favyen
+	e-mail addresses hidden by default
+	moderate first couple project or first ten posts of newly registered users
+	maybe eventually have functionality for administrators to delete troll posts and stuff
+Transition diagram - George
