@@ -1,6 +1,7 @@
 "use strict";
 
-var mongoose = require("mongoose");
+var mongoose = require("mongoose"),
+    Schema = mongoose.Schema;
 
 var postSchema = mongoose.Schema({
     // the author of the post

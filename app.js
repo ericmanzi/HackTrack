@@ -19,7 +19,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // Connect to either the MONGOLAB_URI or to the local database.
-mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/mymongodb');
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/hacktrack');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {

@@ -14,6 +14,8 @@ var userSchema = mongoose.Schema({
     email: String,
     password: String,
     favorites: Array
+    //following: Array,
+
 });
 
 // This middleware automatically hashes the password before it is saved to the database
@@ -45,7 +47,7 @@ userSchema.path('username').validate(function(value) {
 }, 'Invalid username: usernames must not be empty and must contain only numbers letters and underscores');
 
 userSchema.path('email').validate(function(value) {
-    return emailRegex.text(value);
+    return emailRegex.test(value);
 }, 'Invalid email: email must be a valid MIT.edu email');
 
 userSchema.path('password').validate(function(value) {
@@ -53,15 +55,27 @@ userSchema.path('password').validate(function(value) {
 }, 'Invalid password: passwords cannot be empty or contain spaces');
 
 /**
- * Verifies that the provide password matches the given username
+ * Verifies that the provided password matches the given username
  * @param username
  * @param candidatepw
  * @param callback
  */
 userSchema.methods.verifyPassword = function(candidatepw, callback) {
     bcrypt.compare(candidatepw, this.password, function(err, isMatch) {
-        if (err) return cb(err);
-        callback(null, isMatch);
+        if (err) callback(err);
+        else callback(null, isMatch);
+    });
+};
+
+/**
+ * Find the user that matches the given username
+ * @param name
+ * @param callback
+ */
+userSchema.statics.findByUsername = function(name, callback) {
+    this.findOne({ username: name }, function(err, user) {
+        if (err) callback({msg: 'Invalid user'});
+        else callback(null, user);
     });
 };
 
@@ -73,7 +87,7 @@ userSchema.methods.verifyPassword = function(candidatepw, callback) {
  */
 userSchema.methods.createProject = function(user, projectObj, callback) {
     // TODO: check with Kairat
-    //Project.createProject(projectObj, function(err, project) {
+    //Project.createProject(userID, projectObj, function(err, project) {
     //    if (err) callback({msg: 'Invalid user'});
     //    else callback(null);
     //});
@@ -85,7 +99,7 @@ userSchema.methods.createProject = function(user, projectObj, callback) {
  * @param projectID
  * @param callback
  */
-userSchema.methods.getProject = function(projectID, callback) {
+userSchema.statics.getProject = function(projectID, callback) {
     Project.findOne({_id:projectID}, function(err, project) {
         if (project) {
             callback(null, project);
@@ -123,7 +137,10 @@ userSchema.methods.getMyProjects = function(callback) {
 userSchema.methods.upvote = function(projectID, callback) {
     // TODO: check with Kairat
     //Project.findOne({_id: projectID}, function(err, project) {
-    //    project.upvote(this.id);
+    //    project.upvote(this.id, function(err, hasVoted) {
+    //        if (err) callback(err);
+    //        callback(null, hasVoted);
+    //    });
     //});
 };
 
@@ -132,7 +149,7 @@ userSchema.methods.upvote = function(projectID, callback) {
  * @param projectID
  * @param callback
  */
-userSchema.methods.favorite = function(projectID, callback) {
+userSchema.methods.favorite = function(projectID) {
     this.favorites.push(projectID);
 };
 
