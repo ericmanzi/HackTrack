@@ -148,6 +148,12 @@ a{
 	vertical-align: middle;
 	font-size: 40px;
 }
+.project-description{
+	text-align: center;
+	padding-top: 5px;
+	vertical-align: middle;
+	font-size: 20px;
+}
 .project-body{
 	display:flex;
 	height:100vmax;
@@ -163,4 +169,14 @@ a{
 .project-media{
 	min-height:150px;
 	border-bottom: 1px solid #e4e2e2;
+}
+.project-discussion-post{
+	margin-top: 5px;
+	margin-left: 2px;
+}
+.project-discussion-comment{
+	margin:10px 0px 10px 10px;
+}
+.post-content{
+	display:inline-block;
 }
