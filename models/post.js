@@ -1,9 +1,15 @@
 "use strict";
 
+// Lead author: Favyen Bastani <fbastani@mit.edu>
+// A Post is either a discussion or comment.
+//  Discussions can be posted on a project.
+//  Comments are replies to a discussion.
+
 var mongoose = require("mongoose"),
     Schema = mongoose.Schema;
+var async = require("async");
 
-var postSchema = mongoose.Schema({
+var postSchema = Schema({
     // the author of the post
     userID: {type: Schema.Types.ObjectId, ref: 'User'},
 
@@ -25,6 +31,10 @@ var postSchema = mongoose.Schema({
     projectID: {type: Schema.Types.ObjectId, ref: 'Project', index: true},
 });
 
+postSchema.path('content').validate(function(value) {
+    return (typeof value === 'string') && value !== '';
+}, 'Discussion content cannot be empty');
+
 // Creates a new discussion.
 // projectID, userID: the project and user that this discussion belongs to
 // content: discussion text
@@ -44,27 +54,88 @@ postSchema.statics.addDiscussion = function(projectID, userID, content, callback
             return;
         }
         if(callback) {
-            callback(undefined, discussion._id);
+            callback(undefined, discussion.id);
         }
     });
-}
+};
 
 // Gets all discussions for a project.
 // projectID: the project to fetch discussions for.
-// callback: a function(discussions)
+// callback: a function(err, discussions)
 //   discussions is a list of discussion objects
-//   each discussion object is of the form {id, userID, time, contents, comments: [...]}
-//   the comments field is a list of comment objects, each of which is of the form {id, userID, time, contents}
+//   each discussion object is of the form {id, userID, time, content, comments: [...]}
+//   the comments field is a list of comment objects, each of which is of the form {id, userID, time, content}
 postSchema.statics.getDiscussions = function(projectID, callback) {
-    // not implemented
-}
+    Post.
+        find({'projectID': projectID}).
+        sort({time: 1}).
+        exec(function(err, discussions) {
+            if(err) {
+                callback(err, undefined);
+                return;
+            }
+            async.map(discussions, function(discussion, callback) {
+                Post.getDiscussionComments(discussion.id, function(err, comments) {
+                    var discussionObj = {
+                        id: discussion.id,
+                        userID: discussion.userID,
+                        time: discussion.time,
+                        content: discussion.content,
+                        comments: comments,
+                    };
+                    callback(err, discussionObj);
+                });
+            }, callback);
+        });
+};
+
+// Gets the comments for a specified discussion.
+// discussionID: the discussion ID.
+// callback: a function(err, comments)
+//   comments is a list of comment objects, each of which is of the form {id, userID, time, content}
+postSchema.statics.getDiscussionComments = function(discussionID, callback) {
+    Post.
+        find({'parentID': discussionID}).
+        sort({time: 1}).
+        exec(function(err, comments) {
+            if(err) {
+                callback(err, undefined);
+                return;
+            }
+            var commentToObj = function(comment) {
+                return {
+                    id: comment.id,
+                    userID: comment.userID,
+                    time: comment.time,
+                    content: comment.content,
+                };
+            };
+            callback(undefined, comments.map(commentToObj));
+        });
+};
 
 // Adds a new comment to an existing discussion.
 // discussionID, userID: the discussion and user that this comment belongs to
 // content: comment text
 // callback: optional callback of the form function(err, commentID)
 postSchema.statics.addComment = function(discussionID, userID, content, callback) {
-    // not implemented
+    var comment = new Post({
+        userID: userID,
+        content: content,
+        isDiscussion: false,
+        parentID: discussionID,
+    });
+    comment.save(function(err) {
+        if(callback) {
+            if(err) {
+                callback(err, undefined);
+            } else {
+                callback(undefined, comment.id);
+            }
+        }
+    });
 }
 
-var PostModel = mongoose.model('Post', postSchema);
+var Post = mongoose.model('Post', postSchema);
+
+module.exports = Post;
