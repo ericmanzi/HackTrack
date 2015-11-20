@@ -23,7 +23,7 @@ var jakeObj = {
     favorites: []
 };
 
-var mrValid;
+var finn;
 var validUser = {
     username: "finn",
     password: "finn_the_human",
@@ -52,7 +52,8 @@ var invalidEmail = {
     favorites: []
 };
 
-var projectObj = {
+var projectX;
+var projectXObj = {
     title: "awesome title",
     description: "cool description"
 };
@@ -62,15 +63,25 @@ describe('User', function() {
     before(function(done) {
         User.findByUsername("jake", function(err, user) {
             if (err) {
-                User.create(jakeObj, function(err, newuser) {
-                    jake = newuser;
-                    done();
+                User.create(jakeObj, function(err, new_user) {
+                    jake = new_user;
                 });
             } else {
                 jake = user;
-                done();
             }
+            done();
         });
+
+        //Project.findOne({creator: "jake"}, function(err, project) {
+        //    if (project) {
+        //        projectX = project;
+        //    } else {
+        //        jake.createProject(projectXObj, function(err, new_project) {
+        //            projectX=new_project;
+        //        });
+        //    }
+        //    done();
+        //});
     });
 
     describe('#create', function() {
@@ -81,13 +92,13 @@ describe('User', function() {
                     User.create(validUser, function(err, found_user) {
                         assert.equal(found_user.username, 'finn');
                         assert.equal(found_user.email, 'finn@mit.edu');
-                        mrValid = found_user;
+                        finn = found_user;
                         done();
                     });
                 } else {
                     assert.equal(user.username, 'finn');
                     assert.equal(user.email, 'finn@mit.edu');
-                    mrValid = user;
+                    finn = user;
                     done();
                 }
             });
@@ -155,7 +166,7 @@ describe('User', function() {
 
     describe('createProject', function() {
         xit('should create a project belonging to this user', function (done) {
-            jake.createProject(projectObj, function(err, project) {
+            jake.createProject(projectXObj, function(err, project) {
                 Project.findOne({_id:project.id}, function(err, project) {
                     assert.equal(project.creator, "jake");
                     done();
@@ -166,14 +177,12 @@ describe('User', function() {
 
     describe('getProject', function(done) {
         xit('should return the project identified by its ID', function() {
-            Project.findOne({creator: "jake"}, function(err, project) {
-                User.getProject(project.id, function(err, project) {
+                User.getProject(projectX.id, function(err, project) {
                     assert.equal(project.creator, "jake");
                     assert.equal(project.title, "awesome title");
                     assert.equal(project.description, "cool description");
                     done();
                 });
-            });
         });
 
         xit('should return an invalid project message if the project wasn\'t found', function() {
@@ -208,23 +217,37 @@ describe('User', function() {
     describe('upvote', function() {
         xit('should add this user to upvoters of given project if this ' +
             'user hasn\'t voted for this project before', function(done) {
-            Project.findOne({creator: "jake"}, function(err, project) {
                 // TODO: check with Kairat
-                var oldVoteCount = project.getVoteCount();
-                mrValid.upvote(project.id, function(err, hasVoted) {
+                var oldVoteCount = projectX.getVoteCount();
+                finn.upvote(projectX.id, function(err, hasVoted) {
                     if (!err) {
-                        var newVoteCount = project.getVoteCount();
+                        var newVoteCount = projectX.getVoteCount();
                         if (hasVoted) { // voted for this project before
                             assert.equal(newVoteCount, oldVoteCount);
                         } else { // hasn't voted for this project before
                             assert.equal(newVoteCount-oldVoteCount, 1);
                         }
                     }
-                });
+                    done();
             });
 
-        })
+        });
     });
 
+    describe('favorite', function() {
+        xit('should add a project\'s id to this user\'s favorites ' +
+            'if it doesn\'t already exist', function(done) {
+            var oldfavs = finn.favorites.length;
+            finn.favorite(projectX.id, function(err) {
+                var newfavs = finn.favorites.length;
+                if (err.msg==='This project has already been favorited') {
+                    assert.equal(oldfavs, newfavs);
+                } else {
+                    assert.equal(oldfavs-newfavs, 1);
+                }
+            });
+            done();
+        });
+    });
 
 });

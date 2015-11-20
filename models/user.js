@@ -85,7 +85,7 @@ userSchema.statics.findByUsername = function(name, callback) {
  * @param project
  * @param callback
  */
-userSchema.methods.createProject = function(user, projectObj, callback) {
+userSchema.methods.createProject = function(projectObj, callback) {
     // TODO: check with Kairat
     //Project.createProject(userID, projectObj, function(err, project) {
     //    if (err) callback({msg: 'Invalid user'});
@@ -149,8 +149,13 @@ userSchema.methods.upvote = function(projectID, callback) {
  * @param projectID
  * @param callback
  */
-userSchema.methods.favorite = function(projectID) {
-    this.favorites.push(projectID);
+userSchema.methods.favorite = function(projectID, callback) {
+    if (this.favorites.findIndex(projectID)===-1) {
+        this.favorites.push(projectID);
+        callback(null);
+    } else {
+        callback({msg: 'This project has already been favorited'});
+    }
 };
 
 
