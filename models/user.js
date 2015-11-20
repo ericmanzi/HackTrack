@@ -11,11 +11,13 @@ var mongoose = require('mongoose'),
 
 var userSchema = mongoose.Schema({
     username: {type: String, unique: true},
-    email: String,
+    email: {type: String, unique: true}, // restrict email to a single user
     password: String,
     favorites: Array
     //following: Array,
-
+    //first_name: String,
+    //last_name: String,
+    //profile_pic_path: String
 });
 
 // This middleware automatically hashes the password before it is saved to the database
@@ -74,7 +76,7 @@ userSchema.methods.verifyPassword = function(candidatepw, callback) {
  */
 userSchema.statics.findByUsername = function(name, callback) {
     this.findOne({ username: name }, function(err, user) {
-        if (err) callback({msg: 'Invalid user'});
+        if (err) callback({msg: 'No such username.'});
         else callback(null, user);
     });
 };
@@ -134,6 +136,14 @@ userSchema.methods.getMyProjects = function(callback) {
     });
 };
 
+/**
+ * Adds this user to the list of upvoters of the project
+ * identified by the given id. Returns a callback with the
+ * boolean value 'hasVoted' which is true if the user has
+ * previously voted for this project
+ * @param projectID
+ * @param callback
+ */
 userSchema.methods.upvote = function(projectID, callback) {
     // TODO: check with Kairat
     //Project.findOne({_id: projectID}, function(err, project) {
@@ -150,12 +160,46 @@ userSchema.methods.upvote = function(projectID, callback) {
  * @param callback
  */
 userSchema.methods.favorite = function(projectID, callback) {
-    if (this.favorites.findIndex(projectID)===-1) {
-        this.favorites.push(projectID);
-        callback(null);
-    } else {
-        callback({msg: 'This project has already been favorited'});
-    }
+    // TODO: check with Kairat, also test self-favoriting
+    // project should store username and not objectID since
+    // usernames are unique and don't need to query users
+    var user = this;
+    Project.findOne({ _id: projectID }, function(err, project) {
+        if (project.creator === user.username) {
+            callback({msg: 'Cannot favorite own project'});
+        } else {
+            if ( user.favorites.findIndex(projectID) === -1 ) {
+                user.favorites.push(projectID);
+                callback(null);
+            } else {
+                callback({msg: 'This project has already been favorited'});
+            }
+        }
+    });
+};
+
+
+/**
+ * Removes a project from this user's list of favorites
+ * @param projectID
+ * @param callback
+ */
+userSchema.methods.unfavorite = function(projectID, callback) {
+    // TODO: tests for this
+    var user = this;
+    Project.findOne({ _id: projectID }, function(err, project) {
+        if (err) {
+            callback({msg: 'Invalid project.'});
+        } else {
+            var projectIndex = user.favorites.findIndex(projectID);
+            if ( projectIndex === -1 ) {
+                callback({msg: 'This project is not among your favorites.'});
+            } else {
+                user.favorites.splice(projectIndex, 1);
+                callback(null);
+            }
+        }
+    });
 };
 
 

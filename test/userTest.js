@@ -47,7 +47,7 @@ var invalidPassword = {
 
 var invalidEmail = {
     username: "",
-    password: "finn the human",
+    password: "finn_the_human",
     email: "finn@harvard.edu",
     favorites: []
 };
@@ -241,6 +241,22 @@ describe('User', function() {
             finn.favorite(projectX.id, function(err) {
                 var newfavs = finn.favorites.length;
                 if (err.msg==='This project has already been favorited') {
+                    assert.equal(oldfavs, newfavs);
+                } else {
+                    assert.equal(newfavs-oldfavs, 1);
+                }
+            });
+            done();
+        });
+    });
+
+    describe('unfavorite', function() {
+        xit('should remove a project\'s id from this user\'s favorites ' +
+            'if it exists', function(done) {
+            var oldfavs = finn.favorites.length;
+            finn.unfavorite(projectX.id, function(err) {
+                var newfavs = finn.favorites.length;
+                if (err.msg==='This project is not among your favorites.') {
                     assert.equal(oldfavs, newfavs);
                 } else {
                     assert.equal(oldfavs-newfavs, 1);
