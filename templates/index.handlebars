@@ -1,9 +1,12 @@
-<div id="projects">
-
+<div id="projects" >
+	<div class= "projectFeed">
+		<ul class="projectList"> 
 	{{> navbar}}
 	{{#each projects}}
 		{{> project}}
 	{{else}}
 		<p><em>No projects yet!</em></p>
 	{{/each}}
+	</ul>
+	</div>
 </div>
