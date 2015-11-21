@@ -141,4 +141,4 @@ var projectsSort = function(t1, t2){
 var Project = mongoose.model('Project', projectSchema);
 
 // Export the model
-module.exports = User;
+module.exports = Project;

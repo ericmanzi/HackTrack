@@ -12,6 +12,8 @@ var mongoose = require('mongoose');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+var User = require('./models/User');
+
 var app = express();
 
 // view engine setup
@@ -31,6 +33,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({ secret : 'hacktrack', resave : true, saveUninitialized : true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Authentication middleware. This function
