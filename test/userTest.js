@@ -14,6 +14,7 @@ db.once('open', function (callback) {
 });
 
 var User = require('../models/user');
+var Project = require('../models/project');
 
 var jake;
 var jakeObj = {
@@ -53,9 +54,15 @@ var invalidEmail = {
 };
 
 var projectX;
+
 var projectXObj = {
     title: "awesome title",
-    description: "cool description"
+    description: "cool description",
+    owner: "jake",
+    imageLinks: [],
+    videoIDs: [],
+    upvoterIDs: [],
+    tags: []
 };
 
 describe('User', function() {
@@ -72,16 +79,17 @@ describe('User', function() {
             done();
         });
 
-        //Project.findOne({creator: "jake"}, function(err, project) {
-        //    if (project) {
-        //        projectX = project;
-        //    } else {
-        //        jake.createProject(projectXObj, function(err, new_project) {
-        //            projectX=new_project;
-        //        });
-        //    }
-        //    done();
-        //});
+        Project.findOne({owner: "jake"}, function(err, project) {
+            if (project) {
+                projectX = project;
+            } else {
+                Project.createNewProject(projectXObj, function(err, new_project) {
+                    projectX = new_project;
+                });
+            }
+        });
+
+
     });
 
     describe('#create', function() {
@@ -164,49 +172,10 @@ describe('User', function() {
 
     });
 
-    describe('createProject', function() {
-        xit('should create a project belonging to this user', function (done) {
-            jake.createProject(projectXObj, function(err, project) {
-                Project.findOne({_id:project.id}, function(err, project) {
-                    assert.equal(project.creator, "jake");
-                    done();
-                });
-            });
-        });
-    });
-
-    describe('getProject', function(done) {
-        xit('should return the project identified by its ID', function() {
-                User.getProject(projectX.id, function(err, project) {
-                    assert.equal(project.creator, "jake");
-                    assert.equal(project.title, "awesome title");
-                    assert.equal(project.description, "cool description");
-                    done();
-                });
-        });
-
-        xit('should return an invalid project message if the project wasn\'t found', function() {
-            jake.getProject("randomID0129381029", function(err, project) {
-                assert.equal(err.msg, 'Invalid project.');
-                done();
-            });
-        });
-
-    });
-
-    describe('getAllProjects', function() {
-        xit('should get all projects that have been created so far', function(done) {
-            jake.getAllProjects(function(err, projects) {
-                assert.notEqual(projects.length, 0);
-                done();
-            });
-        });
-
-    });
 
     describe('getMyProjects', function() {
 
-        xit('should get all projects made by this user', function(done) {
+        it('should get all projects made by this user', function(done) {
             jake.getMyProjects(function(_, jakesprojects) {
                 assert.equal(jakesprojects.length, 1);
                 done();
@@ -214,28 +183,8 @@ describe('User', function() {
         });
     });
 
-    describe('upvote', function() {
-        xit('should add this user to upvoters of given project if this ' +
-            'user hasn\'t voted for this project before', function(done) {
-                // TODO: check with Kairat
-                var oldVoteCount = projectX.getVoteCount();
-                finn.upvote(projectX.id, function(err, hasVoted) {
-                    if (!err) {
-                        var newVoteCount = projectX.getVoteCount();
-                        if (hasVoted) { // voted for this project before
-                            assert.equal(newVoteCount, oldVoteCount);
-                        } else { // hasn't voted for this project before
-                            assert.equal(newVoteCount-oldVoteCount, 1);
-                        }
-                    }
-                    done();
-            });
-
-        });
-    });
-
     describe('favorite', function() {
-        xit('should add a project\'s id to this user\'s favorites ' +
+        it('should add a project\'s id to this user\'s favorites ' +
             'if it doesn\'t already exist', function(done) {
             var oldfavs = finn.favorites.length;
             finn.favorite(projectX.id, function(err) {
@@ -248,10 +197,18 @@ describe('User', function() {
             });
             done();
         });
+
+        it('should NOT allow favoriting own project', function(done) {
+            jake.favorite(projectX.id, function(err) {
+                assert.equal(err.msg, 'Cannot favorite own project');
+            });
+            done();
+        });
+
     });
 
     describe('unfavorite', function() {
-        xit('should remove a project\'s id from this user\'s favorites ' +
+        it('should remove a project\'s id from this user\'s favorites ' +
             'if it exists', function(done) {
             var oldfavs = finn.favorites.length;
             finn.unfavorite(projectX.id, function(err) {

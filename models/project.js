@@ -22,11 +22,11 @@ var projectSchema = mongoose.Schema({
 */
 projectSchema.statics.createNewProject = function(projectJSONobject, callback){
 	var newProject = new Project(projectJSONobject);
-	newProject.save(function(error){
+	newProject.save(function(error, project){
 		if (error){
 			callback(error);
 		} else {
-			callback(null);
+			callback(null, project);
 		}
 	});
 }
