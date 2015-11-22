@@ -2,13 +2,13 @@ html{
   font-family: 'proxima-nova', 'Proxima Nova', sans-serif;
   }
 body{
-  margin:0;
+  width: 95%;
+  margin:auto;
 }
 header{
   display:block;
 }
 .navBar{
-  width:100%;
   
 }
 .pageTitle{
@@ -142,13 +142,13 @@ a{
     background-size: cover;
 
 }
-.project-title{
+.project-post-title{
   text-align: center;
   padding-top: 75px;
   vertical-align: middle;
   font-size: 40px;
 }
-.project-description{
+.project-post-description{
   text-align: center;
   padding-top: 5px;
   vertical-align: middle;
@@ -184,4 +184,48 @@ a{
 .error {
   color: red;
   margin-bottom: 10px;
+}
+
+#post-project-link {
+  display: block;
+  width: 115px;
+  height: 55px;
+  background: #4E9CAF;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+}
+
+#project-owner {
+  font-size: 20px;
+}
+
+#project-title {
+  font-size: 30px;
+}
+
+#project-content {
+  font-size: 20px;
+}
+
+.projectMain{
+    margin: auto;
+    width: 60%;
+    border:3px solid #73AD21;
+    padding: 10px;
+}
+
+#owner-label {
+  color: red;
+  font-size: 22px;
+}
+
+#description-label {
+  color: blue;
+}
+
+#title-label {
+  color: blue;
 }

@@ -72,7 +72,7 @@ projectSchema.statics.getAllProjects = function(callback){
 	@param {function} a callback function
 */
 projectSchema.statics.getProject = function(projectId, callback){
-	this.find({_id : projectId}, function(err, foundProject){
+	this.findOne({_id : projectId}, function(err, foundProject){
 		if (err){
 			callback(err);
 		} else {
