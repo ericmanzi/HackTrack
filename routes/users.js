@@ -4,7 +4,7 @@
 
 var express = require('express');
 var router = express.Router();
-var User = require('../models/User');
+var User = require('../models/user');
 var utils = require('../utils/utils');
 
 var STATUS_CODE_BAD_REQUEST = 400;

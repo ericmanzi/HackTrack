@@ -13,7 +13,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var projects = require('./routes/projects');
 
-var User = require('./models/User');
+var User = require('./models/user');
 
 var app = express();
 
