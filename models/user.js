@@ -112,7 +112,7 @@ userSchema.methods.favorite = function(projectID, callback) {
         if (project.owner === user.username) {
             callback({msg: 'Cannot favorite own project'});
         } else {
-            if ( user.favorites.findIndex(projectID) === -1 ) {
+            if ( user.favorites.indexOf(projectID) === -1 ) {
                 user.favorites.push(projectID);
                 callback(null);
             } else {
@@ -142,6 +142,16 @@ userSchema.methods.unfavorite = function(projectID, callback) {
                 callback(null);
             }
         }
+    });
+};
+
+/**
+ * Return this users list of favorite projects
+ */
+userSchema.methods.getFavorites = function() {
+    var user = this;
+    Project.find({'_id': { $in: user.favorites }}, function(err, favorites) {
+        if (favorites) return favorites;
     });
 };
 

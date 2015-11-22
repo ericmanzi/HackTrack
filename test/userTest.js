@@ -219,7 +219,7 @@ describe('User', function() {
         it('should remove a project\'s id from this user\'s favorites ' +
             'if it exists', function(done) {
             var oldfavs = finn.favorites.length;
-            finn.unfavorite(projectX.id, function(err) {
+            finn.unfavorite(projectX._id, function(err) {
                 var newfavs = finn.favorites.length;
                 if (err.msg==='This project is not among your favorites.') {
                     assert.equal(oldfavs, newfavs);
@@ -230,6 +230,20 @@ describe('User', function() {
             done();
         });
     });
+
+    describe('getFavorites', function() {
+        it('should return this user\'s favorites', function(done) {
+            finn.favorite(projectX._id, function(err) {
+                if (err) {
+                    assert.equal(err.msg,
+                        'This project has already been favorited');
+                } else {
+                    assert.notEqual(finn.getFavorites().indexOf(projectX._id),-1);
+                }
+                done();
+            })
+        });
+    })
 
 });
 
