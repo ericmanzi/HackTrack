@@ -33,11 +33,12 @@ router.get('/', function(req, res) {
     - err: on failure, an error message
 */
 router.post('/', function(req, res) {
+	var imageLinksList = req.body.imageLinks.split(/\s*,\s*/);
 	var projectJSON = {
 		title : req.body.title,
 		description : req.body.description,
 		owner : "kairat",
-		imageLinks : req.body.imageLinks,
+		imageLinks : imageLinksList,
 		upvoterIDs : [],
 		tags : [],
 		date : new Date()

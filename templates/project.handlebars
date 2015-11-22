@@ -2,9 +2,14 @@
 <li class="project" data-project-id={{_id}}>
 <a href="projects/{{_id}}" class="project-link">
 	<div class="projectContent voteCount">
-		75
+		{{upvoterIDs.length}}
 	</div>
-	<div class="projectContent projectImage"><img style="height:75px; width:75px"src="http://sloansocialimpact.mit.edu/wp-content/uploads/2014/02/MIT_Dome_night1_Edit.jpg"></div>
+	{{#if imageLinks.[0]}}
+		<div class="projectContent projectImage"><img style="height:75px; width:75px" src={{imageLinks.[0]}}></div>
+	{{else}}
+		<div class="projectContent projectImage"><img style="height:75px; width:75px" src="http://sloansocialimpact.mit.edu/wp-content/uploads/2014/02/MIT_Dome_night1_Edit.jpg"></div>
+	{{/if}}
+
 	<div class="projectContent projectDetails">
 		<div class="projectTitle">
 			{{title}}

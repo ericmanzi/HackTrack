@@ -2,11 +2,10 @@
 (function() {
   // listener for posting a new project
   $(document).on('submit', 'form#post-project', function(evt) {
-    console.log('going to submit the form');
     evt.preventDefault();
     var title = $('#project-title').val();
     var description = $('#project-description').val();
-    var imageLinks = $('#project-image-links').val().split(/\s*,\s*/);
+    var imageLinks = $('#project-image-links').val();
     $.post(
       '/projects',
       { title: title,
