@@ -26,7 +26,7 @@ projectSchema.statics.createNewProject = function(projectJSONobject, callback){
 		if (error){
 			callback(error);
 		} else {
-			callback(null, project);
+			callback(null);
 		}
 	});
 }

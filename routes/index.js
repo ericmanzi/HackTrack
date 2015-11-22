@@ -20,13 +20,7 @@ var Project = require('../models/project');
  - err: on failure, an error message
  */
 router.get('/', function(req, res) {
-    Project.getAllProjects(function(err, projects) {
-        if (err) {
-            utils.sendErrResponse(res, 500, 'An unknown error occurred.');
-        } else {
-            res.render('index', { projects: projects });
-        }
-    });
+	res.render('index');
 });
 
 module.exports = router;
