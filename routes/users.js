@@ -116,9 +116,9 @@ router.post('/', function(req, res) {
             User.create(userObj, function(err, user) {
                 if (err) {
                     var errorMsg="";
-                    if (err.errors.username) errorMsg+=err.errors.username.message+", ";
-                    if (err.errors.email) errorMsg+=err.errors.email.message+", ";
-                    if (err.errors.password) errorMsg+=err.errors.password.message;
+                    if (err.errors.username) errorMsg+=err.errors.username.message+". ";
+                    if (err.errors.email) errorMsg+=err.errors.email.message+". ";
+                    if (err.errors.password) errorMsg+=err.errors.password.message+".";
 
                     utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, errorMsg);
                 } else {

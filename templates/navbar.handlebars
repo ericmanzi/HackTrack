@@ -3,17 +3,23 @@
 
         <h1>MIT HACKTRACK</h1>
 
-        {{#if user_logged_in}}
-            <i>Logged in as <strong>{{username}}</strong> </i>
-            <a class="btn btn-primary" id="logout-link" >Logout</a>
-        {{else}}
-            <a class="btn btn-primary" id="login-link"
-               data-toggle="modal" data-target="#signin" >Login</a>
-        {{/if}}
-
     </div>
     <div class="navActions">
-        <div class="post-project"><a href="#" >POST A PROJECT</a></div>
+
+        {{#if user_logged_in}}
+            <div class="pull-right">
+                <i>Logged in as <strong>{{username}}</strong> </i>
+                <a class="btn btn-primary" id="logout-link" >Logout</a>
+            </div>
+            <div class="post-project"><a href="#" >POST A PROJECT</a></div>
+
+        {{else}}
+            <div class="pull-right">
+                <a class="btn btn-primary" id="login-link"
+                   data-toggle="modal" data-target="#signin" >Login</a>
+            </div>
+        {{/if}}
+
         <div class="profile">
         </div>
     </div>
