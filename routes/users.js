@@ -4,7 +4,7 @@
 
 var express = require('express');
 var router = express.Router();
-var User = require('../models/User');
+var User = require('../models/user');
 var utils = require('../utils/utils');
 
 var STATUS_CODE_BAD_REQUEST = 400;
@@ -114,7 +114,16 @@ router.post('/', function(req, res) {
     User.findByUsername(req.body.username, function(err, user) {
         if (err) {
             User.create(userObj, function(err, user) {
-                utils.sendSuccessResponse(res, req.body.username);
+                if (err) {
+                    var errorMsg="";
+                    if (err.errors.username) errorMsg+=err.errors.username.message+", ";
+                    if (err.errors.email) errorMsg+=err.errors.email.message+", ";
+                    if (err.errors.password) errorMsg+=err.errors.password.message;
+
+                    utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, errorMsg);
+                } else {
+                    utils.sendSuccessResponse(res, req.body.username);
+                }
             });
         } else {
             utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, 'That username is already taken');

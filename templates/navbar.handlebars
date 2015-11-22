@@ -1,13 +1,96 @@
 <div class="navBar">
-	<div class="pageTitle"> 
-		<h1>MIT HACKTRACK</h1>
-        <a class="btn btn-primary" data-toggle="modal" href="#signInModal" >Login</a>
+    <div class="pageTitle">
+
+        <h1>MIT HACKTRACK</h1>
+
+        {{#if user_logged_in}}
+            <i>Logged in as <strong>{{username}}</strong> </i>
+            <a class="btn btn-primary" id="logout-link" >Logout</a>
+        {{else}}
+            <a class="btn btn-primary" id="login-link"
+               data-toggle="modal" data-target="#signin" >Login</a>
+        {{/if}}
+
     </div>
-		<div class="navActions">
-			<div class="post">
-			</div>
-			<div class="profile"></div>
-		</div>
-	<div class="mainImg">
-	</div>
+    <div class="navActions">
+        <div class="post-project"><a href="#" >POST A PROJECT</a></div>
+        <div class="profile">
+        </div>
+    </div>
+    <div class="mainImg">
+    </div>
 </div>
+
+
+
+
+<!--//////////// Modals ///////////-->
+
+
+<div class="modal fade" id="signin">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">Login to Hacktrack</h4>
+            </div>
+            <div class="modal-body">
+                <div class="error">
+                    {{#if error}}
+                        {{error}}
+                    {{/if}}
+                </div>
+                <form id="signin-form">
+                    <div class="form-group">
+                        <p><input type="text" class="form-control" name="username" required placeholder="Username"/></p>
+                        <p><input type="password" class="form-control" name="password" required placeholder="Password"/></p>
+                        <p><button type="submit" class="btn btn-primary">Sign in</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                New to Hacktrack?
+                <a data-toggle="modal" data-target="#register" data-dismiss="modal" class="btn btn-primary" href="#">Register</a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+<div class="modal fade" id="register">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">Sign up for Hacktrack</h4>
+            </div>
+            <div class="modal-body">
+                <div class="error">
+                    {{#if error}}
+                        {{error}}
+                    {{/if}}
+                </div>
+                <form id="register-form">
+                    <div class="form-group">
+                        <p><input type="text" class="form-control" name="username" required placeholder="Username"/></p>
+                        <p><input type="text" class="form-control" name="email" required placeholder="Email"/></p>
+                        <p><input type="password" class="form-control" name="password" required placeholder="Password"/></p>
+                        <p><input type="password" class="form-control" name="confirm" required placeholder="Confirm password"/></p>
+                        <p><button type="submit" class="btn btn-primary">Sign up</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                Already have an account?
+                <a data-toggle="modal" href="#signin" data-dismiss="modal" class="btn btn-primary">Login</a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<!--//////////////////// END MODALS ////////////////////-->
+

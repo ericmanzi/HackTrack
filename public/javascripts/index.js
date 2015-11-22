@@ -9,20 +9,27 @@ var loadPage = function(template, data) {
 
 
 var loadHomePage = function() {
-    console.log("current user is "+currentUser);
+    $.get('/projects', function(response) {
 
-    if (currentUser) {
-        loadProjectsPage();
-    } else {
-        loadPage('index');
-    }
+        var data = {
+            user_logged_in: currentUser!==null,
+            username: currentUser,
+            projects: response.content.projects
+        };
+        console.log(JSON.stringify(data));
+        loadPage('index', data);
+    });
 };
 
 var loadProjectPage = function(id){
    //TODO make get request to get specific project
    loadPage('projectView', {})
-
 }
+
+var loadPostProjectPage = function(){
+    loadPage('postProject', {});
+}
+
 $(document).ready(function() {
      $.get('/users/current', function(response) {
      	if (response.content.loggedIn) {
@@ -39,4 +46,9 @@ $(document).on('click', '.project-link', function(evt) {
     var item = $(this).parent();
     var id = item.data('project-id');
     loadProjectPage(id);
+});
+
+$(document).on('click', '.post-project', function(event){
+    event.preventDefault();
+    loadPostProjectPage();
 });

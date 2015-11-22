@@ -11,6 +11,8 @@
             helpers.getFormData(this)
         ).done(function(response) {
             currentUser = response.content.user;
+            $('#signin').hide();
+            $('.modal-backdrop').hide();
             loadHomePage();
         }).fail(function(responseObject) {
             var response = $.parseJSON(responseObject.responseText);
@@ -30,9 +32,13 @@
             '/users',
             formData
         ).done(function(response) {
+            $('#register').hide();
+            $('.modal-backdrop').hide();
             loadHomePage();
         }).fail(function(responseObject) {
+            console.log(JSON.stringify(responseObject));
             var response = $.parseJSON(responseObject.responseText);
+            console.log("error signing up:"+response.err);
             $('.error').text(response.err);
         });
     });
@@ -42,7 +48,7 @@
         $.post(
             '/users/logout'
         ).done(function(response) {
-            currentUser = undefined;
+            currentUser = null;
             loadHomePage();
         }).fail(function(responseObject) {
             var response = $.parseJSON(responseObject.responseText);
