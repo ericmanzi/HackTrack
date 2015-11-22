@@ -1,7 +1,11 @@
-// Lead author: Eric Manzi (ermanzi@mit.edu)
-// User model
 
+/**
+ * Created by ericmanzi on 11/19/15.
+ * Lead author: Eric Manzi
+ * USER MODEL
+ */
 var mongoose = require('mongoose'),
+    Schema = mongoose.Schema,
     Project = require('../models/project'),
     Post = require('../models/post'),
     bcrypt = require('bcrypt'),
@@ -12,8 +16,9 @@ var mongoose = require('mongoose'),
 var userSchema = mongoose.Schema({
     username: {type: String, unique: true},
     email: {type: String, unique: true}, // restrict email to a single user
-    password: String,
+    password: {type: String},
     favorites: Array
+    //favorites: [{ type: Schema.ObjectId, ref: 'Project' }]
     //following: Array,
     //first_name: String,
     //last_name: String,
@@ -57,7 +62,6 @@ userSchema.path('password').validate(function(value) {
 }, 'Invalid password: passwords cannot be empty or contain spaces');
 
 
-//////////////// STATIC METHODS ///////////////
 /**
  * Find the user that matches the given username
  * @param name
@@ -65,13 +69,10 @@ userSchema.path('password').validate(function(value) {
  */
 userSchema.statics.findByUsername = function(name, callback) {
     this.findOne({ username: name }, function(err, user) {
-        if (err) callback({msg: 'No such username.'});
-        else callback(null, user);
+        if (user) callback(null, user);
+        else callback({msg: 'No such username.'});
     });
 };
-
-
-//////////////// INSTANCE METHODS ///////////////
 
 /**
  * Verifies that the provided password matches the given username
@@ -148,3 +149,5 @@ userSchema.methods.unfavorite = function(projectID, callback) {
 var User = mongoose.model("User", userSchema);
 
 module.exports = User;
+
+

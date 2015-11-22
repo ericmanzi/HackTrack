@@ -1,3 +1,4 @@
+
 // Lead author: Eric Manzi (ermanzi@mit.edu)
 // User model tests
 
@@ -33,14 +34,14 @@ var validUser = {
 };
 
 var invalidUsername = {
-    username: "",
+    username: " ",
     password: "finn_the_human",
     email: "finn@mit.edu",
     favorites: []
 };
 
 var invalidPassword = {
-    username: "",
+    username: " ",
     password: "finn the human",
     email: "finn@mit.edu",
     favorites: []
@@ -70,13 +71,19 @@ describe('User', function() {
     before(function(done) {
         User.findByUsername("jake", function(err, user) {
             if (err) {
+                //console.log("no user found. creating new");
                 User.create(jakeObj, function(err, new_user) {
-                    jake = new_user;
+                    if (err) {
+                        //console.log("error:"+err);
+                    } else {
+                        //console.log("new user:"+new_user);
+                        jake = new_user;
+                    }
                 });
             } else {
+                //console.log("user found:"+user);
                 jake = user;
             }
-            done();
         });
 
         Project.findOne({owner: "jake"}, function(err, project) {
@@ -87,6 +94,7 @@ describe('User', function() {
                     projectX = new_project;
                 });
             }
+            done();
         });
 
 
@@ -224,3 +232,5 @@ describe('User', function() {
     });
 
 });
+
+

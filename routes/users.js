@@ -1,3 +1,4 @@
+
 // Lead author: Eric Manzi (ermanzi@mit.edu)
 // Users route: Handles all requests made to /users
 
@@ -171,8 +172,9 @@ router.post('/favorites', function(req, res) {
 });
 
 
+
 /*
- Remove the given project to user's favorites
+ Remove the given project from user's favorites
 
  DELETE /users/favorites
  Request body:
@@ -203,5 +205,34 @@ router.delete('/favorites', function(req, res) {
 });
 
 
+/*
+ Get this user's favorite projects
+
+ GET /users/favorites
+ Request body: empty
+ Response:
+ - success: true if the server succeeded in finding the user's favorites
+ - content: all of this user's favorite projects
+ - error msg:   error status code 400 if there was an error retrieving the
+ user's favorite projects.
+ error status code 403 if user isn't authenticated
+ */
+router.get('/favorites', function(req, res) {
+    if (req.currentUser) {
+        User.findByUsername(req.currentUser.username, function(err, user) {
+            if (err) {
+                utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, err.msg);
+            } else {
+                utils.sendSuccessResponse(res, { favorites: user.getFavorites() });
+            }
+        });
+    } else {
+        utils.sendErrResponse(res, STATUS_CODE_FORBIDDEN,
+            'There is no user currently logged in.');
+    }
+});
+
 
 module.exports = router;
+
+
