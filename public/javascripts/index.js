@@ -13,7 +13,7 @@ var loadPage = function(template, data) {
 
 
 var loadHomePage = function() {
-    $.get('/projects', function(response) {
+    $.get('/projects?trending=1', function(response) {
         console.log(response.content.projects);
         data.projects = response.content.projects;
         loadPage('index', data);

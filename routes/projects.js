@@ -1,3 +1,5 @@
+// Lead author: Kairat Ashim <kairat@mit.edu>
+
 var express = require('express');
 var router = express.Router();
 var utils = require('../utils/utils');
@@ -8,24 +10,36 @@ var Post = require('../models/post');
 /*
  GET /projects
  Request parameters:
- - tweet: none
+ - trending: whether to get trending projects list
+ - days: if trending, the day index relative to today (defaults to 0)
  Response:
  - success: true if the server succeeded in getting all the projects
  - content: on success, the list of projects
  - err: on failure, an error message
  */
 router.get('/', function(req, res) {
-    Project.getAllProjects(function(err, foundProjects){
-        if (err){
-            utils.sendErrResponse(err);
-        } else {
-            utils.sendSuccessResponse(res, {projects : foundProjects});
+    if(req.query.trending) {
+        var dayIndex = 0;
+        if(req.query.days) {
+            dayIndex = parseInt(req.query.days);
         }
-    });
+        Project.getTrendingProjects(dayIndex, function(err, projects){
+            if (err){
+                utils.sendErrResponse(err);
+            } else {
+                utils.sendSuccessResponse(res, {projects: projects});
+            }
+        });
+    } else {
+        Project.getAllProjects(function(err, foundProjects){
+            if (err){
+                utils.sendErrResponse(err);
+            } else {
+                utils.sendSuccessResponse(res, {projects : foundProjects});
+            }
+        });
+    }
 });
-
-
-
 
 /*
  POST /projects
