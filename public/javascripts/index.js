@@ -21,10 +21,12 @@ var loadHomePage = function() {
 };
 
 var loadProjectPage = function(id){
-   $.get('/projects/'+id, function(response){
-    console.log(response.content.project);
-    loadPage('projectView', {project : response.content.project});
-   });
+    $.get('/projects/'+id, function(response){
+        loadPage('projectView', {
+            project: response.content.project,
+            discussions: response.content.discussions,
+        });
+    });
 }
 
 var loadPostProjectPage = function(){

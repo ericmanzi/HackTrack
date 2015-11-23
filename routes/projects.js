@@ -3,6 +3,7 @@ var router = express.Router();
 var utils = require('../utils/utils');
 
 var Project = require('../models/project');
+var Post = require('../models/post');
 
 /*
  GET /projects
@@ -77,7 +78,16 @@ router.get('/:projID', function(req, res) {
                 utils.sendErrResponse(res, 500, 'An unknown error occurred.');
             }
         } else {
-            utils.sendSuccessResponse(res, {project : foundProject});
+            Post.getDiscussions(foundProject.id, function(err, discussions) {
+                if (err){
+                    utils.sendErrResponse(res, 500, 'Error retrieving project: ' + err.message + '.');
+                } else {
+                    utils.sendSuccessResponse(res, {
+                        project : foundProject,
+                        discussions: discussions,
+                    });
+                }
+            });
         }
     });
 });
