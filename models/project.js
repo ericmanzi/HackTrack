@@ -1,3 +1,5 @@
+// Lead author: Kairat Ashim <kairat@mit.edu>
+
 var mongoose = require('mongoose');
 var moment = require('moment');
 var async = require('async');

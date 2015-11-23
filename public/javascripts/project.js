@@ -1,3 +1,5 @@
+// Lead author: Kairat Ashim <kairat@mit.edu>
+
 // Wrapped in an immediately invoked function expression.
 (function() {
   // listener for posting a new project

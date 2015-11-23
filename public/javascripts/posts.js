@@ -1,4 +1,4 @@
-// Lead author: Favyen Bastani
+// Lead author: Favyen Bastani <fbastani@mit.edu>
 
 (function() {
     // Discussion form submission.
