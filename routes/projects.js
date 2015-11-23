@@ -120,5 +120,28 @@ router.post('/:projID', function(req, res) {
     }
 });
 
+/*
+ POST /projects/:projID/addDiscussion
+ Adds a discussion to a project.
+ Request body:
+ - content: the textual content for the discussion
+ Response:
+ - success: if the server succeeded in adding the discussion
+ - err: on failure, an error message
+ */
+router.post('/:projID/addDiscussion', function(req, res) {
+    if (!req.currentUser) { // Require authentication to use this feature
+        utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
+    } else {
+        Post.addDiscussion(req.params.projID, req.currentUser.id, req.body.content, function(err){
+            if (err){
+                utils.sendErrResponse(res, 500, 'Error adding discussion: ' + err.message + '.');
+            } else {
+                utils.sendSuccessResponse(res);
+            }
+        });
+    }
+});
+
 
 module.exports = router;

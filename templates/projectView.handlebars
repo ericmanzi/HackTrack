@@ -8,7 +8,7 @@
 	
 	</div>
 	<div class="proj project-content" >
-		<header class="project-header" data-project-id={{project._id}}>
+		<header class="project-header" id="project-header" data-project-id={{project._id}}>
 			<div class="project-title" id="projectView-title">
 				{{project.title}}
 			</div>
@@ -42,6 +42,12 @@
 							{{/each}}
 						</div>
 					{{/each}}
+					{{#if user_logged_in}}
+						<div class="project-discussion-add">
+							<input type="text" id="project-discussion-add-content" />
+							<button id="project-discussion-add-btn">Add Discussion</button>
+						</div>
+					{{/if}}
 				</div>
 			</div>
 			<div class="project-body-right"></div>
