@@ -3,9 +3,9 @@
   // listener for posting a new project
   $(document).on('submit', 'form#post-project', function(evt) {
     evt.preventDefault();
-    var title = $('#project-title').val();
-    var description = $('#project-description').val();
-    var imageLinks = $('#project-image-links').val();
+    var title = $('#project-post-title').val();
+    var description = $('#project-post-description').val();
+    var imageLinks = $('#project-post-image-links').val();
     $.post(
       '/projects',
       { title: title,
