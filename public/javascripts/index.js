@@ -27,7 +27,6 @@ var loadHomePage = function() {
 };
 
 var loadProjectPage = function(id){
-   //TODO make get request to get specific project
    $.get('/projects/'+id, function(response){
     console.log(response.content.project);
     loadPage('projectView', {project : response.content.project});

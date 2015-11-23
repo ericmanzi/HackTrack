@@ -67,7 +67,6 @@ router.post('/', function(req, res) {
  - err: on failure, an error message
  */
 router.get('/:projID', function(req, res) {
-
     Project.getProject(req.params.projID, function(err, foundProject){
         if (err){
             if (err.projectNotFound){
@@ -79,6 +78,32 @@ router.get('/:projID', function(req, res) {
             utils.sendSuccessResponse(res, {project : foundProject});
         }
     });
+});
+
+/*
+ POST /projects/:projID
+ Request body:
+ - content: projectID
+ Response:
+ - success: true if the server succeeded upvoting the project
+ - err: on failure, an error message
+ */
+router.post('/:projID', function(req, res) {
+    if (!req.currentUser) { // Require authentication to use this feature
+        utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
+    } else {
+        Project.upvoteProject(req.params.projID, req.currentUser.username, function(err){
+            if (err){
+                if (err.projectNotFound){
+                    utils.sendErrResponse(res, 404, 'Project not found');
+                } else {
+                    utils.sendErrResponse(res, 500, 'An unknown error occurred.');
+                }
+            } else {
+                utils.sendSuccessResponse(res);
+            }
+        });
+    }
 });
 
 

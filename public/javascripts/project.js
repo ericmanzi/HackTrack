@@ -20,4 +20,18 @@
     });
   });
 
+  $(document).on('click', '#myButton-upvote', function(evt) {
+    evt.preventDefault();
+    var item = $(this).parent();
+    var id = item.data('project-id');
+    $.post(
+      '/projects/' + id
+    ).done(function(response) {
+      loadProjectPage(id);
+    }).fail(function(responseObject) {
+      var response = $.parseJSON(responseObject.responseText);
+      $('.error').text(response.err);
+    });
+  });
+
 })();

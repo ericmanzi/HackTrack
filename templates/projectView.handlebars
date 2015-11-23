@@ -1,5 +1,10 @@
 {{> navbar}}
-<div class="projectMain" >
+<div class="error"></div>
+<div class="projectMain" data-project-id={{project._id}}>
+	
+	<div id="projectView-upvotes">{{project.upvoterUsernames.length}}</div>
+	<a href="#" id="myButton-upvote">Upvote</a>
+
 	<div id="project-owner"> The owner of the project <span id="owner-label"> {{project.owner}} </span> </div>
 	<br />
 	<div class="projectContent">
