@@ -57,5 +57,21 @@
     });
 
 
+    $(document).on('click', '#favorite-button', function(evt) {
+        evt.preventDefault();
+        var item = $(this).parent();
+        var data = { projectID: item.data('project-id') };
+        $.post(
+            '/users/favorites',
+            data
+        ).done(function(response) {
+            loadProjectPage(data.projectID);
+        }).fail(function(responseObject) {
+            var response = $.parseJSON(responseObject.responseText);
+            $('.error').text(response.err);
+        });
+    });
+
+
 })(); // Wrap in an immediately invoked function expression.
 

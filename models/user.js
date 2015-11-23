@@ -148,13 +148,16 @@ userSchema.methods.unfavorite = function(projectID, callback) {
 /**
  * Return this users list of favorite projects
  */
-userSchema.methods.getFavorites = function() {
+userSchema.methods.getFavorites = function(callback) {
     var user = this;
     Project.find({'_id': { $in: user.favorites }}, function(err, favorites) {
-        if (favorites) return favorites;
+        if (err) {
+            callback({ msg: 'Something went wrong while retrieving your projects'});
+        } else {
+            callback(null, favorites);
+        }
     });
 };
-
 
 var User = mongoose.model("User", userSchema);
 

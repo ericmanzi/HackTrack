@@ -232,7 +232,48 @@ router.get('/favorites', function(req, res) {
             if (err) {
                 utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, err.msg);
             } else {
-                utils.sendSuccessResponse(res, { favorites: user.getFavorites() });
+                user.getFavorites(function(err, favorites) {
+                    if (err) {
+                        utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, err.msg);
+                    } else {
+                        utils.sendSuccessResponse(res, { projects: favorites });
+                    }
+                });
+            }
+        });
+    } else {
+        utils.sendErrResponse(res, STATUS_CODE_FORBIDDEN,
+            'There is no user currently logged in.');
+    }
+});
+
+
+
+/*
+ Get this user's favorite projects
+
+ GET /users/myprojects
+ Request body: empty
+ Response:
+ - success: true if the server succeeded in finding the user's projects
+ - content: all of this user's projects
+ - error msg:   error status code 400 if there was an error retrieving the
+ user's projects.
+ error status code 403 if user isn't authenticated
+ */
+router.get('/myprojects', function(req, res) {
+    if (req.currentUser) {
+        User.findByUsername(req.currentUser.username, function(err, user) {
+            if (err) {
+                utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, err.msg);
+            } else {
+                user.getMyProjects(function(err, myprojects) {
+                    if (err) {
+                        utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, err.msg);
+                    } else {
+                        utils.sendSuccessResponse(res, { projects: myprojects });
+                    }
+                });
             }
         });
     } else {
