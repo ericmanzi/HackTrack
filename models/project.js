@@ -109,7 +109,7 @@ projectSchema.methods.upvoteProjectMethod = function(username, callback){
 		});
 	} else {
 		// notfy the user that s/he has voted already or just keep silent???
-		//callback({alreadyVoted : true});
+		callback({alreadyVoted : true});
 	}
 };
 

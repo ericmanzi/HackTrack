@@ -95,8 +95,10 @@ router.post('/:projID', function(req, res) {
         Project.upvoteProject(req.params.projID, req.currentUser.username, function(err){
             if (err){
                 if (err.projectNotFound){
-                    utils.sendErrResponse(res, 404, 'Project not found');
-                } else {
+                    utils.sendErrResponse(res, 404, 'Project not found.');
+                } else if (err.alreadyVoted){
+                    utils.sendErrResponse(res, 403, "You already voted for this project.")
+                }else {
                     utils.sendErrResponse(res, 500, 'An unknown error occurred.');
                 }
             } else {
