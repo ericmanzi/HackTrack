@@ -14,12 +14,6 @@ var loadPage = function(template, data) {
 
 var loadHomePage = function() {
     $.get('/projects', function(response) {
-
-        //var data = {
-        //    user_logged_in: currentUser!==null,
-        //    username: currentUser,
-        //    projects: response.content.projects
-        //};
         console.log(response.content.projects);
         data.projects = response.content.projects;
         loadPage('index', data);
@@ -37,8 +31,12 @@ var loadPostProjectPage = function(){
     loadPage('postProject', data);
 };
 
-var loadProfilePage = function(){
-    loadPage('profile', data);
+var loadProfilePage = function(projectType){
+    var reqUrl = projectType=="favorites"?'/users/favorites':'/users/myprojects';
+    $.get(reqUrl, function(response){
+        data.projects = response.content.projects;
+        loadPage('profile', data);
+    });    
 }
 
 $(document).ready(function() {
@@ -67,6 +65,11 @@ $(document).on('click', '.post-project', function(event){
 $(document).on('click', '.profile-link', function(event){
     event.preventDefault();
     loadProfilePage();
+});
+
+$(document).on('click', '.favorite-projects-link', function(event){
+    event.preventDefault();
+    loadProfilePage("favorites");
 });
 
 $(document).on('click', '.home-link', function(event){

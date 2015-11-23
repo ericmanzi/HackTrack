@@ -7,7 +7,7 @@
 			</div>
 			<div class="profileInfo">
 				<h1 class="profileInfoTitle">
-					Barack Obama
+					{{username}}
 				</h1>
 			</div>
 			<div class="profileNavigation">
@@ -22,6 +22,18 @@
 					</li>
 				</ul>
 			</div>
+
 		</div>
 	</header>
+	<div >
+		<div class= "projectFeed">
+			<ul class="projectList"> 
+			{{#each projects}}
+				{{> project}}
+			{{else}}
+				<p><em>No projects yet!</em></p>
+			{{/each}}
+			</ul>
+		</div>
+	</div>
 </main>
