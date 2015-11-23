@@ -115,24 +115,34 @@ postSchema.statics.getDiscussionComments = function(discussionID, callback) {
 };
 
 // Adds a new comment to an existing discussion.
-// discussionID, userID: the discussion and user that this comment belongs to
+// projectID, discussionID, userID: the project, discussion, and user that this comment belongs to
 // content: comment text
 // callback: optional callback of the form function(err, commentID)
-postSchema.statics.addComment = function(discussionID, userID, content, callback) {
-    var comment = new Post({
-        userID: userID,
-        content: content,
-        isDiscussion: false,
-        parentID: discussionID,
-    });
-    comment.save(function(err) {
-        if(callback) {
-            if(err) {
-                callback(err, undefined);
-            } else {
-                callback(undefined, comment.id);
-            }
+postSchema.statics.addComment = function(projectID, discussionID, userID, content, callback) {
+    // verify discussion exists
+    Post.findOne({'_id': discussionID, 'projectID': projectID}, function(err, discussion) {
+        if(err) {
+            callback(err, undefined);
+            return;
+        } else if(!discussion) {
+            callback(new Error('no such discussion'), undefined);
+            return;
         }
+        var comment = new Post({
+            userID: userID,
+            content: content,
+            isDiscussion: false,
+            parentID: discussionID,
+        });
+        comment.save(function(err) {
+            if(callback) {
+                if(err) {
+                    callback(err, undefined);
+                } else {
+                    callback(undefined, comment.id);
+                }
+            }
+        });
     });
 }
 

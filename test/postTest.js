@@ -14,11 +14,7 @@ db.once('open', function (callback) {
 });
 
 var User = require('../models/user');
-// temporary project model
-var projectSchema = mongoose.Schema({
-    title: String,
-});
-var Project = mongoose.model('Project', projectSchema);
+var Project = require('../models/project');
 var Post = require('../models/post');
 
 var testUser;
@@ -31,6 +27,13 @@ var testUserObj = {
 var testProject;
 var testProjectObj = {
     title: "postTest",
+    description: "postTest",
+};
+
+var otherProject;
+var otherProjectObj = {
+    title: "postTest2",
+    description: "postTest2",
 };
 
 var testDiscussionID;
@@ -53,12 +56,28 @@ describe('Post', function() {
     before(function(done) {
         Project.findOne({'title': testProjectObj.title}, function(err, project) {
             if(!project) {
+                testProjectObj.owner = testUser.id;
                 Project.create(testProjectObj, function(err, newProject) {
                     testProject = newProject;
                     done();
                 });
             } else {
                 testProject = project;
+                done();
+            }
+        });
+    });
+
+    before(function(done) {
+        Project.findOne({'title': otherProjectObj.title}, function(err, project) {
+            if(!project) {
+                otherProjectObj.owner = testUser.id;
+                Project.create(otherProjectObj, function(err, newProject) {
+                    otherProject = newProject;
+                    done();
+                });
+            } else {
+                otherProject = project;
                 done();
             }
         });
@@ -102,7 +121,7 @@ describe('Post', function() {
 
     describe('#addComment', function() {
         it('should add the comment', function(done) {
-            Post.addComment(testDiscussionID, testUser.id, 'comment text', function(err, commentID) {
+            Post.addComment(testProject.id, testDiscussionID, testUser.id, 'comment text', function(err, commentID) {
                 assert.ok(!err);
                 Post.getDiscussionComments(testDiscussionID, function(err, comments) {
                     assert.ok(!err);
@@ -116,7 +135,7 @@ describe('Post', function() {
         });
 
         it('second comment is returned in correct order', function(done) {
-            Post.addComment(testDiscussionID, testUser.id, 'second comment text', function(err, commentID) {
+            Post.addComment(testProject.id, testDiscussionID, testUser.id, 'second comment text', function(err, commentID) {
                 assert.ok(!err);
                 Post.getDiscussionComments(testDiscussionID, function(err, comments) {
                     assert.ok(!err);
@@ -127,6 +146,13 @@ describe('Post', function() {
                     assert.equal(comments[1].content, 'second comment text');
                     done();
                 });
+            });
+        });
+
+        it('fails on invalid project', function(done) {
+            Post.addComment(otherProject.id, testDiscussionID, testUser.id, 'second comment text', function(err, commentID) {
+                assert.ok(err);
+                done();
             });
         });
     });
