@@ -29,16 +29,18 @@
 					Discussion
 					{{#each discussions}}
 						<div class="project-discussion-post">
-							<div class="post-content project-discussion-user">
-								{{username}}
+							<div class="post-content project-discussion-head">
+							    <span class="post-user">{{username}}</span>
+							    <span class="post-time">at {{time}}</span>
 							</div>
 							<div class="post-content project-discussion-body">
 								{{content}}
 							</div>
 							{{#each comments}}
 								<div class="project-discussion-comment">
-									<div class="post-content discussion-comment-user">
-										{{username}}
+									<div class="post-content discussion-comment-head">
+							            <span class="post-user">{{username}}</span>
+							            <span class="post-time">at {{time}}</span>
 									</div>
 									<div class="post-content discussion-comment-body">
 										{{content}}
