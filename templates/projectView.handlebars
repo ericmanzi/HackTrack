@@ -1,26 +1,46 @@
-{{> navbar}}
-<div class="error"></div>
-<div class="projectMain" data-project-id={{project._id}}>
+
+<div class="project-container" >
+	<div class="proj project-navigation">
+   	
+   	<a href="#" class="home-link">
+   	<span class="glyphicon glyphicon-remove" aria-hidden="true" style="font-size:1.5em"></span>
+   	</a>
 	
-	<div id="projectView-upvotes">{{project.upvoterUsernames.length}}</div>
-	<a href="#" id="myButton-upvote">Upvote</a>
-    <a href="#" id="favorite-button" class="pull-right">Add to favorites</a>
-
-	<div id="project-owner"> The owner of the project <span id="owner-label"> {{project.owner}} </span> </div>
-	<br />
-	<div class="projectContent">
-		<div id="project-title"><p id="title-label">Title:</p>{{project.title}}</div>
-		<br />
-		{{#each project.imageLinks}}
-			<div id="project-image"> <img style="height:200px; width:200px" src={{this}}> </div>
-		{{/each}}
-		<br />
-
-		<div id="project-content"> <p id="description-label">Description:</p>{{project.description}}</div>
+	</div>
+	<div class="proj project-content" >
+		<header class="project-header" style="background-image: url(https://ph-files.imgix.net/ae094ab9-4542-43e3-8303-83f95d60d846?auto=format&w=1000&h=330);" data-project-id={{project._id}}>
+			<div class="project-title">
+				{{project.title}}
+			</div>
+			<div class="project-description">
+				{{project.description}}
+			</div>
+			<div id="projectView-upvotes">{{project.upvoterUsernames.length}}</div>
+			<a href="#" id="myButton-upvote">Upvote</a>
+            <a href="#" id="favorite-button">Add to favorites</a>
+		</header>
+		<div class="project-body">
+			<div class="project-body-left">
+				<div class="project-media">
+					Media
+				</div>
+				<div class="project-discussion">
+					Discussion
+					<div class="project-discussion-post">
+						Hey My name is George
+						<div class="project-discussion-comment">
+							<div class="post-content discussion-comment-user">
+								George Ezenna
+							</div>
+							<div class="post-content discussion-comment-body">
+							Is that so
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="project-body-right"></div>
+		</div>
+	</div>
 	</div>
 
-</div>
-
-<div class="projectDiscussion">
-
-</div>
