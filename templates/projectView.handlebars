@@ -9,10 +9,10 @@
 	</div>
 	<div class="proj project-content" >
 		<header class="project-header" style="background-image: url(https://ph-files.imgix.net/ae094ab9-4542-43e3-8303-83f95d60d846?auto=format&w=1000&h=330);" data-project-id={{project._id}}>
-			<div class="project-title">
+			<div class="project-title" id="projectView-title">
 				{{project.title}}
 			</div>
-			<div class="project-description">
+			<div class="project-description" id="projectView-description">
 				{{project.description}}
 			</div>
 			<div id="projectView-upvotes">{{project.upvoterUsernames.length}}</div>
@@ -21,7 +21,9 @@
 		<div class="project-body">
 			<div class="project-body-left">
 				<div class="project-media">
-					Media
+					{{#each project.imageLinks}}
+						<img src={{this}} alt="image" height="150px">
+					{{/each}}
 				</div>
 				<div class="project-discussion">
 					Discussion
