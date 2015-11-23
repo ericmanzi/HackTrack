@@ -67,7 +67,12 @@ $(document).on('click', '.profile-link', function(event){
     loadProfilePage();
 });
 
-$(document).on('click', '.favorite-projects-link', function(event){
+$(document).on('click', '#view-myprojects', function(event){
+    event.preventDefault();
+    loadProfilePage();
+});
+
+$(document).on('click', '#view-favorites', function(event){
     event.preventDefault();
     loadProfilePage("favorites");
 });
