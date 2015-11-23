@@ -34,6 +34,10 @@ var loadPostProjectPage = function(){
     loadPage('postProject', data);
 };
 
+var loadProfilePage = function(){
+    loadPage('profile', data);
+}
+
 $(document).ready(function() {
      $.get('/users/current', function(response) {
      	if (response.content.loggedIn) {
@@ -55,4 +59,14 @@ $(document).on('click', '.project-link', function(evt) {
 $(document).on('click', '.post-project', function(event){
     event.preventDefault();
     loadPostProjectPage();
+});
+
+$(document).on('click', '.profile-link', function(event){
+    event.preventDefault();
+    loadProfilePage();
+});
+
+$(document).on('click', '.home-link', function(event){
+    event.preventDefault();
+    loadHomePage();
 });

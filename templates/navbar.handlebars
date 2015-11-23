@@ -1,13 +1,18 @@
 <div class="navBar">
+        <a href="#" class="profile-link"><div class="navAvatar pull-right">
+            <div class="userImage"><img src="https://www.whitehouse.gov/sites/whitehouse.gov/files/images/Administration/People/president_official_portrait_hires.jpg" width="50" height="50"></div>
+        </div>
+        </a>
     <div class="pageTitle">
-
-        <h1>MIT HACKTRACK</h1>
+        <h1 class="home-link"><a href="#" style="text-decoration:none;">MIT HACKTRACK</a></h1>
 
     </div>
+
     <div class="navActions">
 
         {{#if user_logged_in}}
             <div class="pull-right">
+                
                 <i>Logged in as <strong>{{username}}</strong> </i>
                 <a class="btn btn-primary" id="logout-link" >Logout</a>
             </div>
