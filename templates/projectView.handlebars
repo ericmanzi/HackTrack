@@ -1,4 +1,5 @@
-<div class="project-container">
+
+<div class="project-container" >
 	<div class="proj project-navigation">
    	
    	<a href="#" class="home-link">
@@ -6,14 +7,16 @@
    	</a>
 	
 	</div>
-	<div class="proj project-content">
-		<header class="project-header" style="background-image: url(https://ph-files.imgix.net/ae094ab9-4542-43e3-8303-83f95d60d846?auto=format&w=1000&h=330);">
+	<div class="proj project-content" >
+		<header class="project-header" style="background-image: url(https://ph-files.imgix.net/ae094ab9-4542-43e3-8303-83f95d60d846?auto=format&w=1000&h=330);" data-project-id={{project._id}}>
 			<div class="project-title">
-				uCella
+				{{project.title}}
 			</div>
 			<div class="project-description">
-				The best project ever
+				{{project.description}}
 			</div>
+			<div id="projectView-upvotes">{{project.upvoterUsernames.length}}</div>
+			<a href="#" id="myButton-upvote">Upvote</a>
 		</header>
 		<div class="project-body">
 			<div class="project-body-left">
@@ -39,3 +42,4 @@
 		</div>
 	</div>
 	</div>
+

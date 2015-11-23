@@ -7,7 +7,7 @@ var projectSchema = mongoose.Schema({
 	owner : {type: String, required : true},
 	imageLinks : [String],
 	videoIDs : [String],
-	upvoterIDs : [String],
+	upvoterUsernames : [String],
 	tags : [String],
 	date : {type : Date, default: Date.now, required : true}
 });
@@ -37,13 +37,13 @@ projectSchema.statics.createNewProject = function(projectJSONobject, callback){
 	@param {String} id of the user that is upvoting the project
 	@param {function} a callback function
 */
-projectSchema.statics.upvoteProject = function(projectId, userId, callback){
+projectSchema.statics.upvoteProject = function(projectId, username, callback){
 	this.findOne({_id : projectId}, function(err, foundProject){
 		if (err){
 			callback(err);
 		} else {
 			if (foundProject){
-				foundProject.upvoteProjectMethod(userId, callback);
+				foundProject.upvoteProjectMethod(username, callback);
 			} else {
 				callback({projectNotFound : true});
 			}
@@ -72,7 +72,7 @@ projectSchema.statics.getAllProjects = function(callback){
 	@param {function} a callback function
 */
 projectSchema.statics.getProject = function(projectId, callback){
-	this.find({_id : projectId}, function(err, foundProject){
+	this.findOne({_id : projectId}, function(err, foundProject){
 		if (err){
 			callback(err);
 		} else {
@@ -97,10 +97,10 @@ projectSchema.statics.getProject = function(projectId, callback){
 	@param {String} id of the user that is upvoting this project
 	@param {function} a callback function
 */
-projectSchema.methods.upvoteProjectMethod = function(userId, callback){
-	if (!(this.upvoterIDs.indexOf(userId) > -1)){
-		foundProject.upvoterIDs.push(userId);
-		foundProject.save(function(error){
+projectSchema.methods.upvoteProjectMethod = function(username, callback){
+	if (!(this.upvoterUsernames.indexOf(username) > -1)){
+		this.upvoterUsernames.push(username);
+		this.save(function(error){
 			if (error){
 				callback(error);
 			} else {
@@ -109,7 +109,7 @@ projectSchema.methods.upvoteProjectMethod = function(userId, callback){
 		});
 	} else {
 		// notfy the user that s/he has voted already or just keep silent???
-		//callback({alreadyVoted : true});
+		callback({alreadyVoted : true});
 	}
 };
 
