@@ -8,15 +8,14 @@
 	
 	</div>
 	<div class="proj project-content" >
-		<header class="project-header" style="background-image: url(https://ph-files.imgix.net/ae094ab9-4542-43e3-8303-83f95d60d846?auto=format&w=1000&h=330);" data-project-id={{project._id}}>
+		<header class="project-header" data-project-id={{project._id}}>
 			<div class="project-title" id="projectView-title">
 				{{project.title}}
 			</div>
 			<div class="project-description" id="projectView-description">
 				{{project.description}}
 			</div>
-			<div id="projectView-upvotes">{{project.upvoterUsernames.length}}</div>
-			<a href="#" id="myButton-upvote">Upvote</a>
+			<a href="#" id="myButton-upvote"><span id="projectView-upvotes">{{project.upvoterUsernames.length}}</span> | Upvote</a>
             <a href="#" id="favorite-button">Add to favorites</a>
 		</header>
 		<div class="project-body">
