@@ -143,5 +143,28 @@ router.post('/:projID/addDiscussion', function(req, res) {
     }
 });
 
+/*
+ POST /projects/:projID/discussions/:discussionID/comment
+ Adds a comment to a discussion.
+ Request body:
+ - content: the textual content for the comment
+ Response:
+ - success: if the server succeeded in adding the comment
+ - err: on failure, an error message
+ */
+router.post('/:projID/discussions/:discussionID/comment', function(req, res) {
+    if (!req.currentUser) { // Require authentication to use this feature
+        utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
+    } else {
+        Post.addComment(req.params.projID, req.params.discussionID, req.currentUser.id, req.body.content, function(err){
+            if (err){
+                utils.sendErrResponse(res, 500, 'Error adding comment: ' + err.message + '.');
+            } else {
+                utils.sendSuccessResponse(res);
+            }
+        });
+    }
+});
+
 
 module.exports = router;

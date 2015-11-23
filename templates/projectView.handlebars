@@ -40,6 +40,12 @@
 									</div>
 								</div>
 							{{/each}}
+							{{#if @root.user_logged_in}}
+								<div class="comment-add" data-discussion-id={{id}}>
+									<input type="text" class="comment-add-content" id="comment-add-content-{{id}}" />
+									<button class="comment-add-btn">Reply</button>
+								</div>
+							{{/if}}
 						</div>
 					{{/each}}
 					{{#if user_logged_in}}
