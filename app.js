@@ -88,6 +88,4 @@ app.use(function(err, req, res, next) {
     });
 });
 
-console.log("Hacktracking...");
-
 module.exports = app;

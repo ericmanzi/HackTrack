@@ -14,8 +14,11 @@
 			</div>
 			<div class="project-description" id="projectView-description">
 				{{project.description}}
+                <br />
+                by <a href="#" id="view-user" view-user-id={{project.owner}}>{{project.owner}}</a>
 			</div>
-			<a href="#" id="myButton-upvote"><span id="projectView-upvotes">{{project.upvoterUsernames.length}}</span> | Upvote</a>
+
+            <a href="#" id="myButton-upvote"><span id="projectView-upvotes">{{project.upvoterUsernames.length}}</span> | Upvote</a>
             <a href="#" id="favorite-button">Add to favorites</a>
 		</header>
 		<div class="project-body">
