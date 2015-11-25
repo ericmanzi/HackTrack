@@ -12,6 +12,7 @@ var mongoose = require('mongoose');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var projects = require('./routes/projects');
+var tags = require('./routes/tags');
 
 var User = require('./models/user');
 
@@ -56,6 +57,7 @@ app.use(function(req, res, next) {
 app.use('/', routes);
 app.use('/users', users);
 app.use('/projects', projects);
+app.use('/tags', tags);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

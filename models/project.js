@@ -27,6 +27,14 @@ var projectSchema = mongoose.Schema({
 	@param {function} a callback function
 */
 projectSchema.statics.createNewProject = function(projectJSONobject, callback){
+	// make tags lowercase
+	if(projectJSONobject.tags) {
+		projectJSONobject.tags = projectJSONobject.tags.map(function(str) {
+			return str.toLowerCase();
+		});
+	}
+
+	// add project to database
 	var newProject = new Project(projectJSONobject);
 	newProject.save(function(error, project){
 		if (error){
@@ -76,11 +84,17 @@ projectSchema.statics.getAllProjects = function(callback){
 	Static method for retrieving trending projects.
 	Returns projects for a TRENDING_INTERVAL-day period, ending at the specified last day.
 	@param {Integer} the index of the last day to retrieve projects for, relative to today
+	@param {String} a tag to filter by; returned projects must be associated with this tag
+		if tag is empty, the filter is ignored
+	@param {String} a string filter; returned projects must match the string in the title or description
+		the string filter is case-insensitive
+		if the string filter is empty, it is ignored
 	@param {function} a callback function(err, projects)
 		projects is a list of objects of the form {date, projects}
 		the nested projects contains projects on that day sorted by upvotes
 */
-projectSchema.statics.getTrendingProjects = function(dayIndex, callback) {
+projectSchema.statics.getTrendingProjects = function(dayIndex, tag, strFilter, callback) {
+	// populate a list of Date ranges for each day in the desired range
 	var todayEnd = moment().endOf('day');
 	dateRanges = [];
 	for(var i = 0; i < TRENDING_INTERVAL; i++) {
@@ -90,10 +104,23 @@ projectSchema.statics.getTrendingProjects = function(dayIndex, callback) {
 		dateRanges.push([startDate.toDate(), endDate.toDate()]);
 	}
 	async.map(dateRanges, function(dateRange, callback) {
-		Project.find({date: {$gt: dateRange[0], $lt: dateRange[1]}}, function(err, projects) {
+		// construct query: include date, and also tag if not empty
+		query = {date: {$gt: dateRange[0], $lt: dateRange[1]}};
+		if(tag) {
+			query.tags = tag;
+		}
+		Project.find(query, function(err, projects) {
 			if(err) {
 				callback(err, undefined);
 				return;
+			}
+			// apply string filter if it is set, by matching with title and description of each project
+			if(strFilter) {
+				var applyStrFilter = function(project) {
+					return project.title.toLowerCase().indexOf(strFilter.toLowerCase()) != -1 ||
+						project.description.toLowerCase().indexOf(strFilter.toLowerCase()) != -1;
+				};
+				projects = projects.filter(applyStrFilter);
 			}
 			projects.sort(projectsSortByVotes);
 			callback(undefined, {date: dateRange[0], projects: projects});
@@ -119,6 +146,40 @@ projectSchema.statics.getProject = function(projectId, callback){
 		}
 	});
 }
+
+/**
+	Static method for retrieving a list of popular tags.
+	@param {Number} maximum number of tags to return
+	@param {function} a callback function(err, tags)
+		tags is an array of strings, each string being a tag
+*/
+projectSchema.statics.getTags = function(count, callback) {
+	this.find({}, function(err, projects) {
+		if(err) {
+			callback(err);
+			return;
+		}
+		var tagHits = {}; // map from tag string to matching project count
+		projects.forEach(function(project) {
+			if(project.tags) {
+				project.tags.forEach(function(tag) {
+					if(tagHits[tag] !== undefined) {
+						tagHits[tag] = tagHits[tag] + 1;
+					} else {
+						tagHits[tag] = 0;
+					}
+				});
+			}
+		});
+		var tagsByHits = Object.keys(tagHits).sort(function(a, b) {
+			return tagHits[b] - tagHits[a];
+		});
+		if(tagsByHits.length > count) {
+			tagsByHits = tagsByHits.slice(0, count);
+		}
+		callback(undefined, tagsByHits);
+	});
+};
 
 ///////////////// - END - STATIC METHODS OF THE projectSchema /////////////////////
 
@@ -147,8 +208,6 @@ projectSchema.methods.upvoteProjectMethod = function(username, callback){
 		callback({alreadyVoted : true});
 	}
 };
-
-
 
 //////////////// - END - INSTANCE METHODS OF INSTANCES OF THE USER MODEL////////////////////
 

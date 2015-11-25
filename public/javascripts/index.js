@@ -12,11 +12,20 @@ var loadPage = function(template, data) {
 };
 
 
-var loadHomePage = function() {
-    $.get('/projects?trending=1', function(response) {
-        //console.log(response.content.projects);
+var loadHomePage = function(tag, filter) {
+    var target = '/projects?trending=1';
+    if(tag) {
+        target += '&tag=' + encodeURIComponent(tag);
+    }
+    if(filter) {
+        target += '&filter=' + encodeURIComponent(filter);
+    }
+    $.get(target, function(response) {
         data.projects = response.content.projects;
-        loadPage('index', data);
+        $.get('/tags', function(response) {
+            data.tags = response.content;
+            loadPage('index', data);
+        });
     });
 };
 
@@ -52,11 +61,11 @@ var loadUserPage = function(username) {
 
 $(document).ready(function() {
      $.get('/users/current', function(response) {
-     	if (response.content.loggedIn) {
-     		currentUser = response.content.user;
-     		console.log("current gotten and user is "+currentUser)
-     	}
-     	loadHomePage();
+         if (response.content.loggedIn) {
+             currentUser = response.content.user;
+             console.log("current gotten and user is "+currentUser)
+         }
+         loadHomePage();
      });
     loadHomePage();
 });

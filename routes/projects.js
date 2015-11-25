@@ -12,6 +12,9 @@ var Post = require('../models/post');
  Request parameters:
  - trending: whether to get trending projects list
  - days: if trending, the day index relative to today (defaults to 0)
+ - tag: optional tag to filter projects by (only supported if trending)
+ - filter: optional string to filter projects by
+           (based on title and description; only supported if trending)
  Response:
  - success: true if the server succeeded in getting all the projects
  - content: on success, the list of projects
@@ -23,7 +26,7 @@ router.get('/', function(req, res) {
         if(req.query.days) {
             dayIndex = parseInt(req.query.days);
         }
-        Project.getTrendingProjects(dayIndex, function(err, projects){
+        Project.getTrendingProjects(dayIndex, req.query.tag, req.query.filter, function(err, projects){
             if (err){
                 utils.sendErrResponse(err);
             } else {

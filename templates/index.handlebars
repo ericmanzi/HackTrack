@@ -1,15 +1,18 @@
 <div id="projects" >
-	<div class= "projectFeed">
-		<ul class="projectList"> 
-	{{> navbar}}
-	{{#each projects}}
-		<h3>{{date}}</h3>
+	<div class="projectFeed">
+		{{> navbar}}
+		<ul id="tagSelection">
+			{{#each tags}}
+				<li class="tagSelector" data-tag="{{this}}">{{this}}</li>
+			{{/each}}
+		</ul>
 		{{#each projects}}
-			{{> project}}
-		{{else}}
-			<p><em>No projects posted on this day!</em></p>
+			<h3>{{date}}</h3>
+			{{#each projects}}
+				{{> project}}
+			{{else}}
+				<p><em>No projects posted on this day!</em></p>
+			{{/each}}
 		{{/each}}
-	{{/each}}
-	</ul>
 	</div>
 </div>
