@@ -16,6 +16,7 @@ db.once('open', function (callback) {
 var User = require('../models/user');
 var Project = require('../models/project');
 var Post = require('../models/post');
+var Activity = require('../models/activity');
 
 var testUser;
 var testUserObj = {
@@ -112,9 +113,21 @@ describe('Post', function() {
         });
 
         it('does not accept empty content', function(done) {
-            Post.addDiscussion(testProject.id, testUser.id, '', function(err, post) {
+            Post.addDiscussion(testProject.id, testUser.id, '', function(err, discussionID) {
                 assert.ok(err);
                 done();
+            });
+        });
+
+        it('creates activity', function(done) {
+            Post.addDiscussion(testProject.id, testUser.id, 'creates activity', function(err, discussionID) {
+                assert.ok(!err);
+                Activity.findOne({'post': discussionID}, function(err, activity) {
+                    assert.ok(!err);
+                    assert.ok(activity);
+                    assert.equal(activity.user, testUser.id);
+                    done();
+                });
             });
         });
     });

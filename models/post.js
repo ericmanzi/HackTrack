@@ -8,6 +8,7 @@
 var mongoose = require("mongoose"),
     Schema = mongoose.Schema;
 var async = require("async");
+var Activity = require('./activity.js');
 
 var postSchema = Schema({
     // the author of the post
@@ -53,9 +54,11 @@ postSchema.statics.addDiscussion = function(projectID, userID, content, callback
             }
             return;
         }
-        if(callback) {
-            callback(undefined, discussion.id);
-        }
+        Activity.addActivity(userID, 'post-create', discussion.id, function(err) {
+            if(callback) {
+                callback(err, discussion.id);
+            }
+        });
     });
 };
 
@@ -143,7 +146,9 @@ postSchema.statics.addComment = function(projectID, discussionID, userID, conten
                 if(err) {
                     callback(err, undefined);
                 } else {
-                    callback(undefined, comment.id);
+                    Activity.addActivity(userID, 'post-create', comment.id, function(err) {
+                        callback(err, comment.id);
+                    });
                 }
             }
         });
