@@ -1,0 +1,32 @@
+Peer reviews (MVP)
+Team Hacktrack: George Ezenna, Kairat Ashim, Eric Manzi, Favyen Bastani
+
+Reviewer: Favyen Bastani
+
+George
+------
+
+George designed the overall website theme and wrote initial static templates.
+He implemented the templates effectively, making it straightforward to insert
+dynamic content when server functionality was implemented. Eventually some
+buttons can be improved to look more consistent across the application, but
+the design was good for the MVP.
+
+Kairat
+------
+
+In addition to implementing the project model and associated controller
+functionality, Kairat also committed the initial application code. It was easy
+to understand how the initial code worked, so that we could quickly get started
+on implementing additional functionality. The project model unit tests need to
+be written but it was fine for MVP. Some of the project model code still has
+references to tweets from Fritter project, would be good to improve the
+function specification, but again it was fine for MVP.
+
+Eric
+----
+
+Eric implemented the user model for MVP, and has also been coordinating with
+the rest of the team for deadlines for submitting various documents. He has
+been very on top of things and communicating with team well. The user model
+code for MVP was clean, well-documented, and well-tested.
