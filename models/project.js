@@ -1,4 +1,10 @@
+// Lead author: Kairat Ashim <kairat@mit.edu>
+
 var mongoose = require('mongoose');
+var moment = require('moment');
+var async = require('async');
+
+var TRENDING_INTERVAL = 7;
 
 // Define a schema for a Project. Each project will have a unique ID
 var projectSchema = mongoose.Schema({
@@ -9,7 +15,7 @@ var projectSchema = mongoose.Schema({
 	videoIDs : [String],
 	upvoterUsernames : [String],
 	tags : [String],
-	date : {type : Date, default: Date.now, required : true}
+	date : {type : Date, default: Date.now, required : true, index: true}
 });
 
 
@@ -65,6 +71,35 @@ projectSchema.statics.getAllProjects = function(callback){
 		}
 	})
 }
+
+/**
+	Static method for retrieving trending projects.
+	Returns projects for a TRENDING_INTERVAL-day period, ending at the specified last day.
+	@param {Integer} the index of the last day to retrieve projects for, relative to today
+	@param {function} a callback function(err, projects)
+		projects is a list of objects of the form {date, projects}
+		the nested projects contains projects on that day sorted by upvotes
+*/
+projectSchema.statics.getTrendingProjects = function(dayIndex, callback) {
+	var todayEnd = moment().endOf('day');
+	dateRanges = [];
+	for(var i = 0; i < TRENDING_INTERVAL; i++) {
+		var daysBehind = i + dayIndex;
+		var startDate = moment(todayEnd).subtract(daysBehind + 1, 'days');
+		var endDate = moment(todayEnd).subtract(daysBehind, 'days');
+		dateRanges.push([startDate.toDate(), endDate.toDate()]);
+	}
+	async.map(dateRanges, function(dateRange, callback) {
+		Project.find({date: {$gt: dateRange[0], $lt: dateRange[1]}}, function(err, projects) {
+			if(err) {
+				callback(err, undefined);
+				return;
+			}
+			projects.sort(projectsSortByVotes);
+			callback(undefined, {date: dateRange[0], projects: projects});
+		});
+	}, callback);
+};
 
 /**
 	Static method retrieving a project with a specific id
@@ -132,6 +167,15 @@ var projectsSort = function(t1, t2){
   } else {
     return -1;
   }
+};
+
+/**
+  Helper function for sorting array of projects by upvote count (descending).
+*/
+var projectsSortByVotes = function(a, b){
+	var count1 = a.upvoterUsernames.length;
+	var count2 = b.upvoterUsernames.length;
+	return count2 - count1;
 };
 
 ///////////////////// - END - HELPER FUNCTIONS ////////////////////

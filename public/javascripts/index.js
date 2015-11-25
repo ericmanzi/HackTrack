@@ -13,8 +13,8 @@ var loadPage = function(template, data) {
 
 
 var loadHomePage = function() {
-    $.get('/projects', function(response) {
-        console.log(response.content.projects);
+    $.get('/projects?trending=1', function(response) {
+        //console.log(response.content.projects);
         data.projects = response.content.projects;
         loadPage('index', data);
     });
@@ -39,7 +39,16 @@ var loadProfilePage = function(projectType){
         data.projects = response.content.projects;
         loadPage('profile', data);
     });    
-}
+};
+
+var loadUserPage = function(username) {
+    var reqUrl = '/users/'+username;
+    $.get(reqUrl, function(response) {
+        data.projects = response.content.projects;
+        data.user = username;
+        loadPage('userProfile', data);
+    });
+};
 
 $(document).ready(function() {
      $.get('/users/current', function(response) {
@@ -83,3 +92,4 @@ $(document).on('click', '.home-link', function(event){
     event.preventDefault();
     loadHomePage();
 });
+

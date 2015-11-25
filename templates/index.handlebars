@@ -3,9 +3,12 @@
 		<ul class="projectList"> 
 	{{> navbar}}
 	{{#each projects}}
-		{{> project}}
-	{{else}}
-		<p><em>No projects yet!</em></p>
+		<h3>{{date}}</h3>
+		{{#each projects}}
+			{{> project}}
+		{{else}}
+			<p><em>No projects posted on this day!</em></p>
+		{{/each}}
 	{{/each}}
 	</ul>
 	</div>

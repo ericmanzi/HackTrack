@@ -14,8 +14,11 @@
 			</div>
 			<div class="project-description" id="projectView-description">
 				{{project.description}}
+                <br />
+                by <a href="#" id="view-user" view-user-id={{project.owner}}>{{project.owner}}</a>
 			</div>
-			<a href="#" id="myButton-upvote"><span id="projectView-upvotes">{{project.upvoterUsernames.length}}</span> | Upvote</a>
+
+            <a href="#" id="myButton-upvote"><span id="projectView-upvotes">{{project.upvoterUsernames.length}}</span> | Upvote</a>
             <a href="#" id="favorite-button">Add to favorites</a>
 		</header>
 		<div class="project-body">
@@ -26,14 +29,23 @@
 					{{/each}}
 				</div>
 				<div class="project-discussion">
-					Discussion
+					<div class="project-discussion-title">
+					    Discussion
+				    </div>
 					{{#each discussions}}
 						<div class="project-discussion-post">
-							{{content}}
+							<div class="post-content project-discussion-head">
+							    <span class="post-user">{{username}}</span>
+							    <span class="post-time">at {{time}}</span>
+							</div>
+							<div class="post-content project-discussion-body">
+								{{content}}
+							</div>
 							{{#each comments}}
 								<div class="project-discussion-comment">
-									<div class="post-content discussion-comment-user">
-										{{userID}}
+									<div class="post-content discussion-comment-head">
+							            <span class="post-user">{{username}}</span>
+							            <span class="post-time">at {{time}}</span>
 									</div>
 									<div class="post-content discussion-comment-body">
 										{{content}}
@@ -47,6 +59,8 @@
 								</div>
 							{{/if}}
 						</div>
+					{{else}}
+						No discussions have been opened yet for this project.
 					{{/each}}
 					{{#if user_logged_in}}
 						<div class="project-discussion-add">

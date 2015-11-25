@@ -65,3 +65,12 @@
     background-size: cover;
     background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(https://ph-files.imgix.net/ae094ab9-4542-43e3-8303-83f95d60d846?auto=format&w=1000&h=330);
 }
+
+.project-discussion-title{
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.project-discussion-head, .discussion-comment-head{
+	font-weight: bold;
+}

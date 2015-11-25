@@ -36,9 +36,9 @@
             $('.modal-backdrop').hide();
             loadHomePage();
         }).fail(function(responseObject) {
-            console.log(JSON.stringify(responseObject));
+            //console.log(JSON.stringify(responseObject));
             var response = $.parseJSON(responseObject.responseText);
-            console.log("error signing up:"+response.err);
+            //console.log("error signing up:"+response.err);
             $('.error').text(response.err);
         });
     });
@@ -71,8 +71,6 @@
             $('.error').text(response.err);
         });
     });
-
-
 
 
 
