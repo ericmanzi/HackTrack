@@ -35,7 +35,7 @@
 					{{#each discussions}}
 						<div class="project-discussion-post">
 							<div class="post-content project-discussion-head">
-							    <span class="post-user">{{username}}</span>
+							    <span class="post-user"><a href="#" id="view-user" view-user-id={{username}}>{{username}}</a></span>
 							    <span class="post-time">on {{prettyDate}} at {{prettyTime}}</span>
 							</div>
 							<div class="post-content project-discussion-body">
@@ -44,7 +44,7 @@
 							{{#each comments}}
 								<div class="project-discussion-comment">
 									<div class="post-content discussion-comment-head">
-							            <span class="post-user">{{username}}</span>
+							            <span class="post-user"><a href="#" id="view-user" view-user-id={{username}}>{{username}}</a></span>
 							            <span class="post-time">on {{prettyDate}} at {{prettyTime}}</span>
 									</div>
 									<div class="post-content discussion-comment-body">
