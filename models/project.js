@@ -3,6 +3,8 @@
 var mongoose = require('mongoose');
 var moment = require('moment');
 var async = require('async');
+var Activity = require('./activity.js');
+var common = require('./common.js');
 
 var TRENDING_INTERVAL = 7;
 
@@ -90,7 +92,7 @@ projectSchema.statics.getAllProjects = function(callback){
 		the string filter is case-insensitive
 		if the string filter is empty, it is ignored
 	@param {function} a callback function(err, projects)
-		projects is a list of objects of the form {date, projects}
+		projects is a list of objects of the form {date, prettyDate, projects}
 		the nested projects contains projects on that day sorted by upvotes
 */
 projectSchema.statics.getTrendingProjects = function(dayIndex, tag, strFilter, callback) {
@@ -101,11 +103,11 @@ projectSchema.statics.getTrendingProjects = function(dayIndex, tag, strFilter, c
 		var daysBehind = i + dayIndex;
 		var startDate = moment(todayEnd).subtract(daysBehind + 1, 'days');
 		var endDate = moment(todayEnd).subtract(daysBehind, 'days');
-		dateRanges.push([startDate.toDate(), endDate.toDate()]);
+		dateRanges.push([startDate, endDate]);
 	}
 	async.map(dateRanges, function(dateRange, callback) {
 		// construct query: include date, and also tag if not empty
-		query = {date: {$gt: dateRange[0], $lt: dateRange[1]}};
+		query = {date: {$gt: dateRange[0].toDate(), $lt: dateRange[1].toDate()}};
 		if(tag) {
 			query.tags = tag;
 		}
@@ -123,7 +125,11 @@ projectSchema.statics.getTrendingProjects = function(dayIndex, tag, strFilter, c
 				projects = projects.filter(applyStrFilter);
 			}
 			projects.sort(projectsSortByVotes);
-			callback(undefined, {date: dateRange[0], projects: projects});
+			callback(undefined, {
+				date: dateRange[0],
+				prettyDate: dateRange[0].format(common.DATE_FORMAT),
+				projects: projects,
+			});
 		});
 	}, callback);
 };

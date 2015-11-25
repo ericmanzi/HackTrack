@@ -8,7 +8,9 @@
 var mongoose = require("mongoose"),
     Schema = mongoose.Schema;
 var async = require("async");
+var moment = require('moment');
 var Activity = require('./activity.js');
+var common = require('./common.js');
 
 var postSchema = Schema({
     // the author of the post
@@ -66,7 +68,7 @@ postSchema.statics.addDiscussion = function(projectID, userID, content, callback
 // projectID: the project to fetch discussions for.
 // callback: a function(err, discussions)
 //   discussions is a list of discussion objects
-//   each discussion object is of the form {id, userID, username, time, content, comments: [...]}
+//   each discussion object is of the form {id, userID, username, time, prettyDate, prettyTime, content, comments: [...]}
 //   the comments field is a list of comment objects, each of which is of the form {id, userID, username, time, content}
 postSchema.statics.getDiscussions = function(projectID, callback) {
     Post.
@@ -85,6 +87,8 @@ postSchema.statics.getDiscussions = function(projectID, callback) {
                         userID: discussion.user.id,
                         username: discussion.user.username,
                         time: discussion.time,
+                        prettyDate: moment(discussion.time).format(common.DATE_FORMAT),
+                        prettyTime: moment(discussion.time).format(common.TIME_FORMAT),
                         content: discussion.content,
                         comments: comments,
                     };
@@ -97,7 +101,8 @@ postSchema.statics.getDiscussions = function(projectID, callback) {
 // Gets the comments for a specified discussion.
 // discussionID: the discussion ID.
 // callback: a function(err, comments)
-//   comments is a list of comment objects, each of which is of the form {id, userID, username, time, content}
+//   comments is a list of comment objects,
+//   each of which is of the form {id, userID, username, time, prettyDate, prettyTime, content}
 postSchema.statics.getDiscussionComments = function(discussionID, callback) {
     Post.
         find({'parent': discussionID}).
@@ -114,6 +119,8 @@ postSchema.statics.getDiscussionComments = function(discussionID, callback) {
                     userID: comment.user.id,
                     username: comment.user.username,
                     time: comment.time,
+                    prettyDate: moment(comment.time).format(common.DATE_FORMAT),
+                    prettyTime: moment(comment.time).format(common.TIME_FORMAT),
                     content: comment.content,
                 };
             };
