@@ -14,6 +14,7 @@ var activityTypesDetail = {
 // create maps from activityTypesDetail:
 // 1) types: e.g. POST_CREATE -> 'post-create'
 // 2) typeKeys: e.g. 'post-create' -> 'post'
+//              this is used to set/get the correct object
 var types = {};
 Object.keys(activityTypesDetail).forEach(function(ident) {
 	types[ident] = activityTypesDetail[ident].type;
@@ -76,7 +77,7 @@ activitySchema.statics.getActivities = function(userIDs, count, callback) {
     }
     Activity.
         find({'user': {$in: userIDs}}).
-        sort({time: 1}).
+        sort({time: -1}).
         limit(count).
         populate('user').
         exec(function(err, activities) {
@@ -85,33 +86,19 @@ activitySchema.statics.getActivities = function(userIDs, count, callback) {
                 return;
             }
             async.map(activities, function(activity, callback) {
-                if(activity.type == Activity.Types.POST_CREATE) {
-                    activity.populate('post', function(err, activity) {
-                        if(err) {
-                            callback(err);
-                            return;
-                        }
-                        callback(undefined, {
-                            user: activity.user,
-                            type: activity.type,
-                            obj: activity.post,
-                            time: activity.time,
-                        });
+                var typeKey = typeKeys[activity.type];
+                activity.populate(typeKey, function(err, activity) {
+                    if(err) {
+                        callback(err);
+                        return;
+                    }
+                    callback(undefined, {
+                        user: activity.user,
+                        type: activity.type,
+                        obj: activity[typeKey],
+                        time: activity.time,
                     });
-                } else if(activity.type == Activity.Types.POST_CREATE) {
-                    activity.populate('project', function(err, activity) {
-                        if(err) {
-                            callback(err);
-                            return;
-                        }
-                        callback(undefined, {
-                            user: activity.user,
-                            type: activity.type,
-                            obj: activity.project,
-                            time: activity.time,
-                        });
-                    });
-                }
+                });
             }, callback);
         });
 };
