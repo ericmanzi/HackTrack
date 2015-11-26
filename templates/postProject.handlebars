@@ -1,24 +1,29 @@
 {{> navbar}}
 <div class="error"></div>
-<form class="pure-form pure-form-aligned" id="post-project">
-    <fieldset>
-        <div class="pure-control-group">
-            <label for="name">Title</label>
-            <input id="project-post-title" type="text" placeholder="Title">
-        </div>
-
-        <div class="pure-control-group">
-            <label for="foo">Description</label>
-            <textarea id="project-post-description" placeholder="Enter description of a project..."></textarea>
-        </div>
-
-        <div class="pure-control-group">
-            <label for="foo">Image Links</label>
-            <textarea id="project-post-image-links" placeholder="Enter image links separated by commas..."></textarea>
-        </div>
-
-        <div class="pure-controls">
-            <button type="submit" class="pure-button pure-button-primary">Submit</button>
-        </div>
-    </fieldset>
+<form id="post-project">
+  <fieldset class="form-group">
+    <label for="projectTitle">Project Title *</label>
+    <input type="text" class="form-control" id="project-post-title" placeholder="Enter project title..." maxlength="100" required>
+  </fieldset>
+  <fieldset class="form-group">
+    <label for="projectDescription">Project Description *</label>
+    <textarea class="form-control" id="project-post-description" rows="3" placeholder="Enter project description..." required></textarea>
+  </fieldset>
+  <fieldset class="form-group">
+    <label for="projectTags">Project Tags</label>
+    <input type="text" data-role="tagsinput" value="Amsterdam,Washington,Sydney,Beijing,Cairo" class="form-control" id="project-post-tags" placeholder="Enter project tags..."/>
+    <small class="text-muted">Click enter after entering each tag</small>
+  </fieldset>
+  <fieldset class="form-group">
+    <div class="image_input_fields_wrap">
+      <label for="projectImageLinks">Project Image Links</label>
+      <small class="text-muted">(Enter one link per input field, max 5 images)</small>
+      <div><input type="text" class="form-control project-post-image-links" placeholder="Enter project image link..."></div>
+      <button type="button" class="btn btn-success btn-sm add_imagelink_field_button">Add more images</button>
+    </div>
+  </fieldset>
+  <hr />
+  <button type="button" class="btn btn-primary" id="submit-project-post">Submit</button>
+  <button type="button" class="btn btn-danger" id="cancel-project-post">Cancel</button>
 </form>
+
