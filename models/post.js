@@ -56,7 +56,7 @@ postSchema.statics.addDiscussion = function(projectID, userID, content, callback
             }
             return;
         }
-        Activity.addActivity(userID, 'post-create', discussion.id, function(err) {
+        Activity.addActivity(userID, Activity.Types.POST_CREATE, discussion.id, function(err) {
             if(callback) {
                 callback(err, discussion.id);
             }
@@ -153,7 +153,7 @@ postSchema.statics.addComment = function(projectID, discussionID, userID, conten
                 if(err) {
                     callback(err, undefined);
                 } else {
-                    Activity.addActivity(userID, 'post-create', comment.id, function(err) {
+                    Activity.addActivity(userID, Activity.Types.POST_CREATE, comment.id, function(err) {
                         callback(err, comment.id);
                     });
                 }

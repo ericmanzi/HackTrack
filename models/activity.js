@@ -7,13 +7,29 @@ var mongoose = require("mongoose"),
     Schema = mongoose.Schema;
 var async = require("async");
 
+var activityTypesDetail = {
+	POST_CREATE: {type: 'post-create', key: 'post'},
+	PROJECT_CREATE: {type: 'project-create', key: 'project'},
+};
+// create maps from activityTypesDetail:
+// 1) types: e.g. POST_CREATE -> 'post-create'
+// 2) typeKeys: e.g. 'post-create' -> 'post'
+var types = {};
+Object.keys(activityTypesDetail).forEach(function(ident) {
+	types[ident] = activityTypesDetail[ident].type;
+});
+var typeKeys = {};
+Object.keys(activityTypesDetail).forEach(function(ident) {
+	typeKeys[activityTypesDetail[ident].type] = activityTypesDetail[ident].key;
+});
+
 var activitySchema = Schema({
     // the user who performed this activity
     user: {type: Schema.Types.ObjectId, ref: 'User', index: true},
 
     // type of this activity (one of post-create, project-create)
     type: {type: String, enum: {
-        values: ['post-create', 'project-create'],
+        values: Object.keys(types).map(function(type){ return types[type]; }),
         message: 'invalid activity type (`{VALUE}`)'
     }},
 
@@ -33,18 +49,15 @@ var activitySchema = Schema({
 // ref: the referenced model's ID
 // callback: callback of the form function(err, activityID)
 activitySchema.statics.addActivity = function(userID, type, ref, callback) {
+    if(!(type in typeKeys)) {
+        callback(new Error('invalid activity type: ' + type));
+        return;
+    }
     var activity = new Activity({
         user: userID,
         type: type,
     });
-    if(type == 'post-create') {
-        activity.post = ref;
-    } else if(type == 'project-create') {
-        activity.project = ref;
-    } else {
-        callback(new Error('invalid activity type: ' + type));
-        return;
-    }
+    activity[typeKeys[type]] = ref;
     activity.save(function(err) {
         callback(err, activity.id);
     });
@@ -72,7 +85,7 @@ activitySchema.statics.getActivities = function(userIDs, count, callback) {
                 return;
             }
             async.map(activities, function(activity, callback) {
-                if(activity.type == 'post-create') {
+                if(activity.type == Activity.Types.POST_CREATE) {
                     activity.populate('post', function(err, activity) {
                         if(err) {
                             callback(err);
@@ -85,7 +98,7 @@ activitySchema.statics.getActivities = function(userIDs, count, callback) {
                             time: activity.time,
                         });
                     });
-                } else if(activity.type == 'project-create') {
+                } else if(activity.type == Activity.Types.POST_CREATE) {
                     activity.populate('project', function(err, activity) {
                         if(err) {
                             callback(err);
@@ -104,5 +117,5 @@ activitySchema.statics.getActivities = function(userIDs, count, callback) {
 };
 
 var Activity = mongoose.model('Activity', activitySchema);
-
+Activity.Types = types;
 module.exports = Activity;

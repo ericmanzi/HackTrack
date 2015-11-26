@@ -76,7 +76,7 @@ describe('Activity', function() {
         });
 
         it('should add the activity', function(done) {
-            Activity.addActivity(testUser.id, 'post-create', testPostID, function(err, activityID) {
+            Activity.addActivity(testUser.id, Activity.Types.POST_CREATE, testPostID, function(err, activityID) {
                 assert.ok(!err);
                 Activity.findOne({'_id': activityID}, function(err, activity) {
                     assert.ok(!err);
@@ -94,7 +94,7 @@ describe('Activity', function() {
         });
 
         it('fails on invalid object id', function(done) {
-            Activity.addActivity(testUser.id, 'post-create', 'invalid object id', function(err, activityID) {
+            Activity.addActivity(testUser.id, Activity.Types.POST_CREATE, 'invalid object id', function(err, activityID) {
                 assert.ok(err);
                 done();
             });
@@ -107,7 +107,7 @@ describe('Activity', function() {
         });
 
         it('create post activity returned with post', function(done) {
-            Activity.addActivity(testUser.id, 'post-create', testPostID, function(err, activityID) {
+            Activity.addActivity(testUser.id, Activity.Types.POST_CREATE, testPostID, function(err, activityID) {
                 assert.ok(!err);
                 Activity.getActivities(testUser.id, 100, function(err, activities) {
                     assert.ok(!err);
