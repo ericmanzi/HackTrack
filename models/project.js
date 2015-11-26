@@ -36,15 +36,24 @@ projectSchema.statics.createNewProject = function(projectJSONobject, callback){
 		});
 	}
 
-	// add project to database
-	var newProject = new Project(projectJSONobject);
-	newProject.save(function(error, project){
-		if (error){
-			callback(error);
-		} else {
-			callback(null);
+	// get user ID
+	require('./user.js').findByUsername(projectJSONobject.owner, function(err, user) {
+		if(err) {
+			callback(err);
+			return;
 		}
+		// add project to database
+		var newProject = new Project(projectJSONobject);
+		newProject.save(function(error, project){
+			if (error){
+				callback(error);
+			} else {
+				// create an activity for this add project event
+				Activity.addActivity(user.id, Activity.Types.PROJECT_CREATE, project, callback);
+			}
+		});
 	});
+
 }
 
 /**
