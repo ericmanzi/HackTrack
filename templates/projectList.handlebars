@@ -1,0 +1,8 @@
+{{#each projects}}
+	<h3>{{prettyDate}}</h3>
+	{{#each projects}}
+		{{> project}}
+	{{else}}
+		<p><em>No projects posted on this day!</em></p>
+	{{/each}}
+{{/each}}

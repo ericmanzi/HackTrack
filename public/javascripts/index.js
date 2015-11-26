@@ -13,6 +13,14 @@ var loadPage = function(template, data) {
 
 
 var loadHomePage = function(tag, filter) {
+    $.get('/tags', function(response) {
+        data.tags = response.content;
+        loadPage('index', data);
+        updateHomePage(tag, filter);
+    });
+};
+
+var updateHomePage = function(tag, filter) {
     var target = '/projects?trending=1';
     if(tag) {
         target += '&tag=' + encodeURIComponent(tag);
@@ -21,11 +29,8 @@ var loadHomePage = function(tag, filter) {
         target += '&filter=' + encodeURIComponent(filter);
     }
     $.get(target, function(response) {
-        data.projects = response.content.projects;
-        $.get('/tags', function(response) {
-            data.tags = response.content;
-            loadPage('index', data);
-        });
+        var data = {projects: response.content.projects};
+        $('#projectList').html(Handlebars.templates['projectList'](data));
     });
 };
 

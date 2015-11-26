@@ -6,13 +6,9 @@
 				<li class="tagSelector" data-tag="{{this}}">{{this}}</li>
 			{{/each}}
 		</ul>
-		{{#each projects}}
-			<h3>{{prettyDate}}</h3>
-			{{#each projects}}
-				{{> project}}
-			{{else}}
-				<p><em>No projects posted on this day!</em></p>
-			{{/each}}
-		{{/each}}
+		<div id="searchContainer">
+			<input type="text" id="searchInput" />
+		</div>
+		<div id="projectList"></div>
 	</div>
 </div>
