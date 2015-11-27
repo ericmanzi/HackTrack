@@ -1,0 +1,46 @@
+{{> navbar}}
+<form id="edit-project" data-project-edit-id={{project._id}}>
+    <h1 class="project-edit-label-h1">Edit Project</h1>
+  <div class="alert alert-danger" id="edit-project-error" style="display:none;"></div>
+  <fieldset class="form-group">
+    <label for="projectTitle">Edit Project Title</label>
+    <input type="text" class="form-control" id="project-edit-title" maxlength="100" value={{project.title}} required>
+  </fieldset>
+  <fieldset class="form-group">
+    <label for="projectDescription">Edit Project Description *</label>
+    <textarea class="form-control" id="project-edit-description" rows="3" required>{{project.description}}</textarea>
+  </fieldset>
+  <fieldset class="form-group">
+    <label for="projectVideoLink">Edit Project Video Link </label>
+    <small class="text-muted">(Only one YouTube video link)</small>
+    {{#if project.videoID}}
+      <input type="text" class="form-control" id="project-edit-videoLink" value="https://www.youtube.com/watch?v={{project.videoID}}" required>
+    {{else}}
+      <input type="text" class="form-control" id="project-edit-videoLink" placeholder="Enter project video link..." required>
+    {{/if}}
+  </fieldset>
+  <fieldset class="form-group">
+    <label for="projectTags">Edit Project Tags</label>
+    <small class="text-muted">(Click enter after entering each tag)</small>
+    <ul id="project-edit-tags" class="form-control"></ul>
+  </fieldset>
+  <fieldset class="form-group">
+    <div class="image_input_fields_wrap">
+      <label for="projectImageLinks">Edit Project Image Links</label>
+      <small class="text-muted">(Enter one link per input field, max 5 images)</small>
+      {{#if project.imageLinks.[0]}}
+        {{#each project.imageLinks}}
+          <div><input type="text" class="form-control project-edit-image-links" value={{this}}>
+          <button class="btn btn-warning btn-sm remove_imagelink_field">Remove</button></div>
+        {{/each}}
+      {{else}}
+        <div><input type="text" class="form-control project-edit-image-links" placeholder="Enter project image link...">
+        <button class="btn btn-warning btn-sm remove_imagelink_field">Remove</button></div>
+      {{/if}}
+      <button type="button" class="btn btn-success btn-sm add_imagelinkEdit_field_button">Add more images</button>
+    </div>
+  </fieldset>
+  <hr />
+  <button type="button" class="btn btn-primary" id="submit-project-edit">Submit</button>
+  <button type="button" class="btn btn-danger" id="cancel-project-edit">Cancel</button>
+</form>

@@ -66,7 +66,7 @@ router.post('/', function(req, res) {
             owner: req.currentUser.username,
             imageLinks: imageLinksList,
             upvoterUsernames: [],
-            videoIDs : [videoID],
+            videoID : videoID,
             tags: tagsList,
             date: new Date()
         };
@@ -111,6 +111,43 @@ router.get('/:projID', function(req, res) {
             });
         }
     });
+});
+
+/*
+ POST /projects/edit/:projID
+ Request body:
+ - content: projectID
+ Response:
+ - success: true if the server succeeded in updating a project
+ - err: on failure, an error message
+ */
+router.post('/:projID/edit', function(req, res) {
+    if (!req.currentUser) { // Require authentication to use this feature
+        utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
+    } else {
+        var imageLinksList = req.body.imageLinks.split(/\s*,\s*/);
+        var tagsList = req.body.tags.split(/\s*,\s*/);
+        var videoID = getYouTubeID(req.body.videoLink);
+        var projectJSON = {
+            title: req.body.title,
+            description: req.body.description,
+            imageLinks: imageLinksList,
+            videoID : videoID,
+            tags: tagsList,
+        };
+
+        Project.updateProject(projectJSON, req.params.projID, req.currentUser.username, function(err){
+            if (err){
+                if (err.projectNotFound){
+                    utils.sendErrResponse(res, 404, 'Project not found.');
+                } else {
+                    utils.sendErrResponse(res, 500, 'An unknown error occurred.');
+                }
+            } else {
+                utils.sendSuccessResponse(res);
+            }
+        })
+    }
 });
 
 /*

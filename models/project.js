@@ -14,7 +14,7 @@ var projectSchema = mongoose.Schema({
 	description : {type: String, required : true},
 	owner : {type: String, required : true},
 	imageLinks : [String],
-	videoIDs : [String],
+	videoID : {type: String},
 	upvoterUsernames : [String],
 	tags : [String],
 	date : {type : Date, default: Date.now, required : true, index: true}
@@ -53,7 +53,47 @@ projectSchema.statics.createNewProject = function(projectJSONobject, callback){
 			}
 		});
 	});
+}
 
+/**
+	Static method for updating existing Project document
+	@param {object} project object
+	@param {function} a callback function
+*/
+projectSchema.statics.updateProject = function(projectJSONobject, projectID, editorUsername, callback){
+	// make tags lowercase
+	if(projectJSONobject.tags) {
+		projectJSONobject.tags = projectJSONobject.tags.map(function(str) {
+			return str.toLowerCase();
+		});
+	}
+
+	this.findOne({_id : projectID}, function(error, foundProject){
+		if (error){
+			callback(error);
+		} else {
+			if (foundProject && foundProject.owner === editorUsername){
+				foundProject.title = projectJSONobject.title;
+				foundProject.description = projectJSONobject.description;
+				console.log(projectJSONobject.imageLinks);
+				foundProject.imageLinks = projectJSONobject.imageLinks;
+				console.log(foundProject.imageLinks);
+				foundProject.videoID = projectJSONobject.videoID;
+				foundProject.tags = projectJSONobject.tags;
+				// TODO: create an activity for this edit/update project event
+				//  Activity.addActivity(user.id, Activity.Types.PROJECT_EDIT, project, callback); ????
+				foundProject.save(function(error){
+					if (error){
+						callback(error);
+					} else {
+						callback(null);
+					}
+				});
+			} else {
+				callback({projectNotFound : true})
+			}
+		}
+	});
 }
 
 /**
