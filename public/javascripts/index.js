@@ -87,7 +87,7 @@ $(document).on('click', '.project-link', function(evt) {
     loadProjectPage(id);
 });
 
-$(document).on('click', '.post-project', function(event){
+$(document).on('click', '#post-project-link', function(event){
     event.preventDefault();
     loadPostProjectPage();
 });

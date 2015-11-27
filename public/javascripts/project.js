@@ -6,13 +6,29 @@
     ////////////// START: listeners for posting a new project /////////////////////
     $(document).on('click', '#submit-project-post', function(evt) {
         evt.preventDefault();
+        var errorDiv = $("#post-project-error");
         var title = $('#project-post-title').val();
+        if (title === ""){
+            errorDiv.html('Title cannot be empty.');
+            errorDiv.show(300);
+            return;
+        }
         var description = $('#project-post-description').val();
+        if (description === ""){
+            errorDiv.html('Description cannot be empty.');
+            errorDiv.show(300);
+            return;
+        }
         var tags = $("#project-post-tags").tagit("assignedTags");
         var imageLinks = $('.project-post-image-links').map(function(){
             return $(this).val();
         }).get();
         var videoLink = $('#project-post-videoLink').val();
+        if (videoLink !== "" && videoLink.search('youtu') === -1){
+            errorDiv.html('Only YouTube videos are allowed.');
+            errorDiv.show(300);
+            return;
+        }
         tags = tags.join(',');
         imageLinks = imageLinks.join(",");
         $.post(
@@ -27,7 +43,8 @@
             loadHomePage();
         }).fail(function(responseObject) {
             var response = $.parseJSON(responseObject.responseText);
-            $('.error').text(response.err);
+            $("#post-project-error").html(response.err);
+            $("#post-project-error").show(300);
         });
     });
 
