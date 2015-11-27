@@ -125,8 +125,14 @@ router.post('/:projID/edit', function(req, res) {
     if (!req.currentUser) { // Require authentication to use this feature
         utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
     } else {
-        var imageLinksList = req.body.imageLinks.split(/\s*,\s*/);
-        var tagsList = req.body.tags.split(/\s*,\s*/);
+        var imageLinksList = [];
+        if (req.body.imageLinks !== ""){
+            imageLinksList = req.body.imageLinks.split(/\s*,\s*/);
+        }
+        var tagsList = [];
+        if (req.body.tags !== ""){
+            tagsList = re.body.tags.split(/\s*,\s*/);
+        }
         var videoID = getYouTubeID(req.body.videoLink);
         var projectJSON = {
             title: req.body.title,

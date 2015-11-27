@@ -22,9 +22,15 @@
             return;
         }
         var tags = $("#project-post-tags").tagit("assignedTags");
-        var imageLinks = $('.project-post-image-links').map(function(){
+
+        var imageLinksArray = $('.project-post-image-links').map(function(){
             return $(this).val();
         }).get();
+
+        var imageLinks = $.grep(imageLinksArray, function(n, i){
+            return n !== "";
+        })
+
         var videoLink = $('#project-post-videoLink').val();
         if ((videoLink !== "" && videoLink.search('youtu') === -1) || (videoLink.search(',') !== -1)){
             errorDiv.hide();
@@ -101,9 +107,13 @@
 
         var tags = $("#project-edit-tags").tagit("assignedTags");
 
-        var imageLinks = $('.project-edit-image-links').map(function(){
+        var imageLinksArray = $('.project-edit-image-links').map(function(){
             return $(this).val();
         }).get();
+
+        var imageLinks = $.grep(imageLinksArray, function(n, i){
+            return n !== "";
+        })
 
         var videoLink = $('#project-edit-videoLink').val();
         if ((videoLink !== "" && videoLink.search('youtu') === -1) || (videoLink.search(',') !== -1)){
@@ -115,7 +125,7 @@
 
         tags = tags.join(',');
         imageLinks = imageLinks.join(",");
-        
+
         $.post(
             '/projects/'+projectID + '/edit',
             {   

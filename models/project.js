@@ -75,9 +75,7 @@ projectSchema.statics.updateProject = function(projectJSONobject, projectID, edi
 			if (foundProject && foundProject.owner === editorUsername){
 				foundProject.title = projectJSONobject.title;
 				foundProject.description = projectJSONobject.description;
-				console.log(projectJSONobject.imageLinks);
 				foundProject.imageLinks = projectJSONobject.imageLinks;
-				console.log(foundProject.imageLinks);
 				foundProject.videoID = projectJSONobject.videoID;
 				foundProject.tags = projectJSONobject.tags;
 				// TODO: create an activity for this edit/update project event
