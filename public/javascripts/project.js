@@ -8,14 +8,20 @@
         evt.preventDefault();
         var title = $('#project-post-title').val();
         var description = $('#project-post-description').val();
-        var tags = $("input").tagsinput('items');
-        console.log(tags);
-        var imageLinks = $('#project-post-image-links').val();
+        var tags = $("#project-post-tags").tagit("assignedTags");
+        var imageLinks = $('.project-post-image-links').map(function(){
+            return $(this).val();
+        }).get();
+        var videoLink = $('#project-post-videoLink').val();
+        tags = tags.join(',');
+        imageLinks = imageLinks.join(",");
         $.post(
             '/projects',
-            { title: title,
+            {   title: title,
                 description : description,
-                imageLinks : imageLinks
+                imageLinks : imageLinks,
+                tags : tags,
+                videoLink : videoLink
             }
         ).done(function(response) {
             loadHomePage();
@@ -23,6 +29,11 @@
             var response = $.parseJSON(responseObject.responseText);
             $('.error').text(response.err);
         });
+    });
+
+    $(document).on('click', '#cancel-project-post', function(event){
+        event.preventDefault();
+        loadHomePage();
     });
 
     var max_image_links = 5;

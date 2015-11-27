@@ -9,6 +9,11 @@ var loadPage = function(template, data) {
     data.user_logged_in = currentUser!==null;
     data.username = currentUser;
     $('#main-container').html(Handlebars.templates[template](data));
+    if (template === 'postProject'){
+        $("#project-post-tags").tagit({
+          placeholderText : " Enter project tag..."
+        });
+    }
 };
 
 

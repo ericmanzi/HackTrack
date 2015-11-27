@@ -6,6 +6,7 @@ var utils = require('../utils/utils');
 
 var Project = require('../models/project');
 var Post = require('../models/post');
+var getYouTubeID = require('get-youtube-id');
 
 /*
  GET /projects
@@ -57,13 +58,16 @@ router.post('/', function(req, res) {
         utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
     } else {
         var imageLinksList = req.body.imageLinks.split(/\s*,\s*/);
+        var tagsList = req.body.tags.split(/\s*,\s*/);
+        var videoID = getYouTubeID(req.body.videoLink);
         var projectJSON = {
             title: req.body.title,
             description: req.body.description,
             owner: req.currentUser.username,
             imageLinks: imageLinksList,
-            upvoterIDs: [],
-            tags: [],
+            upvoterUsernames: [],
+            videoIDs : [videoID],
+            tags: tagsList,
             date: new Date()
         };
         Project.createNewProject(projectJSON, function (err) {
