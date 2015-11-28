@@ -1,66 +1,66 @@
 /* Lead author: George Ezenna <ezennag@mit.edu> */
 
 html{
-  font-family: 'proxima-nova', 'Proxima Nova', sans-serif;
-  }
+    font-family: 'proxima-nova', 'Proxima Nova', sans-serif;
+}
 body{
-  width: 95%;
-  margin:auto;
+    width: 95%;
+    margin:auto;
 }
 header{
-  display:block;
+    display:block;
 }
 .navBar{
-  
+
 }
 .pageTitle{
-  margin:0 auto;
-  width:300px;
+    margin:0 auto;
+    width:300px;
 }
 .mainImg{
-  margin:0 auto;
-  height:75px;
-  min-width:350px;
-  background-color:#f7f7fa;
-  border-bottom:1px solid #e4e2e2; 
+    margin:0 auto;
+    height:75px;
+    min-width:350px;
+    background-color:#f7f7fa;
+    border-bottom:1px solid #e4e2e2;
 }
 ul.projectList{
-  list-style-type: none;
+    list-style-type: none;
 }
 .projectContent{
-  margin:2px 10px;
-  display:inline-block;
-  vertical-align: middle;
+    margin:2px 10px;
+    display:inline-block;
+    vertical-align: middle;
 }
 .project{
-  width:100%;
+    width:100%;
 }
 
 /* for profile page */
 .profileHeader{
-  display:block;
-  height:223px;
-  background: #534540;
+    display:block;
+    height:223px;
+    background: #534540;
     color: white;
 
 }
 
 .page-main{
-  margin:0;
-  padding:0;
-  min-width:100%;
+    margin:0;
+    padding:0;
+    min-width:100%;
 }
 
 .profileContainer{
-  padding:30px 10px 0;
-  box-sizing:border-box;
-  margin:0 auto;
-  max-width:960px;
-  min-width:350px;
-  position:relative;
+    padding:30px 10px 0;
+    box-sizing:border-box;
+    margin:0 auto;
+    max-width:960px;
+    min-width:350px;
+    position:relative;
 }
 .profileAvatar{
-  float: left;
+    float: left;
     position: relative;
     margin-bottom: 30px;
     margin-right: 20px;
@@ -69,14 +69,14 @@ ul.projectList{
     height: 110px;
 }
 .userImage{
-  display:inline-block;
-  position:relative;
+    display:inline-block;
+    position:relative;
 }
 .userImage img{
-  border-radius: 50%;
+    border-radius: 50%;
 }
 .profileInfoTitle{
-  font-size: 30px;
+    font-size: 30px;
     font-weight: 600;
     line-height: 36px;
     margin-bottom: 3px;
@@ -84,7 +84,7 @@ ul.projectList{
     max-width: 600px;
 }
 .profileNavigation{
-  clear: both;
+    clear: both;
     background: rgba(255,255,255,0.2);
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
@@ -94,13 +94,13 @@ ul.projectList{
     width: 100%;
 }
 .profileNavigation ul{
-  list-style: none;
+    list-style: none;
     padding: 0px;
     margin: 0px;
     display: table-row;
 }
 ul{
-  display: block;
+    display: block;
     -webkit-margin-before: 1em;
     -webkit-margin-after: 1em;
     -webkit-margin-start: 0px;
@@ -108,108 +108,108 @@ ul{
     -webkit-padding-start: 40px;
 }
 li{
-      display: list-item;
+    display: list-item;
 }
 .profile-navigation-tab{
-  text-align: center;
+    text-align: center;
     display: table-cell;
 }
 .profile-navigation-tab a{
-  display: block;
+    display: block;
     padding: 6px 0px;
     color: #C4BFBD;
 }
 a{
-  text-decoration: none;
-  background-color: transparent;
+    text-decoration: none;
+    background-color: transparent;
 }
 /*For Project Page*/
 .project-container{
-  display:flex;
+    display:flex;
 }
 .project-navigation{
-  flex:1;
-  height:100vmax;
-  border-right: 1px solid #e4e2e2;
+    flex:1;
+    height:100vmax;
+    border-right: 1px solid #e4e2e2;
 }
 .project-content{
-  width: 1120px;
-  height:100%;
+    width: 1120px;
+    height:100%;
 }
 
 .project-header{
-  min-height: 250px;
-  background-position: center;
+    min-height: 250px;
+    background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
 
 }
 .project-post-title{
-  text-align: center;
-  padding-top: 75px;
-  vertical-align: middle;
-  font-size: 40px;
+    text-align: center;
+    padding-top: 75px;
+    vertical-align: middle;
+    font-size: 40px;
 }
 .project-post-description{
-  text-align: center;
-  padding-top: 5px;
-  vertical-align: middle;
-  font-size: 20px;
+    text-align: center;
+    padding-top: 5px;
+    vertical-align: middle;
+    font-size: 20px;
 }
 .project-body{
-  display:flex;
-  height:100vmax;
+    display:flex;
+    height:100vmax;
 }
 .project-body-left{
-  width:900px;
-  border-right: 1px solid #e4e2e2;
+    width:900px;
+    border-right: 1px solid #e4e2e2;
 }
 .project-body-right{
-  flex:1;
-  height:100%;
+    flex:1;
+    height:100%;
 }
 .project-media{
-  min-height:150px;
-  border-bottom: 1px solid #e4e2e2;
+    min-height:150px;
+    border-bottom: 1px solid #e4e2e2;
 }
 .project-discussion-post{
-  margin-top: 5px;
-  margin-left: 2px;
+    margin-top: 5px;
+    margin-left: 2px;
 }
 .project-discussion-comment{
-  margin:10px 0px 10px 10px;
+    margin:10px 0px 10px 10px;
 }
 .post-content{
-  display:inline-block;
+    display:inline-block;
 }
 
 .error {
-  color: red;
-  margin-bottom: 10px;
+    color: red;
+    margin-bottom: 10px;
 }
 
 #post-project-link {
-  display: block;
-  width: 115px;
-  height: 55px;
-  background: #4E9CAF;
-  padding: 10px;
-  text-align: center;
-  border-radius: 5px;
-  color: white;
-  font-weight: bold;
+    display: block;
+    width: 115px;
+    height: 55px;
+    background: #4E9CAF;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
 }
 
 #project-owner {
-  font-size: 20px;
+    font-size: 20px;
 }
 
 #project-title {
-  font-size: 30px;
+    font-size: 30px;
 }
 
 #project-content {
-  font-size: 20px;
+    font-size: 20px;
 }
 
 .projectMain{
@@ -220,14 +220,19 @@ a{
 }
 
 #owner-label {
-  color: red;
-  font-size: 22px;
+    color: red;
+    font-size: 22px;
 }
 
 #description-label {
-  color: blue;
+    color: blue;
 }
 
 #title-label {
-  color: blue;
+    color: blue;
+}
+
+.terms {
+    height: 350px;
+    overflow: scroll;
 }

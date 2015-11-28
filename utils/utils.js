@@ -5,6 +5,8 @@
 var utils = (function () {
     var _utils = {};
 
+    _utils.STATUS_CODE_BAD_REQUEST = 400;
+    _utils.STATUS_CODE_FORBIDDEN = 403;
     /*
      Send a 200 OK with success:true in the request body to the
      response argument provided.

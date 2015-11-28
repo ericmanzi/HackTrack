@@ -17,12 +17,10 @@ var userSchema = mongoose.Schema({
     username: {type: String, unique: true},
     email: {type: String, unique: true}, // restrict email to a single user
     password: {type: String},
-    favorites: Array
-    //favorites: [{ type: Schema.ObjectId, ref: 'Project' }]
-    //following: Array,
-    //first_name: String,
-    //last_name: String,
-    //profile_pic_path: String
+    favorites: Array,
+    verified: {type: Boolean, default: false},
+    following: Array,
+    profile_pic_path: String
 });
 
 // This middleware automatically hashes the password before it is saved to the database

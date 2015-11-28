@@ -20,6 +20,20 @@
         });
     });
 
+    $(document).on('click', '#agree', function(evt) {
+        if (!($(this).is(':checked'))) {
+            $('#signup-btn').attr('disabled', 'disabled');
+        } else {
+            $('#signup-btn').removeAttr('disabled');
+        }
+    });
+
+    $(document).on('click', '#terms-link', function(evt) {
+        $('#terms-nav-tab').addClass("active");
+        $('#register-nav-tab').removeClass("active");
+    });
+
+
     $(document).on('submit', '#register-form', function(evt) {
         evt.preventDefault();
         var formData = helpers.getFormData(this);
@@ -34,7 +48,8 @@
         ).done(function(response) {
             $('#register').hide();
             $('.modal-backdrop').hide();
-            loadHomePage();
+            //loadHomePage();
+            $('#emailSent').modal();
         }).fail(function(responseObject) {
             //console.log(JSON.stringify(responseObject));
             var response = $.parseJSON(responseObject.responseText);

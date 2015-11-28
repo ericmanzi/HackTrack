@@ -7,8 +7,17 @@ var router = express.Router();
 var User = require('../models/user');
 var utils = require('../utils/utils');
 
-var STATUS_CODE_BAD_REQUEST = 400;
-var STATUS_CODE_FORBIDDEN = 403;
+var nodemailer = require('nodemailer');
+var smtpTransport = require('nodemailer-smtp-transport');
+
+
+var transport = nodemailer.createTransport((smtpTransport({
+    service: "gmail",
+    auth: {
+        user: "hacktrack.mit@gmail.com",
+        pass: "iamhacktrack"
+    }
+})));
 
 /*
  For both login and create user, we want to send an error code if the user
@@ -18,10 +27,10 @@ var STATUS_CODE_FORBIDDEN = 403;
  */
 var isLoggedInOrInvalidBody = function(req, res) {
     if (req.currentUser) {
-        utils.sendErrResponse(res, STATUS_CODE_FORBIDDEN, 'There is already a user logged in.');
+        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'There is already a user logged in.');
         return true;
     } else if (!(req.body.username && req.body.password)) {
-        utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, 'Username or password not provided.');
+        utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Username or password not provided.');
         return true;
     }
     return false;
@@ -55,11 +64,11 @@ router.post('/login', function(req, res) {
                     req.session.username = req.body.username;
                     utils.sendSuccessResponse(res, { user: req.body.username });
                 } else {
-                    utils.sendErrResponse(res, STATUS_CODE_FORBIDDEN, 'Invalid password.');
+                    utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'Invalid password.');
                 }
             });
         } else {
-            utils.sendErrResponse(res, STATUS_CODE_FORBIDDEN, err.msg);
+            utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, err.msg);
         }
     });
 
@@ -78,7 +87,7 @@ router.post('/logout', function(req, res) {
         req.session.destroy();
         utils.sendSuccessResponse(res);
     } else {
-        utils.sendErrResponse(res, STATUS_CODE_FORBIDDEN, 'There is no user currently logged in.');
+        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'There is no user currently logged in.');
     }
 });
 
@@ -108,7 +117,10 @@ router.post('/', function(req, res) {
         username: req.body.username,
         email: req.body.email,
         password: req.body.password,
-        favorites: []
+        favorites: [],
+        verified: false,
+        following: [],
+        profile_pic_path: ""
     };
 
     User.findByUsername(req.body.username, function(err, user) {
@@ -120,17 +132,79 @@ router.post('/', function(req, res) {
                     if (err.errors.email) errorMsg+=err.errors.email.message+". ";
                     if (err.errors.password) errorMsg+=err.errors.password.message+".";
 
-                    utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, errorMsg);
+                    utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, errorMsg);
                 } else {
                     utils.sendSuccessResponse(res, req.body.username);
+
+                    /*-----------------START Send verification email--------------------*/
+                    var mailOptions={
+                        from: "MIT Hacktrack \<hacktrack.mit@gmail.com\>",
+                        to : req.body.email,
+                        subject : "Verify your account with MIT HackTrack",
+                        text: "Thanks for signing up to use MIT HackTrack! \r\n"+
+                        "Please go to the link below to activate your account:\r\n"+
+                        "hacktrack-mit.herokuapp.com/users/something...\r\n"+
+                        "The MIT Hacktrack team\r\n"+"hacktrack-mit.herokuapp.com",
+                        html : "Thanks for signing up to use MIT HackTrack!<br/>"+
+                        "Please click the link below to activate your account: <br/>"+
+                        "<a href='http://localhost:3000/users/activate?username="+user.username+
+                        "&key="+user.password+"'>Verify your account</a>"+
+                        "<br/><br/>The MIT Hacktrack team<br/>"+
+                        "<a href='hacktrack-mit.herokuapp.com'>hacktrack-mit.herokuapp.com</a>" //TODO: back to heroku
+                    };
+                    transport.sendMail(mailOptions, function(error, info){
+                        if(error){
+                            console.log(error);
+                        } else {
+                            console.log('Message sent: ' + info.response);
+                        }
+                    });
+                    /*-----------------END Send verification email--------------------*/
+
                 }
             });
         } else {
-            utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, 'That username is already taken');
+            utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'That username is already taken');
         }
     });
-
 });
+
+
+/*
+ Activate this user's account
+
+ GET /users/activate
+ Request parameters: username, key
+ Response:
+ - success.verified: true if the key matches the username. The user is the
+                     saved as verified in the db and logged into the app
+ - error msg: if the key does not match the username
+ */
+router.get('/activate', function(req, res) {
+    var username = req.query.username;
+    var key = req.query.key;
+    //console.log("username: "+username);
+    //console.log("key: "+key);
+
+    User.findByUsername(username, function (err, user) {
+        if (err) {
+            utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Error verifying account: Invalid username');
+        } else {
+            if (user.password===key) {
+                console.log("session: "+req.session.username);
+                req.session.username = username;
+                console.log("session: "+req.session.username);
+
+                user.verified=true;
+                res.render('index');
+                user.save();
+            } else {
+                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Error verifying account: Invalid key');
+            }
+        }
+    });
+});
+
 
 /*
  Determine whether there is a current user logged in
@@ -163,11 +237,11 @@ router.post('/favorites', function(req, res) {
     if (req.currentUser) {
         User.findByUsername(req.currentUser.username, function(err, user) {
             if (err) {
-                utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, err.msg);
+                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
             } else {
                 user.favorite(req.body.projectID, function(err) {
                     if (err) {
-                        utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, err.msg);
+                        utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
                     } else {
                         utils.sendSuccessResponse(res);
                     }
@@ -175,7 +249,7 @@ router.post('/favorites', function(req, res) {
             }
         });
     } else {
-        utils.sendErrResponse(res, STATUS_CODE_FORBIDDEN,
+        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN,
             'There is no user currently logged in.');
     }
 });
@@ -196,11 +270,11 @@ router.delete('/favorites', function(req, res) {
     if (req.currentUser) {
         User.findByUsername(req.currentUser.username, function(err, user) {
             if (err) {
-                utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, err.msg);
+                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
             } else {
                 user.unfavorite(req.body.projectID, function(err) {
                     if (err) {
-                        utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, err.msg);
+                        utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
                     } else {
                         utils.sendSuccessResponse(res);
                     }
@@ -208,7 +282,7 @@ router.delete('/favorites', function(req, res) {
             }
         });
     } else {
-        utils.sendErrResponse(res, STATUS_CODE_FORBIDDEN,
+        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN,
             'There is no user currently logged in.');
     }
 });
@@ -230,11 +304,11 @@ router.get('/favorites', function(req, res) {
     if (req.currentUser) {
         User.findByUsername(req.currentUser.username, function(err, user) {
             if (err) {
-                utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, err.msg);
+                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
             } else {
                 user.getFavorites(function(err, favorites) {
                     if (err) {
-                        utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, err.msg);
+                        utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
                     } else {
                         utils.sendSuccessResponse(res, { projects: favorites });
                     }
@@ -242,7 +316,7 @@ router.get('/favorites', function(req, res) {
             }
         });
     } else {
-        utils.sendErrResponse(res, STATUS_CODE_FORBIDDEN,
+        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN,
             'There is no user currently logged in.');
     }
 });
@@ -265,11 +339,11 @@ router.get('/myprojects', function(req, res) {
     if (req.currentUser) {
         User.findByUsername(req.currentUser.username, function(err, user) {
             if (err) {
-                utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, err.msg);
+                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
             } else {
                 user.getMyProjects(function(err, myprojects) {
                     if (err) {
-                        utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, err.msg);
+                        utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
                     } else {
                         utils.sendSuccessResponse(res, { projects: myprojects });
                     }
@@ -277,7 +351,7 @@ router.get('/myprojects', function(req, res) {
             }
         });
     } else {
-        utils.sendErrResponse(res, STATUS_CODE_FORBIDDEN,
+        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN,
             'There is no user currently logged in.');
     }
 });
@@ -299,11 +373,11 @@ router.get('/favorites', function(req, res) {
     if (req.currentUser) {
         User.findByUsername(req.currentUser.username, function(err, user) {
             if (err) {
-                utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, err.msg);
+                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
             } else {
                 user.getFavorites(function(err, favorites) {
                     if (err) {
-                        utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, err.msg);
+                        utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
                     } else {
                         utils.sendSuccessResponse(res, { projects: favorites });
                     }
@@ -311,7 +385,7 @@ router.get('/favorites', function(req, res) {
             }
         });
     } else {
-        utils.sendErrResponse(res, STATUS_CODE_FORBIDDEN,
+        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN,
             'There is no user currently logged in.');
     }
 });
@@ -332,11 +406,11 @@ router.get('/favorites', function(req, res) {
 router.get('/:username', function(req, res) {
     User.findByUsername(req.params.username, function(err, user) {
         if (err) {
-            utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, err.msg);
+            utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
         } else {
             user.getMyProjects(function(err, userProjects) {
                 if (err) {
-                    utils.sendErrResponse(res, STATUS_CODE_BAD_REQUEST, err.msg);
+                    utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
                 } else {
                     utils.sendSuccessResponse(res, { projects: userProjects });
                 }

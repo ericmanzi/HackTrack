@@ -1,10 +1,10 @@
 <div class="navBar">
-        {{#if user_logged_in}}
+    {{#if user_logged_in}}
         <a href="#" class="profile-link"><div class="navAvatar pull-right">
             <div class="userImage"><img src="https://www.whitehouse.gov/sites/whitehouse.gov/files/images/Administration/People/president_official_portrait_hires.jpg" width="50" height="50"></div>
         </div>
         </a>
-        {{/if}}
+    {{/if}}
     <div class="pageTitle">
         <h1 class="home-link"><a href="#" style="text-decoration:none;">MIT HACKTRACK</a></h1>
 
@@ -14,7 +14,7 @@
 
         {{#if user_logged_in}}
             <div class="pull-right">
-                
+
                 <i>Logged in as <strong>{{username}}</strong> </i>
                 <a class="btn btn-primary" id="logout-link" >Logout</a>
             </div>
@@ -85,19 +85,102 @@
                         {{error}}
                     {{/if}}
                 </div>
-                <form id="register-form">
-                    <div class="form-group">
-                        <p><input type="text" class="form-control" name="username" required placeholder="Username"/></p>
-                        <p><input type="text" class="form-control" name="email" required placeholder="Email"/></p>
-                        <p><input type="password" class="form-control" name="password" required placeholder="Password"/></p>
-                        <p><input type="password" class="form-control" name="confirm" required placeholder="Confirm password"/></p>
-                        <p><button type="submit" class="btn btn-primary">Sign up</button>
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active" id="register-nav-tab">
+                        <a href="#register-tab" role="tab" data-toggle="tab">Signup</a>
+                    </li>
+                    <li role="presentation" id="terms-nav-tab">
+                        <a href="#terms-tab" role="tab" data-toggle="tab">Terms of Use</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="register-tab">
+                        <form id="register-form">
+                            <div class="form-group"><br/>
+                                <p><input type="text" class="form-control" name="username" required placeholder="Username"/></p>
+                                <p><input type="text" class="form-control" name="email" required placeholder="Email"/></p>
+                                <p><input type="password" class="form-control" name="password" required placeholder="Password"/></p>
+                                <p><input type="password" class="form-control" name="confirm" required placeholder="Confirm password"/></p>
+                                <p><input type="checkbox" id="agree" >
+                                    By signing up, you agree to the
+                                    <a href="#terms-tab" data-toggle="tab" id="terms-link">terms of use</a></p>
+                                <p><button type="submit" class="btn btn-primary" id="signup-btn" disabled>Sign up</button>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                    <div role="tabpanel" class="tab-pane" id="terms-tab">
+                        <div class="terms"> 
+                            <h3>Terms of Use</h3> 
+                            Please read this agreement before using MIT HackTrack.
+                            In order to use MIT HackTrack, you must accept the terms of this agreement.
+                             <ol> 
+                                <li> 
+                                    <strong>Your account</strong> <br/> 
+                                    Use of this application is limited to members of the MIT community. 
+                                    Therefore, you must provide your MIT email in order to access member features. 
+                                    You may only create one account per email address and you must verify 
+                                    that the MIT email address you have provided is valid and will 
+                                    remain valid during the term of this agreement. Your username must 
+                                    not impersonate someone else or cause confusion as to source, affiliation 
+                                    or endorsement. You may not (or permit third parties to) create multiple 
+                                    accounts that act or appear as a single account. Failure to comply with 
+                                    these terms will result in the suspension of your account. 
+                                </li> 
+                                <li> 
+                                    <strong>Comments and Feedback</strong><br/> 
+                                    As a member of the HackTrack community, you may provide comments 
+                                    and/or start discussions related to projects created by other users. 
+                                    You understand and agree that activities such posting information that 
+                                    is irrelevant to the discussion/project may constitute violation of 
+                                    these terms and if so, will result in the suspension of your account. 
+                                </li> 
+                                <li> 
+                                    <strong>Intellectual property</strong><br/> 
+                                    We claim no intellectual property rights over the material you provide 
+                                    to the app. Your profile and materials uploaded remain yours. 
+                                    However, all projects that you post can be viewed publicly, even by 
+                                    non-MIT members, you agree to allow others to view your Content. 
+                                    You may not present ideas that you found on HackTrack as your own 
+                                    without permission from the original poster. Doing so would constitute 
+                                    grounds for the suspension of your account. 
+                                </li> 
+                            </ol> 
+                            These terms of use constitute the entire legal agreement between you and 
+                            MIT HackTrack and govern your use of HackTrack Content.
+                             </div>
+                    </div>
+                </div>
+
+
             </div>
             <div class="modal-footer">
                 Already have an account?
                 <a data-toggle="modal" href="#signin" data-dismiss="modal" class="btn btn-primary">Login</a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+<div class="modal fade" id="emailSent">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">What's next?</h4>
+            </div>
+            <div class="modal-body">
+                Check your inbox for an email confirming your account.
+                To complete the registration process, you must click the link
+                in the email <strong>within the next 24 hours</strong>.
+                If you do not receive an email within a few minutes, check your
+                Spam folder to ensure it was not incorrectly moved.
+            </div>
+            <div class="modal-footer">
+                <a data-dismiss="modal" class="btn btn-default">Back to main page</a>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
