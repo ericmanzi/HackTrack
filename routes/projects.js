@@ -129,9 +129,10 @@ router.post('/:projID/edit', function(req, res) {
         if (req.body.imageLinks !== ""){
             imageLinksList = req.body.imageLinks.split(/\s*,\s*/);
         }
+
         var tagsList = [];
         if (req.body.tags !== ""){
-            tagsList = re.body.tags.split(/\s*,\s*/);
+            tagsList = req.body.tags.split(/\s*,\s*/);
         }
         var videoID = getYouTubeID(req.body.videoLink);
         var projectJSON = {
@@ -144,6 +145,7 @@ router.post('/:projID/edit', function(req, res) {
 
         Project.updateProject(projectJSON, req.params.projID, req.currentUser.username, function(err){
             if (err){
+
                 if (err.projectNotFound){
                     utils.sendErrResponse(res, 404, 'Project not found.');
                 } else {

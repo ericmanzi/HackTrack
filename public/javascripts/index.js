@@ -28,6 +28,13 @@ var loadPage = function(template, data) {
             $("#project-edit-tags").tagit("createTag", currentTag);
         });
     }
+
+    /////////// SETTING BACKGROUND IMAGE //////////
+    if (template === 'projectView'){
+        if (data.project.imageLinks.length !== 0){
+            $('#project-header').css("background", "linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(" + data.project.imageLinks[0] + ")");    
+        } 
+    } 
 };
 
 

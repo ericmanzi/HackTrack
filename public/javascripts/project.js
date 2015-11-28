@@ -127,9 +127,9 @@
         imageLinks = imageLinks.join(",");
 
         $.post(
-            '/projects/'+projectID + '/edit',
+            '/projects/'+ projectID + '/edit',
             {   
-                title: title,
+                title : title,
                 description : description,
                 imageLinks : imageLinks,
                 tags : tags,
