@@ -82,7 +82,7 @@ var loadProfilePage = function(projectType){
 };
 
 var loadUserPage = function(username) {
-    var reqUrl = '/users/'+username;
+    var reqUrl = '/users/profiles/'+username;
     $.get(reqUrl, function(response) {
         data.projects = response.content.projects;
         data.user = username;

@@ -73,6 +73,18 @@ userSchema.statics.findByUsername = function(name, callback) {
 };
 
 /**
+ * Check that the given email address is unique
+ * @param emailAddr
+ * @param callback
+ */
+userSchema.statics.isEmailUnique = function(emailAddr, callback) {
+    this.findOne({ email: emailAddr }, function(err, user) {
+        if (user) callback(null, 'That email is already in use by another account.');
+        else callback({msg: 'No such email.'});
+    });
+};
+
+/**
  * Verifies that the provided password matches the given username
  * @param candidatepw
  * @param callback

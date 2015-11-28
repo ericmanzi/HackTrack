@@ -13,6 +13,7 @@
             currentUser = response.content.user;
             $('#signin').hide();
             $('.modal-backdrop').hide();
+            $('body,html').removeClass("modal-open");
             loadHomePage();
         }).fail(function(responseObject) {
             var response = $.parseJSON(responseObject.responseText);
@@ -48,6 +49,7 @@
         ).done(function(response) {
             $('#register').hide();
             $('.modal-backdrop').hide();
+            $('body,html').removeClass("modal-open");
             //loadHomePage();
             $('#emailSent').modal();
         }).fail(function(responseObject) {

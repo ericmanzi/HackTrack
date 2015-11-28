@@ -59,14 +59,18 @@ router.post('/login', function(req, res) {
 
     User.findByUsername(req.body.username, function(err, user) {
         if (user) {
-            user.verifyPassword(req.body.password, function(err, match) {
-                if (match) {
-                    req.session.username = req.body.username;
-                    utils.sendSuccessResponse(res, { user: req.body.username });
-                } else {
-                    utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'Invalid password.');
-                }
-            });
+            if (user.verified) {
+                user.verifyPassword(req.body.password, function(err, match) {
+                    if (match) {
+                        req.session.username = req.body.username;
+                        utils.sendSuccessResponse(res, { user: req.body.username });
+                    } else {
+                        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'Invalid password.');
+                    }
+                });
+            } else {
+                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Your account has not been verified');
+            }
         } else {
             utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, err.msg);
         }
@@ -125,42 +129,48 @@ router.post('/', function(req, res) {
 
     User.findByUsername(req.body.username, function(err, user) {
         if (err) {
-            User.create(userObj, function(err, user) {
+            User.isEmailUnique(req.body.email, function(err, msg) {
                 if (err) {
-                    var errorMsg="";
-                    if (err.errors.username) errorMsg+=err.errors.username.message+". ";
-                    if (err.errors.email) errorMsg+=err.errors.email.message+". ";
-                    if (err.errors.password) errorMsg+=err.errors.password.message+".";
+                    User.create(userObj, function(err, user) {
+                        if (err) {
+                            var errorMsg="";
+                            if (err.errors.username) errorMsg+=err.errors.username.message+". ";
+                            if (err.errors.email) errorMsg+=err.errors.email.message+". ";
+                            if (err.errors.password) errorMsg+=err.errors.password.message+".";
 
-                    utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, errorMsg);
-                } else {
-                    utils.sendSuccessResponse(res, req.body.username);
-
-                    /*-----------------START Send verification email--------------------*/
-                    var mailOptions={
-                        from: "MIT Hacktrack \<hacktrack.mit@gmail.com\>",
-                        to : req.body.email,
-                        subject : "Verify your account with MIT HackTrack",
-                        text: "Thanks for signing up to use MIT HackTrack! \r\n"+
-                        "Please go to the link below to activate your account:\r\n"+
-                        "hacktrack-mit.herokuapp.com/users/something...\r\n"+
-                        "The MIT Hacktrack team\r\n"+"hacktrack-mit.herokuapp.com",
-                        html : "Thanks for signing up to use MIT HackTrack!<br/>"+
-                        "Please click the link below to activate your account: <br/>"+
-                        "<a href='http://localhost:3000/users/activate?username="+user.username+
-                        "&key="+user.password+"'>Verify your account</a>"+
-                        "<br/><br/>The MIT Hacktrack team<br/>"+
-                        "<a href='hacktrack-mit.herokuapp.com'>hacktrack-mit.herokuapp.com</a>" //TODO: back to heroku
-                    };
-                    transport.sendMail(mailOptions, function(error, info){
-                        if(error){
-                            console.log(error);
+                            utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, errorMsg);
                         } else {
-                            console.log('Message sent: ' + info.response);
+                            utils.sendSuccessResponse(res, req.body.username);
+
+                            /*-----------------START Send verification email--------------------*/
+                            var mailOptions={
+                                from: "MIT Hacktrack \<hacktrack.mit@gmail.com\>",
+                                to : req.body.email,
+                                subject : "Verify your account with MIT HackTrack",
+                                text: "Thanks for signing up to use MIT HackTrack! \r\n"+
+                                "Please go to the link below to activate your account:\r\n"+
+                                "hacktrack-mit.herokuapp.com/users/something...\r\n"+
+                                "The MIT Hacktrack team\r\n"+"hacktrack-mit.herokuapp.com",
+                                html : "Thanks for signing up to use MIT HackTrack!<br/>"+
+                                "Please click the link below to activate your account: <br/>"+
+                                "<a href='http://localhost:3000/users/activate?username="+user.username+
+                                "&key="+user.password+"'>Verify your account</a>"+
+                                "<br/><br/>The MIT Hacktrack team<br/>"+
+                                "<a href='hacktrack-mit.herokuapp.com'>hacktrack-mit.herokuapp.com</a>" //TODO: back to heroku
+                            };
+                            transport.sendMail(mailOptions, function(error, info){
+                                if(error){
+                                    console.log(error);
+                                } else {
+                                    console.log('Message sent: ' + info.response);
+                                }
+                            });
+                            /*-----------------END Send verification email--------------------*/
+
                         }
                     });
-                    /*-----------------END Send verification email--------------------*/
-
+                } else {
+                    utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, msg);
                 }
             });
         } else {
@@ -394,7 +404,7 @@ router.get('/favorites', function(req, res) {
 /*
  Get this user's projects
 
- GET /users/:username
+ GET /users/profiles/:username
  Request body: empty
  Response:
  - success: true if the server succeeded in finding the user's projects
@@ -403,7 +413,7 @@ router.get('/favorites', function(req, res) {
  user's projects.
  error status code 403 if user isn't authenticated
  */
-router.get('/:username', function(req, res) {
+router.get('/profiles/:username', function(req, res) {
     User.findByUsername(req.params.username, function(err, user) {
         if (err) {
             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
