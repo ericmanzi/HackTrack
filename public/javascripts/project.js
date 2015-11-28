@@ -88,7 +88,7 @@
         evt.preventDefault();
         console.log('submitting the edit');
         var errorDiv = $("#edit-project-error");
-        var projectID = errorDiv.parent().data("project-edit-id")
+        var projectID = errorDiv.parent().data("project-edit-id");
 
         var title = $('#project-edit-title').val();
         if (title === ""){

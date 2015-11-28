@@ -5,6 +5,7 @@ var router = express.Router();
 var utils = require('../utils/utils');
 
 var Project = require('../models/project');
+var User = require('../models/user');
 var Post = require('../models/post');
 var getYouTubeID = require('get-youtube-id');
 
@@ -91,6 +92,7 @@ router.post('/', function(req, res) {
  - err: on failure, an error message
  */
 router.get('/:projID', function(req, res) {
+    var response = {};
     Project.getProject(req.params.projID, function(err, foundProject){
         if (err){
             if (err.projectNotFound){
@@ -99,13 +101,22 @@ router.get('/:projID', function(req, res) {
                 utils.sendErrResponse(res, 500, 'An unknown error occurred.');
             }
         } else {
+            response.project = foundProject;
             Post.getDiscussions(foundProject.id, function(err, discussions) {
                 if (err){
                     utils.sendErrResponse(res, 500, 'Error retrieving project: ' + err.message + '.');
                 } else {
-                    utils.sendSuccessResponse(res, {
-                        project : foundProject,
-                        discussions: discussions,
+                    response.discussions = discussions;
+                    User.findOne(req.currentUser, function(err, user) {
+                        if (user) {
+                            var favorites = user.getFavoritesIdList();
+                            console.log(favorites);
+                            if (favorites.length>0) {
+                                var pIndex = favorites.indexOf(req.params.projID);
+                                response.favorited = (pIndex!==-1);
+                            }
+                        }
+                        utils.sendSuccessResponse(res, response);
                     });
                 }
             });

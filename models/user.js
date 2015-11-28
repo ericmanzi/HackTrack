@@ -119,17 +119,18 @@ userSchema.methods.getMyProjects = function(callback) {
 userSchema.methods.favorite = function(projectID, callback) {
     var user = this;
     Project.findOne({ _id: projectID }, function(err, project) {
-        if (project.owner === user.username) {
-            callback({msg: 'Cannot favorite own project'});
-        } else {
-            if ( user.favorites.indexOf(projectID) === -1 ) {
-                user.favorites.push(projectID);
-                user.save();
+        //if (project.owner === user.username) {
+        //    callback({msg: 'Cannot favorite own project'});
+        //} else {
+        if ( user.favorites.indexOf(projectID) === -1 ) {
+            user.favorites.push(projectID);
+            user.save(function(err,savedUser) {
                 callback(null);
-            } else {
-                callback({msg: 'This project has already been favorited'});
-            }
+            });
+        } else {
+            callback({msg: 'This project has already been favorited'});
         }
+        //}
     });
 };
 
@@ -145,7 +146,7 @@ userSchema.methods.unfavorite = function(projectID, callback) {
         if (err) {
             callback({msg: 'Invalid project.'});
         } else {
-            var projectIndex = user.favorites.findIndex(projectID);
+            var projectIndex = user.favorites.indexOf(projectID);
             if ( projectIndex === -1 ) {
                 callback({msg: 'This project is not among your favorites.'});
             } else {
@@ -169,6 +170,14 @@ userSchema.methods.getFavorites = function(callback) {
             callback(null, favorites);
         }
     });
+};
+
+/**
+ * Return this users list of favorite project ids
+ */
+userSchema.methods.getFavoritesIdList = function() {
+    var user = this;
+    return user.favorites;
 };
 
 var User = mongoose.model("User", userSchema);

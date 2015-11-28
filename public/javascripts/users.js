@@ -96,6 +96,23 @@ var files = [];
         });
     });
 
+    $(document).on('click', '#unfavorite-button', function(evt) {
+        evt.preventDefault();
+        var item = $(this).parent();
+        var data = { projectID: item.data('project-id'), csrftoken: getCSRFToken() };
+        $.ajax({
+            url: '/users/favorites',
+            method: 'DELETE',
+            data: data
+        }).done(function(response) {
+            loadProjectPage(data.projectID);
+        }).fail(function(responseObject) {
+            var response = $.parseJSON(responseObject.responseText);
+            console.log(response.err);
+            $('.error').text(response.err);
+        });
+    });
+
     $(document).on('change', '#fileselect', function(evt) {
         files = $(this).get(0).files;
     });

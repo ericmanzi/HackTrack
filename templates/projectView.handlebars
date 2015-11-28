@@ -18,10 +18,23 @@
                 by <a href="#" id="view-user" view-user-id={{project.owner}}>{{project.owner}}</a>
 			</div>
 
-            <a href="#" id="myButton-upvote"><span id="projectView-upvotes">{{project.upvoterUsernames.length}}</span> | Upvote</a>
-            <a href="#" id="favorite-button">Add to favorites</a>
+            {{#if user_logged_in}}
+                <button id="myButton-upvote" class="project-actions"><span id="projectView-upvotes">
+                    {{project.upvoterUsernames.length}}</span> | Upvote</button>
+            {{else}}
+                <button id="myButton-upvote" class="project-actions" disabled><span id="projectView-upvotes">
+                    {{project.upvoterUsernames.length}}</span> | Upvote</button>
+            {{/if}}
+            {{#if user_logged_in}}
+                {{#if favorited}}
+                    <button id="unfavorite-button" class="project-actions">Unfavorite</button>
+                {{else}}
+                    <button id="favorite-button" class="project-actions">Add to favorites</button>
+                {{/if}}
+            {{/if}}
+
             {{#if is_owner_of_this_project}}
-            	<a href="#" id="edit-project-button">Edit project</a>
+            	<button id="edit-project-button" class="project-actions">Edit project</button>
             {{/if}}
 		</header>
 		<div class="project-body">

@@ -70,9 +70,10 @@ var loadProjectPage = function(id){
         loadPage('projectView', {
             project: response.content.project,
             discussions: response.content.discussions,
+            favorited: response.content.favorited
         });
     });
-}
+};
 
 var loadPostProjectPage = function(){
     loadPage('postProject', data);
