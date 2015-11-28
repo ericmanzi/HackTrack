@@ -124,7 +124,7 @@ router.post('/', function(req, res) {
         favorites: [],
         verified: false,
         following: [],
-        profile_pic_path: ""
+        profile_picture: "https://www.whitehouse.gov/sites/whitehouse.gov/files/images/Administration/People/president_official_portrait_hires.jpg"
     };
 
     User.findByUsername(req.body.username, function(err, user) {
@@ -227,7 +227,14 @@ router.get('/activate', function(req, res) {
  */
 router.get('/current', function(req, res) {
     if (req.currentUser) {
-        utils.sendSuccessResponse(res, { loggedIn : true, user : req.currentUser.username });
+        User.findByUsername(req.currentUser.username, function(err, user) {
+            var profile = {
+                profile_picture: user.profile_picture,
+                loggedIn : true,
+                user : req.currentUser.username
+            };
+            utils.sendSuccessResponse(res, profile);
+        });
     } else {
         utils.sendSuccessResponse(res, { loggedIn : false });
     }
@@ -429,8 +436,35 @@ router.get('/profiles/:username', function(req, res) {
     });
 });
 
+/*
+ Change this user's profile picture
 
-
+ POST: /users/profile_picture
+ Request body:
+ - username
+ - profile picture link
+ Response:
+ - success: true if saving the profile picture succeeded
+ - err: on error, an error message
+ */
+router.post('/profile_picture', function(req, res) {
+    if (req.currentUser) {
+        console.log("username:"+req.body.username);
+        console.log("url:"+req.body.profile_pic_url);
+        User.findByUsername(req.body.username, function(err, user) {
+            if (err) {
+                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Invalid username');
+            } else {
+                user.profile_picture = req.body.profile_pic_url;
+                user.save(function(err, user) {
+                    utils.sendSuccessResponse(res);
+                });
+            }
+        });
+    } else {
+        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'There is no user currently logged in.');
+    }
+});
 
 
 module.exports = router;

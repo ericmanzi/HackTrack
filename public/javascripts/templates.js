@@ -52,7 +52,11 @@ templates['index'] = template({"1":function(container,depth0,helpers,partials,da
     + "		</ul>\n		<div id=\"searchContainer\">\n			<input type=\"text\" id=\"searchInput\" />\n		</div>\n		<div id=\"projectList\"></div>\n	</div>\n</div>\n";
 },"usePartial":true,"useData":true});
 templates['navbar'] = template({"1":function(container,depth0,helpers,partials,data) {
-    return "        <a href=\"#\" class=\"profile-link\"><div class=\"navAvatar pull-right\">\n            <div class=\"userImage\"><img src=\"https://www.whitehouse.gov/sites/whitehouse.gov/files/images/Administration/People/president_official_portrait_hires.jpg\" width=\"50\" height=\"50\"></div>\n        </div>\n        </a>\n";
+    var helper;
+
+  return "        <a href=\"#\" class=\"profile-link\"><div class=\"navAvatar pull-right\">\n            <div class=\"userImage\"><img src=\""
+    + container.escapeExpression(((helper = (helper = helpers.profile_picture || (depth0 != null ? depth0.profile_picture : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"profile_picture","hash":{},"data":data}) : helper)))
+    + "\" width=\"50\" height=\"50\" id=\"profile-sm\"></div>\n        </div>\n        </a>\n";
 },"3":function(container,depth0,helpers,partials,data) {
     var helper;
 
@@ -93,14 +97,16 @@ templates['profile'] = template({"1":function(container,depth0,helpers,partials,
 },"3":function(container,depth0,helpers,partials,data) {
     return "				<p><em>No projects yet!</em></p>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1, helper, alias1=depth0 != null ? depth0 : {};
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
   return ((stack1 = container.invokePartial(partials.navbar,depth0,{"name":"navbar","data":data,"helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
-    + "<main class=\"page-main\">\n	<header class=\"profileHeader\">\n		<div class=\"profileContainer\">\n			<div class=\"profileAvatar\">\n				<span class=\"userImage\"><img src=\"https://www.whitehouse.gov/sites/whitehouse.gov/files/images/Administration/People/president_official_portrait_hires.jpg\" width=\"110\" height=\"110\"></span>\n			</div>\n			<div class=\"profileInfo\">\n				<h1 class=\"profileInfoTitle\">\n					"
-    + container.escapeExpression(((helper = (helper = helpers.username || (depth0 != null ? depth0.username : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"username","hash":{},"data":data}) : helper)))
+    + "<main class=\"page-main\">\n	<header class=\"profileHeader\">\n		<div class=\"profileContainer\">\n			<div class=\"profileAvatar\">\n				<span class=\"userImage\">\n                    <img src=\""
+    + alias4(((helper = (helper = helpers.profile_picture || (depth0 != null ? depth0.profile_picture : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"profile_picture","hash":{},"data":data}) : helper)))
+    + "\" width=\"110\" height=\"110\" id=\"profile-md\">\n                </span>\n                <div class=\"thumb_meta\">\n                    <a href=\"#uploadProfilePic\" data-toggle=\"modal\" id=\"change-profile\">\n                        Change profile picture</a></div>\n\n            </div>\n			<div class=\"profileInfo\">\n				<h1 class=\"profileInfoTitle\">\n					"
+    + alias4(((helper = (helper = helpers.username || (depth0 != null ? depth0.username : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"username","hash":{},"data":data}) : helper)))
     + "\n				</h1>\n			</div>\n			<div class=\"profileNavigation\">\n				<ul>\n					<li class=\"profile-navigation-tab\">\n						<a href=\"#\" id=\"view-favorites\">\n							Favorites\n						</a>\n					</li>\n					<li class=\"profile-navigation-tab\" id=\"view-myprojects\">\n						<a href=\"#\">My Projects</a>\n					</li>\n				</ul>\n			</div>\n\n		</div>\n	</header>\n	<div >\n		<div class= \"projectFeed\">\n			<ul class=\"projectList\"> \n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.projects : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
-    + "			</ul>\n		</div>\n	</div>\n</main>";
+    + "			</ul>\n		</div>\n	</div>\n</main>\n\n<!-- Modal  Add Profile Pic-->\n<div class=\"modal fade\" id=\"uploadProfilePic\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\">x</button>\n                <h4 class=\"modal-title\">Change Profile Picture</h4>\n            </div>\n            <div id = 'upload_modal' class=\"modal-body\">\n                <input type=\"file\" name=\"fileselect\" id=\"fileselect\" accept='image/*'>\n                <p class=\"help-block\">Browse for picture to add.</p>\n            </div>\n            <div class=\"modal-footer\">\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Cancel</button>\n                <button id='upload_profile_button' type=\"button\" class=\"btn btn-default\">Upload</button>\n            </div>\n        </div>\n    </div>\n</div>";
 },"usePartial":true,"useData":true});
 templates['project'] = template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
@@ -241,7 +247,7 @@ templates['userProfile'] = template({"1":function(container,depth0,helpers,parti
   return ((stack1 = container.invokePartial(partials.navbar,depth0,{"name":"navbar","data":data,"helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
     + "<main class=\"page-main\">\n    <header class=\"profileHeader\">\n        <div class=\"profileContainer\">\n            <div class=\"profileAvatar\">\n                <span class=\"userImage\"><img src=\"https://www.whitehouse.gov/sites/whitehouse.gov/files/images/Administration/People/president_official_portrait_hires.jpg\" width=\"110\" height=\"110\"></span>\n            </div>\n            <div class=\"profileInfo\">\n                <h1 class=\"profileInfoTitle\">\n                    "
     + container.escapeExpression(((helper = (helper = helpers.user || (depth0 != null ? depth0.user : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"user","hash":{},"data":data}) : helper)))
-    + "\n                </h1>\n            </div>\n            <button type=\"button\" class=\"btn btn-warning\">Follow</button>\n        </div>\n    </header>\n    <div >\n        <div class= \"projectFeed\">\n            <ul class=\"projectList\">\n"
+    + "\n                </h1>\n            </div>\n            <button type=\"button\" class=\"btn btn-warning pull-right\">Follow</button>\n        </div>\n    </header>\n    <div >\n        <div class= \"projectFeed\">\n            <ul class=\"projectList\">\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.projects : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "            </ul>\n        </div>\n    </div>\n</main>";
 },"usePartial":true,"useData":true});

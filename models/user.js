@@ -20,7 +20,7 @@ var userSchema = mongoose.Schema({
     favorites: Array,
     verified: {type: Boolean, default: false},
     following: Array,
-    profile_pic_path: String
+    profile_picture: String
 });
 
 // This middleware automatically hashes the password before it is saved to the database

@@ -2,6 +2,7 @@
  * Created by ericmanzi on 11/20/15.
  * Lead author: Eric Manzi
  */
+var files = [];
 
 (function() {
     $(document).on('submit', '#signin-form', function(evt) {
@@ -14,7 +15,10 @@
             $('#signin').hide();
             $('.modal-backdrop').hide();
             $('body,html').removeClass("modal-open");
-            loadHomePage();
+            $.get('/users/current', function(response) {
+                profile_picture = response.content.profile_picture;
+                loadHomePage();
+            });
         }).fail(function(responseObject) {
             var response = $.parseJSON(responseObject.responseText);
             $('.error').text(response.err);
@@ -90,6 +94,45 @@
         });
     });
 
+    $(document).on('change', '#fileselect', function(evt) {
+        files = $(this).get(0).files;
+    });
+
+    $(document).on("click", "#upload_profile_button", function(){
+        if (files.length > 0) { // if there's a file to upload
+            var file = files[0];
+            var parseFile = new Parse.File(file.name, file);
+
+            parseFile.save()
+                .then(function(savedFile) { // save was successful
+                    var data = {
+                        username: currentUser,
+                        profile_pic_url: savedFile.url(),
+                        csrftoken: getCSRFToken()
+                    };
+                    $.post(
+                        '/users/profile_picture',
+                        data
+                    ).done(function(response) {
+                        $('#uploadProfilePic').hide();
+                        $('.modal-backdrop').hide();
+                        $('body,html').removeClass("modal-open");
+                        $('#profile-sm').attr('src', data.profile_pic_url);
+                        $('#profile-md').attr('src', data.profile_pic_url);
+                        profile_picture = data.profile_pic_url;
+
+                        //loadProfilePage();
+                    }).fail(function(responseObject) {
+                        var response = $.parseJSON(responseObject.responseText);
+                        //console.log("response error:"+response.err);
+                        $('.error').text(response.err);
+                    });
+
+                }, function(error) { // the save failed
+                    $('.error').text("Error: " + error.code + " " + error.message);
+                });
+        }
+    });
 
 
 })(); // Wrap in an immediately invoked function expression.

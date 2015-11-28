@@ -3,8 +3,14 @@
 	<header class="profileHeader">
 		<div class="profileContainer">
 			<div class="profileAvatar">
-				<span class="userImage"><img src="https://www.whitehouse.gov/sites/whitehouse.gov/files/images/Administration/People/president_official_portrait_hires.jpg" width="110" height="110"></span>
-			</div>
+				<span class="userImage">
+                    <img src="{{profile_picture}}" width="110" height="110" id="profile-md">
+                </span>
+                <div class="thumb_meta">
+                    <a href="#uploadProfilePic" data-toggle="modal" id="change-profile">
+                        Change profile picture</a></div>
+
+            </div>
 			<div class="profileInfo">
 				<h1 class="profileInfoTitle">
 					{{username}}
@@ -37,3 +43,23 @@
 		</div>
 	</div>
 </main>
+
+<!-- Modal  Add Profile Pic-->
+<div class="modal fade" id="uploadProfilePic">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">Change Profile Picture</h4>
+            </div>
+            <div id = 'upload_modal' class="modal-body">
+                <input type="file" name="fileselect" id="fileselect" accept='image/*'>
+                <p class="help-block">Browse for picture to add.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id='upload_profile_button' type="button" class="btn btn-default">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>

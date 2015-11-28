@@ -1,14 +1,16 @@
 Handlebars.registerPartial('project', Handlebars.templates['project']);
 Handlebars.registerPartial('navbar', Handlebars.templates['navbar']);
-var currentUser = null;
 
+var currentUser = null;
 var data={};
+var profile_picture = null;
+
 var loadPage = function(template, data) {
     //var projects = [{project:"project1", _id:1}, {project:"project2", _id:2}];
     //data = data || {projects:projects};
     data.user_logged_in = currentUser!==null;
     data.username = currentUser;
-
+    data.profile_picture = profile_picture;
     if (template === "projectView"){
         data.is_owner_of_this_project = data.project.owner === currentUser;
     }
@@ -55,7 +57,10 @@ var updateHomePage = function(tag, filter) {
         target += '&filter=' + encodeURIComponent(filter);
     }
     $.get(target, function(response) {
-        var data = {projects: response.content.projects};
+        var data = {
+            projects: response.content.projects,
+            profile_picture: response.content.profile_picture
+        };
         $('#projectList').html(Handlebars.templates['projectList'](data));
     });
 };
@@ -102,11 +107,16 @@ $(document).ready(function() {
      $.get('/users/current', function(response) {
          if (response.content.loggedIn) {
              currentUser = response.content.user;
-             console.log("current gotten and user is "+currentUser)
+             profile_picture = response.content.profile_picture;
+             console.log("current user is "+currentUser)
          }
          loadHomePage();
      });
     loadHomePage();
+
+    /*---------INITIALIZE PARSE--------*/
+    Parse.initialize("8jPwCfzXBGpPR2WVW935pey0C66bWtjMLRZPIQc8", "zgB9cjo7JifswwYBTtSvU1MSJCMVZMwEZI3Etw4d");
+
 });
 
 $(document).on('click', '.project-link', function(evt) {

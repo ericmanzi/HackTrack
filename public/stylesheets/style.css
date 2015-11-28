@@ -75,6 +75,29 @@ ul.projectList{
 .userImage img{
     border-radius: 50%;
 }
+.thumb_meta {
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    padding:50px 0px 5px 15px;
+    background-color:rgba(0,0,0,0.6);
+    color:#fff;
+    font-size:13px;
+    border-radius:50%;
+    height: inherit;
+    opacity:0;
+    transition: opacity 0.5s;
+    -webkit-transition: opacity 1.0s;
+    z-index:99;
+}
+.profileAvatar:hover .thumb_meta{
+    opacity:1;
+    transition: opacity 0.5s;
+    -webkit-transition: opacity 1.0s;
+}
+
+
 .profileInfoTitle{
     font-size: 30px;
     font-weight: 600;
@@ -235,4 +258,13 @@ a{
 .terms {
     height: 350px;
     overflow: scroll;
+}
+
+#change-profile {
+    text-decoration: none;
+    color: white;
+}
+#change-profile:hover {
+    text-decoration: underline;
+    color: white;
 }
