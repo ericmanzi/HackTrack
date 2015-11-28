@@ -12,8 +12,9 @@ var files = [];
             helpers.getFormData(this)
         ).done(function(response) {
             currentUser = response.content.user;
-            $('#signin').hide();
-            $('.modal-backdrop').hide();
+            $('#signin').modal('hide');
+            $('.modal-backdrop').modal('hide');
+            $('.modal-backdrop').removeClass("modal-backdrop");
             $('body,html').removeClass("modal-open");
             $.get('/users/current', function(response) {
                 profile_picture = response.content.profile_picture;
@@ -51,11 +52,12 @@ var files = [];
             '/users',
             formData
         ).done(function(response) {
-            $('#register').hide();
-            $('.modal-backdrop').hide();
+            $('#register').modal('hide');
+            $('.modal-backdrop').modal('hide');
+            $('.modal-backdrop').removeClass("modal-backdrop");
             $('body,html').removeClass("modal-open");
             //loadHomePage();
-            $('#emailSent').modal();
+            $('#emailSent').modal('show');
         }).fail(function(responseObject) {
             //console.log(JSON.stringify(responseObject));
             var response = $.parseJSON(responseObject.responseText);
@@ -114,9 +116,10 @@ var files = [];
                         '/users/profile_picture',
                         data
                     ).done(function(response) {
-                        $('#uploadProfilePic').hide();
-                        $('.modal-backdrop').hide();
+                        $('#uploadProfilePic').modal('hide');
+                        $('.modal-backdrop').modal('hide');
                         $('body,html').removeClass("modal-open");
+                        $('.modal-backdrop').removeClass("modal-backdrop");
                         $('#profile-sm').attr('src', data.profile_pic_url);
                         $('#profile-md').attr('src', data.profile_pic_url);
                         profile_picture = data.profile_pic_url;

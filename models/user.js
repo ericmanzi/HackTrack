@@ -66,7 +66,7 @@ userSchema.path('password').validate(function(value) {
  * @param callback
  */
 userSchema.statics.findByUsername = function(name, callback) {
-    this.findOne({ username: name }, function(err, user) {
+    this.findOne({ username: { $regex : new RegExp(name, "i") } } , function(err, user) {
         if (user) callback(null, user);
         else callback({msg: 'No such username.'});
     });

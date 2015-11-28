@@ -63,7 +63,7 @@ router.post('/login', function(req, res) {
                 user.verifyPassword(req.body.password, function(err, match) {
                     if (match) {
                         req.session.username = req.body.username;
-                        utils.sendSuccessResponse(res, { user: req.body.username });
+                        utils.sendSuccessResponse(res, { user: user.username });
                     } else {
                         utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'Invalid password.');
                     }
