@@ -8,7 +8,7 @@
         var content = $('#project-discussion-add-content').val();
         var data = { content: content, csrftoken: getCSRFToken() };
         $.post(
-            '/projects/' + projectID + '/addDiscussion',
+            '/projects/' + projectID + '/discussion',
             data
         ).done(function(response) {
             loadProjectPage(projectID);

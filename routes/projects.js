@@ -187,7 +187,7 @@ router.post('/:projID', function(req, res) {
 });
 
 /*
- POST /projects/:projID/addDiscussion
+ POST /projects/:projID/discussion
  Adds a discussion to a project.
  Request body:
  - content: the textual content for the discussion
@@ -195,15 +195,15 @@ router.post('/:projID', function(req, res) {
  - success: if the server succeeded in adding the discussion
  - err: on failure, an error message
  */
-router.post('/:projID/addDiscussion', function(req, res) {
+router.post('/:projID/discussion', function(req, res) {
     if (!req.currentUser) { // Require authentication to use this feature
         utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
     } else {
-        Post.addDiscussion(req.params.projID, req.currentUser.id, req.body.content, function(err){
+        Post.addDiscussion(req.params.projID, req.currentUser.id, req.body.content, function(err, discussion){
             if (err){
                 utils.sendErrResponse(res, 500, 'Error adding discussion: ' + err.message + '.');
             } else {
-                utils.sendSuccessResponse(res);
+                utils.sendSuccessResponse(res, {discussion: discussion});
             }
         });
     }
@@ -222,11 +222,11 @@ router.post('/:projID/discussions/:discussionID/comment', function(req, res) {
     if (!req.currentUser) { // Require authentication to use this feature
         utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
     } else {
-        Post.addComment(req.params.projID, req.params.discussionID, req.currentUser.id, req.body.content, function(err){
+        Post.addComment(req.params.projID, req.params.discussionID, req.currentUser.id, req.body.content, function(err, comment){
             if (err){
                 utils.sendErrResponse(res, 500, 'Error adding comment: ' + err.message + '.');
             } else {
-                utils.sendSuccessResponse(res);
+                utils.sendSuccessResponse(res, {comment: comment});
             }
         });
     }
