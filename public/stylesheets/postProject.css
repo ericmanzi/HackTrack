@@ -1,0 +1,18 @@
+#post-project {
+    margin: 0 auto;
+    width: 80%;
+}
+
+.project-post-image-links, .remove_imagelink_field, .add_imagelink_field_button {
+    margin-top:5px;
+}
+
+.tagit-label {
+    color: #000000;
+}
+
+.project-post-tags-input:focus {
+    outline: none;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+}
