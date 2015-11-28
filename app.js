@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var utils = require('./utils/utils');
 require('handlebars/runtime');
 var mongoose = require('mongoose');
 
@@ -35,7 +36,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session({ secret : 'hacktrack', resave : true, saveUninitialized : true }));
+app.use(session({ secret : utils.randString(16), resave : true, saveUninitialized : true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Authentication middleware. This function

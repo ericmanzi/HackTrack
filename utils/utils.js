@@ -1,3 +1,5 @@
+var crypto = require('crypto');
+
 // Source: Notes Demo App
 // These methods abstract out the basic mechanism
 // of creating server responses with some content
@@ -27,6 +29,20 @@ var utils = (function () {
             success: false,
             err: err
         }).end();
+    };
+
+    // Generates a random string with the specified number of characters.
+    // len: length of string to generate
+    // chars: alphabet to choose characters from
+    // If chars is not set, we default to alphanumeric alphabet.
+    _utils.randString = function(len, chars) {
+	    chars = chars || 'abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789';
+	    var rnd = crypto.randomBytes(len);
+	    var value = new Array(len);
+	    for (var i = 0; i < len; i++) {
+		    value[i] = chars[rnd[i] % chars.length];
+	    }
+	    return value.join('');
     };
 
     Object.freeze(_utils);
