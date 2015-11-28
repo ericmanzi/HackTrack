@@ -160,7 +160,7 @@ projectSchema.statics.getTrendingProjects = function(dayIndex, tag, strFilter, c
 		}
 		Project.find(query, function(err, projects) {
 			if(err) {
-				callback(err, undefined);
+				callback(err, null);
 				return;
 			}
 			// apply string filter if it is set, by matching with title and description of each project
@@ -172,7 +172,7 @@ projectSchema.statics.getTrendingProjects = function(dayIndex, tag, strFilter, c
 				projects = projects.filter(applyStrFilter);
 			}
 			projects.sort(projectsSortByVotes);
-			callback(undefined, {
+			callback(null, {
 				date: dateRange[0],
 				prettyDate: dateRange[0].format(common.DATE_FORMAT),
 				projects: projects,
@@ -230,7 +230,7 @@ projectSchema.statics.getTags = function(count, callback) {
 		if(tagsByHits.length > count) {
 			tagsByHits = tagsByHits.slice(0, count);
 		}
-		callback(undefined, tagsByHits);
+		callback(null, tagsByHits);
 	});
 };
 

@@ -92,7 +92,7 @@ activitySchema.statics.getActivities = function(userIDs, count, callback) {
                         callback(err);
                         return;
                     }
-                    callback(undefined, {
+                    callback(null, {
                         user: activity.user,
                         type: activity.type,
                         obj: activity[typeKey],
