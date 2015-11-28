@@ -66,7 +66,7 @@ router.post('/', function(req, res) {
             owner: req.currentUser.username,
             imageLinks: imageLinksList,
             upvoterUsernames: [],
-            videoIDs : [videoID],
+            videoID : videoID,
             tags: tagsList,
             date: new Date()
         };
@@ -114,6 +114,51 @@ router.get('/:projID', function(req, res) {
 });
 
 /*
+ POST /projects/edit/:projID
+ Request body:
+ - content: projectID
+ Response:
+ - success: true if the server succeeded in updating a project
+ - err: on failure, an error message
+ */
+router.post('/:projID/edit', function(req, res) {
+    if (!req.currentUser) { // Require authentication to use this feature
+        utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
+    } else {
+        var imageLinksList = [];
+        if (req.body.imageLinks !== ""){
+            imageLinksList = req.body.imageLinks.split(/\s*,\s*/);
+        }
+
+        var tagsList = [];
+        if (req.body.tags !== ""){
+            tagsList = req.body.tags.split(/\s*,\s*/);
+        }
+        var videoID = getYouTubeID(req.body.videoLink);
+        var projectJSON = {
+            title: req.body.title,
+            description: req.body.description,
+            imageLinks: imageLinksList,
+            videoID : videoID,
+            tags: tagsList,
+        };
+
+        Project.updateProject(projectJSON, req.params.projID, req.currentUser.username, function(err){
+            if (err){
+
+                if (err.projectNotFound){
+                    utils.sendErrResponse(res, 404, 'Project not found.');
+                } else {
+                    utils.sendErrResponse(res, 500, 'An unknown error occurred.');
+                }
+            } else {
+                utils.sendSuccessResponse(res);
+            }
+        })
+    }
+});
+
+/*
  POST /projects/:projID
  Request body:
  - content: projectID
@@ -142,7 +187,7 @@ router.post('/:projID', function(req, res) {
 });
 
 /*
- POST /projects/:projID/addDiscussion
+ POST /projects/:projID/discussion
  Adds a discussion to a project.
  Request body:
  - content: the textual content for the discussion
@@ -150,15 +195,15 @@ router.post('/:projID', function(req, res) {
  - success: if the server succeeded in adding the discussion
  - err: on failure, an error message
  */
-router.post('/:projID/addDiscussion', function(req, res) {
+router.post('/:projID/discussion', function(req, res) {
     if (!req.currentUser) { // Require authentication to use this feature
         utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
     } else {
-        Post.addDiscussion(req.params.projID, req.currentUser.id, req.body.content, function(err){
+        Post.addDiscussion(req.params.projID, req.currentUser.id, req.body.content, function(err, discussion){
             if (err){
                 utils.sendErrResponse(res, 500, 'Error adding discussion: ' + err.message + '.');
             } else {
-                utils.sendSuccessResponse(res);
+                utils.sendSuccessResponse(res, {discussion: discussion});
             }
         });
     }
@@ -177,11 +222,11 @@ router.post('/:projID/discussions/:discussionID/comment', function(req, res) {
     if (!req.currentUser) { // Require authentication to use this feature
         utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
     } else {
-        Post.addComment(req.params.projID, req.params.discussionID, req.currentUser.id, req.body.content, function(err){
+        Post.addComment(req.params.projID, req.params.discussionID, req.currentUser.id, req.body.content, function(err, comment){
             if (err){
                 utils.sendErrResponse(res, 500, 'Error adding comment: ' + err.message + '.');
             } else {
-                utils.sendSuccessResponse(res);
+                utils.sendSuccessResponse(res, {comment: comment});
             }
         });
     }

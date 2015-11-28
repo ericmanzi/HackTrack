@@ -14,7 +14,7 @@ var projectSchema = mongoose.Schema({
 	description : {type: String, required : true},
 	owner : {type: String, required : true},
 	imageLinks : [String],
-	videoIDs : [String],
+	videoID : {type: String},
 	upvoterUsernames : [String],
 	tags : [String],
 	date : {type : Date, default: Date.now, required : true, index: true}
@@ -53,7 +53,45 @@ projectSchema.statics.createNewProject = function(projectJSONobject, callback){
 			}
 		});
 	});
+}
 
+/**
+	Static method for updating existing Project document
+	@param {object} project object
+	@param {function} a callback function
+*/
+projectSchema.statics.updateProject = function(projectJSONobject, projectID, editorUsername, callback){
+	// make tags lowercase
+	if(projectJSONobject.tags) {
+		projectJSONobject.tags = projectJSONobject.tags.map(function(str) {
+			return str.toLowerCase();
+		});
+	}
+
+	this.findOne({_id : projectID}, function(error, foundProject){
+		if (error){
+			callback(error);
+		} else {
+			if (foundProject && foundProject.owner === editorUsername){
+				foundProject.title = projectJSONobject.title;
+				foundProject.description = projectJSONobject.description;
+				foundProject.imageLinks = projectJSONobject.imageLinks;
+				foundProject.videoID = projectJSONobject.videoID;
+				foundProject.tags = projectJSONobject.tags;
+				// TODO: create an activity for this edit/update project event
+				//  Activity.addActivity(user.id, Activity.Types.PROJECT_EDIT, project, callback); ????
+				foundProject.save(function(error){
+					if (error){
+						callback(error);
+					} else {
+						callback(null);
+					}
+				});
+			} else {
+				callback({projectNotFound : true})
+			}
+		}
+	});
 }
 
 /**
@@ -122,7 +160,7 @@ projectSchema.statics.getTrendingProjects = function(dayIndex, tag, strFilter, c
 		}
 		Project.find(query, function(err, projects) {
 			if(err) {
-				callback(err, undefined);
+				callback(err, null);
 				return;
 			}
 			// apply string filter if it is set, by matching with title and description of each project
@@ -134,7 +172,7 @@ projectSchema.statics.getTrendingProjects = function(dayIndex, tag, strFilter, c
 				projects = projects.filter(applyStrFilter);
 			}
 			projects.sort(projectsSortByVotes);
-			callback(undefined, {
+			callback(null, {
 				date: dateRange[0],
 				prettyDate: dateRange[0].format(common.DATE_FORMAT),
 				projects: projects,
@@ -192,7 +230,7 @@ projectSchema.statics.getTags = function(count, callback) {
 		if(tagsByHits.length > count) {
 			tagsByHits = tagsByHits.slice(0, count);
 		}
-		callback(undefined, tagsByHits);
+		callback(null, tagsByHits);
 	});
 };
 

@@ -8,12 +8,33 @@ var loadPage = function(template, data) {
     //data = data || {projects:projects};
     data.user_logged_in = currentUser!==null;
     data.username = currentUser;
+
+    if (template === "projectView"){
+        data.is_owner_of_this_project = data.project.owner === currentUser;
+    }
+
     $('#main-container').html(Handlebars.templates[template](data));
+
+    ///////// DEALING WITH TAGS ////////////
     if (template === 'postProject'){
         $("#project-post-tags").tagit({
-          placeholderText : " Enter project tag..."
+            placeholderText : " Enter project tag..."
+        });
+    } else if (template === "edit-project"){
+        $("#project-edit-tags").tagit({
+            placeholderText : " Enter project tag..."
+        });
+        data.project.tags.forEach(function(currentTag){
+            $("#project-edit-tags").tagit("createTag", currentTag);
         });
     }
+
+    /////////// SETTING BACKGROUND IMAGE //////////
+    if (template === 'projectView'){
+        if (data.project.imageLinks.length !== 0){
+            $('#project-header').css("background", "linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(" + data.project.imageLinks[0] + ")");    
+        } 
+    } 
 };
 
 
@@ -68,6 +89,14 @@ var loadUserPage = function(username) {
         loadPage('userProfile', data);
     });
 };
+
+var loadEditProjectPage = function(projID){
+    $.get('/projects/'+projID, function(response){
+        loadPage('edit-project', {
+            project: response.content.project
+        });
+    });
+}
 
 $(document).ready(function() {
      $.get('/users/current', function(response) {

@@ -6,9 +6,9 @@
     var addDiscussion = function() {
         var projectID = $('#project-header').data('project-id');
         var content = $('#project-discussion-add-content').val();
-        var data = { content: content };
+        var data = { content: content, csrftoken: getCSRFToken() };
         $.post(
-            '/projects/' + projectID + '/addDiscussion',
+            '/projects/' + projectID + '/discussion',
             data
         ).done(function(response) {
             loadProjectPage(projectID);
@@ -34,7 +34,7 @@
     var addComment = function(discussionID) {
         var projectID = $('#project-header').data('project-id');
         var content = $('#comment-add-content-' + discussionID).val();
-        var data = { content: content };
+        var data = { content: content, csrftoken: getCSRFToken() };
         $.post(
             '/projects/' + projectID + '/discussions/' + discussionID + '/comment',
             data

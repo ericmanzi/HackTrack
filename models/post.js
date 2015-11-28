@@ -52,7 +52,7 @@ postSchema.statics.addDiscussion = function(projectID, userID, content, callback
     discussion.save(function(err) {
         if(err) {
             if(callback) {
-                callback(err, undefined);
+                callback(err);
             }
             return;
         }
@@ -77,7 +77,7 @@ postSchema.statics.getDiscussions = function(projectID, callback) {
         populate('user').
         exec(function(err, discussions) {
             if(err) {
-                callback(err, undefined);
+                callback(err);
                 return;
             }
             async.map(discussions, function(discussion, callback) {
@@ -110,7 +110,7 @@ postSchema.statics.getDiscussionComments = function(discussionID, callback) {
         populate('user').
         exec(function(err, comments) {
             if(err) {
-                callback(err, undefined);
+                callback(err);
                 return;
             }
             var commentToObj = function(comment) {
@@ -124,7 +124,7 @@ postSchema.statics.getDiscussionComments = function(discussionID, callback) {
                     content: comment.content,
                 };
             };
-            callback(undefined, comments.map(commentToObj));
+            callback(null, comments.map(commentToObj));
         });
 };
 
@@ -136,10 +136,10 @@ postSchema.statics.addComment = function(projectID, discussionID, userID, conten
     // verify discussion exists
     Post.findOne({'_id': discussionID, 'project': projectID}, function(err, discussion) {
         if(err) {
-            callback(err, undefined);
+            callback(err);
             return;
         } else if(!discussion) {
-            callback(new Error('no such discussion'), undefined);
+            callback(new Error('no such discussion'));
             return;
         }
         var comment = new Post({
@@ -151,7 +151,7 @@ postSchema.statics.addComment = function(projectID, discussionID, userID, conten
         comment.save(function(err) {
             if(callback) {
                 if(err) {
-                    callback(err, undefined);
+                    callback(err);
                 } else {
                     Activity.addActivity(userID, Activity.Types.POST_CREATE, comment.id, function(err) {
                         callback(err, comment.id);
