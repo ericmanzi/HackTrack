@@ -46,7 +46,8 @@
                 description : description,
                 imageLinks : imageLinks,
                 tags : tags,
-                videoLink : videoLink
+                videoLink : videoLink,
+                csrftoken: getCSRFToken()
             }
         ).done(function(response) {
             loadHomePage();
@@ -128,12 +129,13 @@
 
         $.post(
             '/projects/'+ projectID + '/edit',
-            {   
+            {
                 title : title,
                 description : description,
                 imageLinks : imageLinks,
                 tags : tags,
-                videoLink : videoLink
+                videoLink : videoLink,
+                csrftoken: getCSRFToken()
             }
         ).done(function(response) {
             loadHomePage();
@@ -169,7 +171,8 @@
         var item = $(this).parent();
         var id = item.data('project-id');
         $.post(
-            '/projects/' + id
+            '/projects/' + id,
+            {csrftoken: getCSRFToken()}
         ).done(function(response) {
             loadProjectPage(id);
         }).fail(function(responseObject) {

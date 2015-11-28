@@ -38,6 +38,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({ secret : utils.randString(16), resave : true, saveUninitialized : true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(require('./utils/csrf'));
 
 // Authentication middleware. This function
 // is called on _every_ request and populates

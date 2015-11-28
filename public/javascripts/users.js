@@ -46,7 +46,8 @@
     $(document).on('click', '#logout-link', function(evt) {
         evt.preventDefault();
         $.post(
-            '/users/logout'
+            '/users/logout',
+            {csrftoken: getCSRFToken()}
         ).done(function(response) {
             currentUser = null;
             loadHomePage();
@@ -60,7 +61,7 @@
     $(document).on('click', '#favorite-button', function(evt) {
         evt.preventDefault();
         var item = $(this).parent();
-        var data = { projectID: item.data('project-id') };
+        var data = { projectID: item.data('project-id'), csrftoken: getCSRFToken() };
         $.post(
             '/users/favorites',
             data
