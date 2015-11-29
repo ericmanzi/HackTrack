@@ -433,7 +433,72 @@ router.post('/profile_picture', function(req, res) {
     }
 });
 
+/*
+ Reset the user's password.
+ POST: /users/profiles/:username/password
+ Request body:
+ - password: the new password
+ - key: password reset key
+ OR
+ - email: the user's e-mail address
+ Response:
+ - success: true if requesting a password reset or performing password update succeeded
+ - err: on error, an error message
+ */
+router.post('/profiles/:username/password', function(req, res) {
+    if (req.currentUser) {
+        utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'You are already logged in');
+        return;
+    }
+    User.findByUsername(req.params.username, function(err, user) {
+        if(err) {
+            utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+            return;
+        }
+        if(req.body.email) {
+            user.passwordResetRequest(req.body.email, function(err, key) {
+                if(err) {
+                    utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+                    return;
+                }
+                email(req.body.email, 'Password reset request', 'pwreset-request', {username: user.username, key: key});
+                utils.sendSuccessResponse(res, {});
+            });
+        } else if(req.body.password && req.body.key) {
+            user.passwordResetFinish(req.body.key, req.body.password, function(err) {
+                if(err) {
+                    utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+                } else {
+                    utils.sendSuccessResponse(res, {});
+                }
+            });
+        } else {
+            utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Neither e-mail address nor password specified.');
+        }
+    });
+});
+
+/*
+ Display password reset form with reset key.
+ GET /users/profiles/:username/password
+ Parameters:
+ - key: password reset key
+ Response: page containing password reset form
+ */
+router.get('/profiles/:username/password', function(req, res) {
+    if (req.currentUser) {
+        // already logged in!
+        res.redirect('/');
+        return;
+    }
+    res.render('index', {'autoload': {
+        'modal': 'pwreset-finish',
+        'data': {
+            'username': req.params.username,
+            'key': req.query.key,
+        },
+    }});
+});
+
 
 module.exports = router;
-
-

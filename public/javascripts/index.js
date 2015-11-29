@@ -40,11 +40,14 @@ var loadPage = function(template, data) {
 };
 
 
-var loadHomePage = function(tag, filter) {
+var loadHomePage = function(tag, filter, callback) {
     $.get('/tags', function(response) {
         data.tags = response.content;
         loadPage('index', data);
         updateHomePage(tag, filter);
+        if(callback) {
+            callback();
+        }
     });
 };
 
@@ -105,19 +108,27 @@ var loadEditProjectPage = function(projID){
 }
 
 $(document).ready(function() {
-     $.get('/users/current', function(response) {
-         if (response.content.loggedIn) {
-             currentUser = response.content.user;
-             profile_picture = response.content.profile_picture;
-             console.log("current user is "+currentUser)
-         }
-         loadHomePage();
-     });
+    $.get('/users/current', function(response) {
+        if (response.content.loggedIn) {
+            currentUser = response.content.user;
+            profile_picture = response.content.profile_picture;
+            console.log("current user is "+currentUser)
+        }
+        loadHomePage('', '', function() {
+            // autoload a modal if requested
+            // this is used to load special forms on some pages, e.g. password reset
+            var autoloadEl = $('#autoload');
+            if(autoloadEl.length === 1) {
+                var modalEl = $('#' + autoloadEl.data('modal'));
+                modalEl.data(autoloadEl.data());
+                modalEl.modal('show');
+            }
+        });
+    });
     loadHomePage();
 
     /*---------INITIALIZE PARSE--------*/
     Parse.initialize("8jPwCfzXBGpPR2WVW935pey0C66bWtjMLRZPIQc8", "zgB9cjo7JifswwYBTtSvU1MSJCMVZMwEZI3Etw4d");
-
 });
 
 $(document).on('click', '.project-link', function(evt) {
