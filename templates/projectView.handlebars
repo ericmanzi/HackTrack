@@ -51,7 +51,8 @@
 					{{#each discussions}}
 						<div class="project-discussion-post">
 							<div class="post-content project-discussion-head">
-							    <span class="post-user"><a href="#" id="view-user" view-user-id={{username}}>{{username}}</a></span>
+								<span class="userImage"><img src="{{user.profile_picture}}" width="60" height="60"></span>
+							    <span class="post-user"><a href="#" id="view-user" view-user-id={{user.username}}>{{user.username}}</a></span>
 							    <span class="post-time">on {{prettyDate}} at {{prettyTime}}</span>
 							</div>
 							<div class="post-content project-discussion-body">
@@ -60,7 +61,8 @@
 							{{#each comments}}
 								<div class="project-discussion-comment">
 									<div class="post-content discussion-comment-head">
-							            <span class="post-user"><a href="#" id="view-user" view-user-id={{username}}>{{username}}</a></span>
+										<span class="userImage"><img src="{{user.profile_picture}}" width="60" height="60"></span>
+							            <span class="post-user"><a href="#" id="view-user" view-user-id={{user.username}}>{{user.username}}</a></span>
 							            <span class="post-time">on {{prettyDate}} at {{prettyTime}}</span>
 									</div>
 									<div class="post-content discussion-comment-body">
