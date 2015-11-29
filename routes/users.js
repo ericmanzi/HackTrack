@@ -306,41 +306,6 @@ router.delete('/favorites', function(req, res) {
 
 
 /*
- Get this user's favorite projects
-
- GET /users/favorites
- Request body: empty
- Response:
- - success: true if the server succeeded in finding the user's favorites
- - content: all of this user's favorite projects
- - error msg:   error status code 400 if there was an error retrieving the
- user's favorite projects.
- error status code 403 if user isn't authenticated
- */
-router.get('/favorites', function(req, res) {
-    if (req.currentUser) {
-        User.findByUsername(req.currentUser.username, function(err, user) {
-            if (err) {
-                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
-            } else {
-                user.getFavorites(function(err, favorites) {
-                    if (err) {
-                        utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
-                    } else {
-                        utils.sendSuccessResponse(res, { projects: favorites });
-                    }
-                });
-            }
-        });
-    } else {
-        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN,
-            'There is no user currently logged in.');
-    }
-});
-
-
-
-/*
  Get the current user's projects
 
  GET /users/myprojects

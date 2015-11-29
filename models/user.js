@@ -180,6 +180,55 @@ userSchema.methods.getFavoritesIdList = function() {
     return user.favorites;
 };
 
+
+/**
+ * Add the given username to list of usernames being followed by this user
+ * @param username
+ * @param callback
+ */
+userSchema.methods.follow = function(username, callback) {
+    var user = this;
+    User.findByUsername(username, function(err, followedUser) {
+        if (err) {
+            callback({ msg: err.msg});
+        } else {
+            if ( user.following.indexOf(username) === -1 ) {
+                user.following.push(projectID);
+                user.save(function(err,savedUser) {
+                    callback(null);
+                });
+            } else {
+                callback({msg: 'You are already following this user.'});
+            }
+        }
+    });
+};
+
+
+/**
+ * Removes the username from list of usernames being following by this user
+ * @param username
+ * @param callback
+ */
+userSchema.methods.unfollow = function(username, callback) {
+    var user = this;
+    User.findByUsername(username, function(err, followedUser) {
+        if (err) {
+            callback({ msg: err.msg});
+        } else {
+            var userIndex = user.following.indexOf(username);
+            if ( userIndex === -1 ) {
+                callback({msg: 'You are not following this user.'});
+            } else {
+                user.following.splice(userIndex, 1);
+                user.save(function(err,savedUser) {
+                    callback(null);
+                });
+            }
+        }
+    });
+};
+
 var User = mongoose.model("User", userSchema);
 
 module.exports = User;
