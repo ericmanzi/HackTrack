@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     Project = require('../models/project'),
     Post = require('../models/post'),
+    utils = require('../utils/utils'),
     bcrypt = require('bcrypt'),
     SALT_WORK_FACTOR = 10;  // We use the salt to prevent rainbow table attacks and to
                             // resist brute-force attacks in the event that someone
@@ -17,15 +18,20 @@ var userSchema = mongoose.Schema({
     username: {type: String, unique: true},
     email: {type: String, unique: true}, // restrict email to a single user
     password: {type: String},
+    verification_key: {type: String},
     favorites: Array,
-    verified: {type: Boolean, default: false},
     following: Array,
     profile_picture: String
 });
 
 // This middleware automatically hashes the password before it is saved to the database
+// We also generate a verification key if none exists.
 userSchema.pre('save', function(next) {
     var user = this;
+    // set verification key if not set
+    if (user.verification_key === undefined) {
+        user.verification_key = utils.randString(16);
+    }
     // only hash the password if it has been modified (or is new)
     if (!user.isModified('password')) return next();
     // generate a salt
@@ -94,6 +100,13 @@ userSchema.methods.verifyPassword = function(candidatepw, callback) {
         if (err) callback(err);
         else callback(null, isMatch);
     });
+};
+
+/**
+ * Returns true if the user's account is verified, and false otherwise.
+ */
+userSchema.methods.isVerified = function() {
+    return this.verification_key === '';
 };
 
 

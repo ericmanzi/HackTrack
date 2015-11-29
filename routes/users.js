@@ -57,7 +57,7 @@ router.post('/login', function(req, res) {
 
     User.findByUsername(req.body.username, function(err, user) {
         if (user) {
-            if (user.verified) {
+            if (user.isVerified()) {
                 user.verifyPassword(req.body.password, function(err, match) {
                     if (match) {
                         req.session.username = req.body.username;
@@ -148,12 +148,12 @@ router.post('/', function(req, res) {
                                 text: "Thanks for signing up to use MIT HackTrack! \r\n"+
                                 "Please click the link below to activate your account:\r\n"+
                                 "http://hacktrack-mit.herokuapp.com/users/activate?username="+user.username+
-                                "&key="+user.password+"\r\n\r\n"+
+                                "&key="+user.verification_key+"\r\n\r\n"+
                                 "The MIT Hacktrack team\r\n"+"hacktrack-mit.herokuapp.com",
                                 html : "Thanks for signing up to use MIT HackTrack!<br/>"+
                                 "Please click the link below to activate your account: <br/>"+
                                 "<a href='http://hacktrack-mit.herokuapp.com/users/activate?username="+user.username+
-                                "&key="+user.password+"'>Verify your account</a>"+
+                                "&key="+user.verification_key+"'>Verify your account</a>"+
                                 "<br/><br/>The MIT Hacktrack team<br/>"+
                                 "<a href='http://hacktrack-mit.herokuapp.com'>hacktrack-mit.herokuapp.com</a>" //TODO: back to heroku
                             };
@@ -199,12 +199,12 @@ router.get('/activate', function(req, res) {
         if (err) {
             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Error verifying account: Invalid username');
         } else {
-            if (user.password===key) {
+            if (user.verification_key===key) {
                 console.log("session: "+req.session.username);
                 req.session.username = username;
                 console.log("session: "+req.session.username);
 
-                user.verified=true;
+                user.verification_key='';
                 res.render('index');
                 user.save();
             } else {
