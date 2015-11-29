@@ -166,3 +166,7 @@ $(document).on('click', '.home-link', function(event){
     loadHomePage();
 });
 
+// clear error texts when new modal is displayed
+$(document).on('hide.bs.modal', '.modal', function(event){
+    $('.error').text('');
+});
