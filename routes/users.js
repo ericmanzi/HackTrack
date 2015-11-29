@@ -146,15 +146,16 @@ router.post('/', function(req, res) {
                                 to : req.body.email,
                                 subject : "Verify your account with MIT HackTrack",
                                 text: "Thanks for signing up to use MIT HackTrack! \r\n"+
-                                "Please go to the link below to activate your account:\r\n"+
-                                "hacktrack-mit.herokuapp.com/users/something...\r\n"+
+                                "Please click the link below to activate your account:\r\n"+
+                                "http://hacktrack-mit.herokuapp.com/users/activate?username="+user.username+
+                                "&key="+user.password+"\r\n\r\n"+
                                 "The MIT Hacktrack team\r\n"+"hacktrack-mit.herokuapp.com",
                                 html : "Thanks for signing up to use MIT HackTrack!<br/>"+
                                 "Please click the link below to activate your account: <br/>"+
-                                "<a href='http://localhost:3000/users/activate?username="+user.username+
+                                "<a href='http://hacktrack-mit.herokuapp.com/users/activate?username="+user.username+
                                 "&key="+user.password+"'>Verify your account</a>"+
                                 "<br/><br/>The MIT Hacktrack team<br/>"+
-                                "<a href='hacktrack-mit.herokuapp.com'>hacktrack-mit.herokuapp.com</a>" //TODO: back to heroku
+                                "<a href='http://hacktrack-mit.herokuapp.com'>hacktrack-mit.herokuapp.com</a>" //TODO: back to heroku
                             };
                             transport.sendMail(mailOptions, function(error, info){
                                 if(error){
