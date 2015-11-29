@@ -6,16 +6,7 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 var utils = require('../utils/utils');
-var config = require('../config');
-
-var nodemailer = require('nodemailer');
-var smtpTransport = require('nodemailer-smtp-transport');
-
-
-var transport = nodemailer.createTransport((smtpTransport({
-    service: config.smtp_service,
-    auth: config.smtp_auth
-})));
+var email = require('../utils/email');
 
 /*
  For both login and create user, we want to send an error code if the user
@@ -139,33 +130,10 @@ router.post('/', function(req, res) {
                             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, errorMsg);
                         } else {
                             utils.sendSuccessResponse(res, req.body.username);
-
-                            /*-----------------START Send verification email--------------------*/
-                            var mailOptions={
-                                from: "MIT Hacktrack \<hacktrack.mit@gmail.com\>",
-                                to : req.body.email,
-                                subject : "Verify your account with MIT HackTrack",
-                                text: "Thanks for signing up to use MIT HackTrack! \r\n"+
-                                "Please click the link below to activate your account:\r\n"+
-                                "http://hacktrack-mit.herokuapp.com/users/activate?username="+user.username+
-                                "&key="+user.verification_key+"\r\n\r\n"+
-                                "The MIT Hacktrack team\r\n"+"hacktrack-mit.herokuapp.com",
-                                html : "Thanks for signing up to use MIT HackTrack!<br/>"+
-                                "Please click the link below to activate your account: <br/>"+
-                                "<a href='http://hacktrack-mit.herokuapp.com/users/activate?username="+user.username+
-                                "&key="+user.verification_key+"'>Verify your account</a>"+
-                                "<br/><br/>The MIT Hacktrack team<br/>"+
-                                "<a href='http://hacktrack-mit.herokuapp.com'>hacktrack-mit.herokuapp.com</a>" //TODO: back to heroku
-                            };
-                            transport.sendMail(mailOptions, function(error, info){
-                                if(error){
-                                    console.log(error);
-                                } else {
-                                    console.log('Message sent: ' + info.response);
-                                }
+                            email(req.body.email, 'Verify your account with MIT HackTrack', 'verification', {
+                                username: user.username,
+                                key: user.verification_key,
                             });
-                            /*-----------------END Send verification email--------------------*/
-
                         }
                     });
                 } else {
