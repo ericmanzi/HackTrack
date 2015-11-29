@@ -1,14 +1,11 @@
 
 <div class="project-container" >
-	<div class="proj project-navigation">
-   	
-   	<a href="#" class="home-link">
-   	<span class="glyphicon glyphicon-remove" aria-hidden="true" style="font-size:1.5em"></span>
-   	</a>
-	
-	</div>
-	<div class="proj project-content" >
+	<div class="proj" >
 		<header class="project-header" id="project-header" data-project-id={{project._id}}>
+				<a href="#" class="home-link">
+	   				<span class="glyphicon glyphicon-remove cancel-button" aria-hidden="true" style="font-size:3em; padding-top:2px; padding-left:2px"></span>
+	   			</a>
+		   	
 			<div class="project-title" id="projectView-title">
 				{{project.title}}
 			</div>
@@ -39,12 +36,12 @@
 		</header>
 		<div class="project-body">
 			<div class="project-body-left">
-				<div class="project-media">
+				<div class="project-content project-media">
 					{{#each project.imageLinks}}
 						<img src={{this}} alt="image" height="150px">
 					{{/each}}
 				</div>
-				<div class="project-discussion">
+				<div class="project-content project-discussion">
 					<div class="project-discussion-title">
 					    Discussion
 				    </div>
