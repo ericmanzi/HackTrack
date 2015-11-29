@@ -5,9 +5,7 @@ var currentUser = null;
 var data={};
 var profile_picture = null;
 
-var loadPage = function(template, data) {
-    //var projects = [{project:"project1", _id:1}, {project:"project2", _id:2}];
-    //data = data || {projects:projects};
+var loadPage = function(template, data, isReload) {
     data.user_logged_in = currentUser!==null;
     data.username = currentUser;
     data.profile_picture = profile_picture;
@@ -16,6 +14,11 @@ var loadPage = function(template, data) {
     }
 
     $('#main-container').html(Handlebars.templates[template](data));
+
+    // if we're loading a new "page", scroll to the top
+    if(!isReload) {
+        window.scrollTo(0, 0);
+    }
 
     ///////// DEALING WITH TAGS ////////////
     if (template === 'postProject'){
@@ -68,13 +71,13 @@ var updateHomePage = function(tag, filter) {
     });
 };
 
-var loadProjectPage = function(id){
+var loadProjectPage = function(id, isReload){
     $.get('/projects/'+id, function(response){
         loadPage('projectView', {
             project: response.content.project,
             discussions: response.content.discussions,
             favorited: response.content.favorited
-        });
+        }, isReload);
     });
 };
 

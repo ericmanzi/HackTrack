@@ -89,7 +89,7 @@ var files = [];
             '/users/favorites',
             data
         ).done(function(response) {
-            loadProjectPage(data.projectID);
+            loadProjectPage(data.projectID, true);
         }).fail(function(responseObject) {
             var response = $.parseJSON(responseObject.responseText);
             $('.error').text(response.err);
@@ -105,7 +105,7 @@ var files = [];
             method: 'DELETE',
             data: data
         }).done(function(response) {
-            loadProjectPage(data.projectID);
+            loadProjectPage(data.projectID, true);
         }).fail(function(responseObject) {
             var response = $.parseJSON(responseObject.responseText);
             console.log(response.err);

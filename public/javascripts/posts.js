@@ -11,7 +11,7 @@
             '/projects/' + projectID + '/discussion',
             data
         ).done(function(response) {
-            loadProjectPage(projectID);
+            loadProjectPage(projectID, true);
         }).fail(function(responseObject) {
             var response = $.parseJSON(responseObject.responseText);
             $('.error').text(response.err);
@@ -39,7 +39,7 @@
             '/projects/' + projectID + '/discussions/' + discussionID + '/comment',
             data
         ).done(function(response) {
-            loadProjectPage(projectID);
+            loadProjectPage(projectID, true);
         }).fail(function(responseObject) {
             var response = $.parseJSON(responseObject.responseText);
             $('.error').text(response.err);
