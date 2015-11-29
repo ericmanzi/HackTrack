@@ -1,13 +1,9 @@
 <div class="navBar">
     {{#if user_logged_in}}
-        <a href="#" class="profile-link"><div class="navAvatar pull-right">
-            <div class="userImage"><img src="{{profile_picture}}" width="50" height="50" id="profile-sm"></div>
-        </div>
-        </a>
+        
     {{/if}}
-    <div class="pageTitle">
+    <div class="page-title">
         <h1 class="home-link"><a href="#" style="text-decoration:none;">MIT HACKTRACK</a></h1>
-
     </div>
 
     <div class="navActions">
@@ -15,6 +11,11 @@
         {{#if user_logged_in}}
             <div class="pull-right">
 
+            <a href="#" class="profile-link">
+                <div class="navAvatar">
+                    <div class="userImage"><img src="{{profile_picture}}" width="50" height="39" id="profile-sm"></div>
+                </div>
+            </a>
                 <i>Logged in as <strong>{{username}}</strong> </i>
                 <a class="btn btn-primary" id="logout-link" >Logout</a>
             </div>

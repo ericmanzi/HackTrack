@@ -4,16 +4,25 @@ html{
     font-family: 'proxima-nova', 'Proxima Nova', sans-serif;
 }
 body{
-    width: 95%;
     margin:auto;
 }
 header{
     display:block;
 }
-.navBar{
+.title-element{
+    display:inline-block;
+    width:300px;
+    height:40px;
+}
+.navAvatar{
+    margin:0 auto;
+    width: 50px;
 
 }
-.pageTitle{
+.navActions{
+    height:80px;
+}
+.page-title{
     margin:0 auto;
     width:300px;
 }
@@ -268,3 +277,5 @@ a{
     text-decoration: underline;
     color: white;
 }
+
+

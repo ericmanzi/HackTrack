@@ -1,3 +1,7 @@
+.post-project{
+	padding-top:5px;
+	vertical-align: middle;
+}
 #post-project {
     margin: 0 auto;
     width: 80%;
@@ -14,5 +18,5 @@
 .project-post-tags-input:focus {
     outline: none;
     border-color: #9ecaed;
-    box-shadow: 0 0 10px #9ecaed;
+    box-shadow: 0 0 5px #9ecaed;
 }
