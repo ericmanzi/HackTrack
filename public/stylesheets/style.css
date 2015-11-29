@@ -278,4 +278,6 @@ a{
     color: white;
 }
 
-
+#searchContainer {
+	width: 400px;
+}
