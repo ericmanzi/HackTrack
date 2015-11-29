@@ -4,16 +4,25 @@ html{
     font-family: 'proxima-nova', 'Proxima Nova', sans-serif;
 }
 body{
-    width: 95%;
     margin:auto;
 }
 header{
     display:block;
 }
-.navBar{
+.title-element{
+    display:inline-block;
+    width:300px;
+    height:40px;
+}
+.navAvatar{
+    margin:0 auto;
+    width: 50px;
 
 }
-.pageTitle{
+.navActions{
+    height:80px;
+}
+.page-title{
     margin:0 auto;
     width:300px;
 }
@@ -147,7 +156,7 @@ a{
     background-color: transparent;
 }
 /*For Project Page*/
-.project-container{
+/*.project-container{
     display:flex;
 }
 .project-navigation{
@@ -158,7 +167,7 @@ a{
 .project-content{
     width: 1120px;
     height:100%;
-}
+}*/
 
 .project-header{
     min-height: 250px;
@@ -178,6 +187,9 @@ a{
     padding-top: 5px;
     vertical-align: middle;
     font-size: 20px;
+}
+.project-content{
+    margin: 20px 10px 10px 30px;
 }
 .project-body{
     display:flex;
@@ -267,4 +279,8 @@ a{
 #change-profile:hover {
     text-decoration: underline;
     color: white;
+}
+
+#searchContainer {
+	width: 400px;
 }

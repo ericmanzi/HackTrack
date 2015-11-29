@@ -103,7 +103,7 @@ describe('Post', function() {
                             return;
                         }
                         found = true;
-                        assert.equal(discussion.userID, testUser.id);
+                        assert.equal(discussion.user.id, testUser.id);
                         assert.equal(discussion.content, 'discussion text');
                     });
                     assert.ok(found);
@@ -140,7 +140,7 @@ describe('Post', function() {
                     assert.ok(!err);
                     assert.equal(comments.length, 1);
                     assert.equal(comments[0].id, commentID);
-                    assert.equal(comments[0].userID, testUser.id);
+                    assert.equal(comments[0].user.id, testUser.id);
                     assert.equal(comments[0].content, 'comment text');
                     done();
                 });
@@ -155,7 +155,7 @@ describe('Post', function() {
                     assert.equal(comments.length, 2);
                     assert.equal(comments[0].content, 'comment text');
                     assert.equal(comments[1].id, commentID);
-                    assert.equal(comments[1].userID, testUser.id);
+                    assert.equal(comments[1].user.id, testUser.id);
                     assert.equal(comments[1].content, 'second comment text');
                     done();
                 });

@@ -5,9 +5,7 @@ var currentUser = null;
 var data={};
 var profile_picture = null;
 
-var loadPage = function(template, data) {
-    //var projects = [{project:"project1", _id:1}, {project:"project2", _id:2}];
-    //data = data || {projects:projects};
+var loadPage = function(template, data, isReload) {
     data.user_logged_in = currentUser!==null;
     data.username = currentUser;
     data.profile_picture = profile_picture;
@@ -16,6 +14,11 @@ var loadPage = function(template, data) {
     }
 
     $('#main-container').html(Handlebars.templates[template](data));
+
+    // if we're loading a new "page", scroll to the top
+    if(!isReload) {
+        window.scrollTo(0, 0);
+    }
 
     ///////// DEALING WITH TAGS ////////////
     if (template === 'postProject'){
@@ -40,11 +43,14 @@ var loadPage = function(template, data) {
 };
 
 
-var loadHomePage = function(tag, filter) {
+var loadHomePage = function(tag, filter, callback) {
     $.get('/tags', function(response) {
         data.tags = response.content;
         loadPage('index', data);
         updateHomePage(tag, filter);
+        if(callback) {
+            callback();
+        }
     });
 };
 
@@ -65,13 +71,13 @@ var updateHomePage = function(tag, filter) {
     });
 };
 
-var loadProjectPage = function(id){
+var loadProjectPage = function(id, isReload){
     $.get('/projects/'+id, function(response){
         loadPage('projectView', {
             project: response.content.project,
             discussions: response.content.discussions,
             favorited: response.content.favorited
-        });
+        }, isReload);
     });
 };
 
@@ -105,19 +111,27 @@ var loadEditProjectPage = function(projID){
 }
 
 $(document).ready(function() {
-     $.get('/users/current', function(response) {
-         if (response.content.loggedIn) {
-             currentUser = response.content.user;
-             profile_picture = response.content.profile_picture;
-             console.log("current user is "+currentUser)
-         }
-         loadHomePage();
-     });
+    $.get('/users/current', function(response) {
+        if (response.content.loggedIn) {
+            currentUser = response.content.user;
+            profile_picture = response.content.profile_picture;
+            console.log("current user is "+currentUser)
+        }
+        loadHomePage('', '', function() {
+            // autoload a modal if requested
+            // this is used to load special forms on some pages, e.g. password reset
+            var autoloadEl = $('#autoload');
+            if(autoloadEl.length === 1) {
+                var modalEl = $('#' + autoloadEl.data('modal'));
+                modalEl.data(autoloadEl.data());
+                modalEl.modal('show');
+            }
+        });
+    });
     loadHomePage();
 
     /*---------INITIALIZE PARSE--------*/
     Parse.initialize("8jPwCfzXBGpPR2WVW935pey0C66bWtjMLRZPIQc8", "zgB9cjo7JifswwYBTtSvU1MSJCMVZMwEZI3Etw4d");
-
 });
 
 $(document).on('click', '.project-link', function(evt) {
@@ -152,3 +166,7 @@ $(document).on('click', '.home-link', function(event){
     loadHomePage();
 });
 
+// clear error texts when new modal is displayed
+$(document).on('hide.bs.modal', '.modal', function(event){
+    $('.error').text('');
+});

@@ -6,18 +6,7 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 var utils = require('../utils/utils');
-
-var nodemailer = require('nodemailer');
-var smtpTransport = require('nodemailer-smtp-transport');
-
-
-var transport = nodemailer.createTransport((smtpTransport({
-    service: "gmail",
-    auth: {
-        user: "hacktrack.mit@gmail.com",
-        pass: "iamhacktrack"
-    }
-})));
+var email = require('../utils/email');
 
 /*
  For both login and create user, we want to send an error code if the user
@@ -59,7 +48,7 @@ router.post('/login', function(req, res) {
 
     User.findByUsername(req.body.username, function(err, user) {
         if (user) {
-            if (user.verified) {
+            if (user.isVerified()) {
                 user.verifyPassword(req.body.password, function(err, match) {
                     if (match) {
                         req.session.username = req.body.username;
@@ -141,32 +130,10 @@ router.post('/', function(req, res) {
                             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, errorMsg);
                         } else {
                             utils.sendSuccessResponse(res, req.body.username);
-
-                            /*-----------------START Send verification email--------------------*/
-                            var mailOptions={
-                                from: "MIT Hacktrack \<hacktrack.mit@gmail.com\>",
-                                to : req.body.email,
-                                subject : "Verify your account with MIT HackTrack",
-                                text: "Thanks for signing up to use MIT HackTrack! \r\n"+
-                                "Please go to the link below to activate your account:\r\n"+
-                                "hacktrack-mit.herokuapp.com/users/something...\r\n"+
-                                "The MIT Hacktrack team\r\n"+"hacktrack-mit.herokuapp.com",
-                                html : "Thanks for signing up to use MIT HackTrack!<br/>"+
-                                "Please click the link below to activate your account: <br/>"+
-                                "<a href='http://localhost:3000/users/activate?username="+user.username+
-                                "&key="+user.password+"'>Verify your account</a>"+
-                                "<br/><br/>The MIT Hacktrack team<br/>"+
-                                "<a href='hacktrack-mit.herokuapp.com'>hacktrack-mit.herokuapp.com</a>" //TODO: back to heroku
-                            };
-                            transport.sendMail(mailOptions, function(error, info){
-                                if(error){
-                                    console.log(error);
-                                } else {
-                                    console.log('Message sent: ' + info.response);
-                                }
+                            email(req.body.email, 'Verify your account with MIT HackTrack', 'verification', {
+                                username: user.username,
+                                key: user.verification_key,
                             });
-                            /*-----------------END Send verification email--------------------*/
-
                         }
                     });
                 } else {
@@ -200,12 +167,12 @@ router.get('/activate', function(req, res) {
         if (err) {
             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Error verifying account: Invalid username');
         } else {
-            if (user.password===key) {
+            if (user.verification_key===key) {
                 console.log("session: "+req.session.username);
                 req.session.username = username;
                 console.log("session: "+req.session.username);
 
-                user.verified=true;
+                user.verification_key='';
                 res.render('index');
                 user.save();
             } else {
@@ -431,7 +398,72 @@ router.post('/profile_picture', function(req, res) {
     }
 });
 
+/*
+ Reset the user's password.
+ POST: /users/profiles/:username/password
+ Request body:
+ - password: the new password
+ - key: password reset key
+ OR
+ - email: the user's e-mail address
+ Response:
+ - success: true if requesting a password reset or performing password update succeeded
+ - err: on error, an error message
+ */
+router.post('/profiles/:username/password', function(req, res) {
+    if (req.currentUser) {
+        utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'You are already logged in');
+        return;
+    }
+    User.findByUsername(req.params.username, function(err, user) {
+        if(err) {
+            utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+            return;
+        }
+        if(req.body.email) {
+            user.passwordResetRequest(req.body.email, function(err, key) {
+                if(err) {
+                    utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+                    return;
+                }
+                email(req.body.email, 'Password reset request', 'pwreset-request', {username: user.username, key: key});
+                utils.sendSuccessResponse(res, {});
+            });
+        } else if(req.body.password && req.body.key) {
+            user.passwordResetFinish(req.body.key, req.body.password, function(err) {
+                if(err) {
+                    utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+                } else {
+                    utils.sendSuccessResponse(res, {});
+                }
+            });
+        } else {
+            utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Neither e-mail address nor password specified.');
+        }
+    });
+});
+
+/*
+ Display password reset form with reset key.
+ GET /users/profiles/:username/password
+ Parameters:
+ - key: password reset key
+ Response: page containing password reset form
+ */
+router.get('/profiles/:username/password', function(req, res) {
+    if (req.currentUser) {
+        // already logged in!
+        res.redirect('/');
+        return;
+    }
+    res.render('index', {'autoload': {
+        'modal': 'pwreset-finish',
+        'data': {
+            'username': req.params.username,
+            'key': req.query.key,
+        },
+    }});
+});
+
 
 module.exports = router;
-
-

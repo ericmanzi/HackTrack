@@ -89,7 +89,7 @@ var files = [];
             '/users/favorites',
             data
         ).done(function(response) {
-            loadProjectPage(data.projectID);
+            loadProjectPage(data.projectID, true);
         }).fail(function(responseObject) {
             var response = $.parseJSON(responseObject.responseText);
             $('.error').text(response.err);
@@ -105,7 +105,7 @@ var files = [];
             method: 'DELETE',
             data: data
         }).done(function(response) {
-            loadProjectPage(data.projectID);
+            loadProjectPage(data.projectID, true);
         }).fail(function(responseObject) {
             var response = $.parseJSON(responseObject.responseText);
             console.log(response.err);
@@ -154,6 +154,38 @@ var files = [];
         }
     });
 
+    $(document).on('submit', '#pwreset-request-form', function(evt) {
+        evt.preventDefault();
+        var username = $(this).find('input[name=username]').val();
+        var email = $(this).find('input[name=email]').val();
+        $.post(
+            '/users/profiles/' + username + '/password',
+            {email: email, csrftoken: getCSRFToken()}
+        ).done(function(response) {
+            $('#pwreset-request').modal('hide');
+            $('#pwreset-requested').modal('show');
+        }).fail(function(responseObject) {
+            var response = $.parseJSON(responseObject.responseText);
+            $('.error').text(response.err);
+        });
+    });
+
+    $(document).on('submit', '#pwreset-finish-form', function(evt) {
+        evt.preventDefault();
+        var key = $('#pwreset-finish').data('key');
+        var username = $('#pwreset-finish').data('username');
+        var password = $(this).find('input[name=password]').val();
+        $.post(
+            '/users/profiles/' + username + '/password',
+            {key: key, password: password, csrftoken: getCSRFToken()}
+        ).done(function(response) {
+            $('#pwreset-finish').modal('hide');
+            $('#pwreset-finished').modal('show');
+        }).fail(function(responseObject) {
+            var response = $.parseJSON(responseObject.responseText);
+            $('.error').text(response.err);
+        });
+    });
+
 
 })(); // Wrap in an immediately invoked function expression.
-

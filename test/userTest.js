@@ -79,25 +79,28 @@ describe('User', function() {
                         //console.log("new user:"+new_user);
                         jake = new_user;
                     }
+                    done();
                 });
             } else {
                 //console.log("user found:"+user);
                 jake = user;
+                done();
             }
         });
+    });
 
+    before(function(done) {
         Project.findOne({owner: "jake"}, function(err, project) {
             if (project) {
                 projectX = project;
+                done();
             } else {
                 Project.createNewProject(projectXObj, function(err, new_project) {
                     projectX = new_project;
+                    done();
                 });
             }
-            done();
         });
-
-
     });
 
     describe('#create', function() {
@@ -221,7 +224,7 @@ describe('User', function() {
             var oldfavs = finn.favorites.length;
             finn.unfavorite(projectX._id, function(err) {
                 var newfavs = finn.favorites.length;
-                if (err.msg==='This project is not among your favorites.') {
+                if (err && err.msg==='This project is not among your favorites.') {
                     assert.equal(oldfavs, newfavs);
                 } else {
                     assert.equal(oldfavs-newfavs, 1);
@@ -237,14 +240,104 @@ describe('User', function() {
                 if (err) {
                     assert.equal(err.msg,
                         'This project has already been favorited');
+                    done();
                 } else {
-                    assert.notEqual(finn.getFavorites().indexOf(projectX._id),-1);
+                    finn.getFavorites(function(err, favorites) {
+                        var found = false;
+                        favorites.forEach(function(favorite) {
+                            found = found || favorite.id == projectX.id;
+                        });
+                        assert.ok(found);
+                        done();
+                    });
                 }
+            })
+        });
+    });
+
+    describe('passwordResetRequest', function() {
+        // set finn as verified user
+        before(function(done) {
+            if(finn.verification_key) {
+                finn.verification_key = '';
+                finn.save(done);
+            } else {
+                done();
+            }
+        });
+
+        // set jake as unverified user
+        before(function(done) {
+            if(!jake.verification_key) {
+                jake.verification_key = 'not verified!';
+                jake.save(done);
+            } else {
+                done();
+            }
+        });
+
+        it('should return valid key on valid email', function(done) {
+            finn.passwordResetRequest(finn.email, function(err, key) {
+                assert.ok(!err);
+                finn.passwordResetFinish(key, 'newpassword', function(err) {
+                    assert.ok(!err);
+                    done();
+                });
+            })
+        });
+
+        it('fail on bad email', function(done) {
+            finn.passwordResetRequest('finn@mit', function(err, key) {
+                assert.ok(err);
                 done();
             })
         });
-    })
+
+        it('fail on unverified account', function(done) {
+            jake.passwordResetRequest(jake.email, function(err, key) {
+                assert.ok(err);
+                done();
+            })
+        });
+    });
+
+    describe('passwordResetFinish', function() {
+        // set finn as verified user
+        before(function(done) {
+            if(finn.verification_key) {
+                finn.verification_key = '';
+                finn.save(done);
+            } else {
+                done();
+            }
+        });
+
+        // reset finn password
+        before(function(done) {
+            finn.password = 'oldPassword';
+            finn.save(done);
+        });
+
+        it('resets password on valid key', function(done) {
+            finn.passwordResetRequest(finn.email, function(err, key) {
+                assert.ok(!err);
+                finn.passwordResetFinish(key, 'newPassword', function(err) {
+                    assert.ok(!err);
+                    finn.verifyPassword('newPassword', function(err, isMatch) {
+                        assert.ok(!err);
+                        assert.ok(isMatch);
+                        done();
+                    });
+                });
+            })
+        });
+
+        it('reject invalid key', function(done) {
+            finn.passwordResetFinish('blah blah', 'newPassword', function(err, key) {
+                assert.ok(err);
+                done();
+            })
+        });
+    });
 
 });
-
-

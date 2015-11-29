@@ -49,7 +49,9 @@ projectSchema.statics.createNewProject = function(projectJSONobject, callback){
 				callback(error);
 			} else {
 				// create an activity for this add project event
-				Activity.addActivity(user.id, Activity.Types.PROJECT_CREATE, project, callback);
+				Activity.addActivity(user.id, Activity.Types.PROJECT_CREATE, project, function(err) {
+					callback(err, project);
+				});
 			}
 		});
 	});

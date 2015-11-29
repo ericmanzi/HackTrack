@@ -1,13 +1,9 @@
 <div class="navBar">
     {{#if user_logged_in}}
-        <a href="#" class="profile-link"><div class="navAvatar pull-right">
-            <div class="userImage"><img src="{{profile_picture}}" width="50" height="50" id="profile-sm"></div>
-        </div>
-        </a>
+        
     {{/if}}
-    <div class="pageTitle">
+    <div class="page-title">
         <h1 class="home-link"><a href="#" style="text-decoration:none;">MIT HACKTRACK</a></h1>
-
     </div>
 
     <div class="navActions">
@@ -15,6 +11,11 @@
         {{#if user_logged_in}}
             <div class="pull-right">
 
+            <a href="#" class="profile-link">
+                <div class="navAvatar">
+                    <div class="userImage"><img src="{{profile_picture}}" width="50" height="39" id="profile-sm"></div>
+                </div>
+            </a>
                 <i>Logged in as <strong>{{username}}</strong> </i>
                 <a class="btn btn-primary" id="logout-link" >Logout</a>
             </div>
@@ -60,6 +61,9 @@
                         <p><button type="submit" class="btn btn-primary">Sign in</button>
                     </div>
                 </form>
+                <div class="forgot-password">
+                    <p><a data-toggle="modal" data-target="#pwreset-request" data-dismiss="modal" href="#">Forgot your password?</a></p>
+                </div>
             </div>
             <div class="modal-footer">
                 New to Hacktrack?
@@ -157,6 +161,105 @@
             <div class="modal-footer">
                 Already have an account?
                 <a data-toggle="modal" href="#signin" data-dismiss="modal" class="btn btn-primary">Login</a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+<div class="modal fade" id="pwreset-request">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">Reset your Password</h4>
+            </div>
+            <div class="modal-body">
+                <div class="error">
+                    {{#if error}}
+                        {{error}}
+                    {{/if}}
+                </div>
+                <form id="pwreset-request-form">
+                    <div class="form-group">
+                        <p><input type="text" class="form-control" name="username" required placeholder="Username"/></p>
+                        <p><input type="text" class="form-control" name="email" required placeholder="Email"/></p>
+                        <p><button type="submit" class="btn btn-primary">Reset your Password</button>
+                    </div>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+<div class="modal fade" id="pwreset-requested">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">Password Reset Requested</h4>
+            </div>
+            <div class="modal-body">
+                You have successfully requested a password reset. You will receive
+                an e-mail with instructions to complete the password reset process
+                shortly.
+            </div>
+            <div class="modal-footer">
+                <a data-dismiss="modal" class="btn btn-default">Back to main page</a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+<div class="modal fade" id="pwreset-finish">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">Reset your Password</h4>
+            </div>
+            <div class="modal-body">
+                <div class="error">
+                    {{#if error}}
+                        {{error}}
+                    {{/if}}
+                </div>
+                <form id="pwreset-finish-form">
+                    <div class="form-group">
+                        <p>Enter a new password below to complete the password reset process.</p>
+                        <p><input type="password" class="form-control" name="password" required placeholder="New password"/></p>
+                        <p><button type="submit" class="btn btn-primary">Reset your Password</button>
+                    </div>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+<div class="modal fade" id="pwreset-finished">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">Password Reset Successfully</h4>
+            </div>
+            <div class="modal-body">
+                You have successfully reset your password. You can now login with
+                your new password.
+            </div>
+            <div class="modal-footer">
+                <a data-dismiss="modal" class="btn btn-default">Back to main page</a>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
