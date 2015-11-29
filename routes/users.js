@@ -6,17 +6,15 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 var utils = require('../utils/utils');
+var config = require('../config');
 
 var nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
 
 
 var transport = nodemailer.createTransport((smtpTransport({
-    service: "gmail",
-    auth: {
-        user: "hacktrack.mit@gmail.com",
-        pass: "iamhacktrack"
-    }
+    service: config.smtp_service,
+    auth: config.smtp_auth
 })));
 
 /*
