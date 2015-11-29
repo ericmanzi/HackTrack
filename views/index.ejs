@@ -32,6 +32,13 @@
 <div id="footer">
 </div>
 
+<% if(typeof autoload !== 'undefined') { %>
+    <div id="autoload" data-modal="<%= autoload.modal %>"
+    <% for(var key in autoload.data) { %>
+        data-<%= key %>="<%= autoload.data[key] %>"
+    <% } %>
+    >
+<% } %>
 
 </body>
 </html>

@@ -68,7 +68,7 @@ postSchema.statics.addDiscussion = function(projectID, userID, content, callback
 // projectID: the project to fetch discussions for.
 // callback: a function(err, discussions)
 //   discussions is a list of discussion objects
-//   each discussion object is of the form {id, userID, username, time, prettyDate, prettyTime, content, comments: [...]}
+//   each discussion object is of the form {id, user, time, prettyDate, prettyTime, content, comments: [...]}
 //   the comments field is a list of comment objects, each of which is of the form {id, userID, username, time, content}
 postSchema.statics.getDiscussions = function(projectID, callback) {
     Post.
@@ -84,8 +84,7 @@ postSchema.statics.getDiscussions = function(projectID, callback) {
                 Post.getDiscussionComments(discussion.id, function(err, comments) {
                     var discussionObj = {
                         id: discussion.id,
-                        userID: discussion.user.id,
-                        username: discussion.user.username,
+                        user: discussion.user,
                         time: discussion.time,
                         prettyDate: moment(discussion.time).format(common.DATE_FORMAT),
                         prettyTime: moment(discussion.time).format(common.TIME_FORMAT),
@@ -102,7 +101,7 @@ postSchema.statics.getDiscussions = function(projectID, callback) {
 // discussionID: the discussion ID.
 // callback: a function(err, comments)
 //   comments is a list of comment objects,
-//   each of which is of the form {id, userID, username, time, prettyDate, prettyTime, content}
+//   each of which is of the form {id, user, time, prettyDate, prettyTime, content}
 postSchema.statics.getDiscussionComments = function(discussionID, callback) {
     Post.
         find({'parent': discussionID}).
@@ -116,8 +115,7 @@ postSchema.statics.getDiscussionComments = function(discussionID, callback) {
             var commentToObj = function(comment) {
                 return {
                     id: comment.id,
-                    userID: comment.user.id,
-                    username: comment.user.username,
+                    user: comment.user,
                     time: comment.time,
                     prettyDate: moment(comment.time).format(common.DATE_FORMAT),
                     prettyTime: moment(comment.time).format(common.TIME_FORMAT),
