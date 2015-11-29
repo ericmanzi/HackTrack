@@ -237,10 +237,17 @@ describe('User', function() {
                 if (err) {
                     assert.equal(err.msg,
                         'This project has already been favorited');
+                    done();
                 } else {
-                    assert.notEqual(finn.getFavorites().indexOf(projectX._id),-1);
+                    finn.getFavorites(function(err, favorites) {
+                        var found = false;
+                        favorites.forEach(function(favorite) {
+                            found = found || favorite.id == projectX.id;
+                        });
+                        assert.ok(found);
+                        done();
+                    });
                 }
-                done();
             })
         });
     })
