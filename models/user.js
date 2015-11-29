@@ -165,8 +165,7 @@ userSchema.methods.unfavorite = function(projectID, callback) {
                 callback({msg: 'This project is not among your favorites.'});
             } else {
                 user.favorites.splice(projectIndex, 1);
-                user.save();
-                callback(null);
+                user.save(callback);
             }
         }
     });
@@ -176,13 +175,19 @@ userSchema.methods.unfavorite = function(projectID, callback) {
  * Return this users list of favorite projects
  */
 userSchema.methods.getFavorites = function(callback) {
-    var user = this;
-    Project.find({'_id': { $in: user.favorites }}, function(err, favorites) {
-        if (err) {
-            callback({ msg: 'Something went wrong while retrieving your projects'});
-        } else {
-            callback(null, favorites);
+    User.findOne({_id: this._id}, function(err, user) { // reload user so that we get up-to-date favorites array
+        if(err) {
+            callback({msg: 'Invalid user'});
+            return;
         }
+        console.log(user);
+        Project.find({'_id': { $in: user.favorites }}, function(err, favorites) {
+            if (err) {
+                callback({ msg: 'Something went wrong while retrieving your projects'});
+            } else {
+                callback(null, favorites);
+            }
+        });
     });
 };
 

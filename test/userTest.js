@@ -79,25 +79,28 @@ describe('User', function() {
                         //console.log("new user:"+new_user);
                         jake = new_user;
                     }
+                    done();
                 });
             } else {
                 //console.log("user found:"+user);
                 jake = user;
+                done();
             }
         });
+    });
 
+    before(function(done) {
         Project.findOne({owner: "jake"}, function(err, project) {
             if (project) {
                 projectX = project;
+                done();
             } else {
                 Project.createNewProject(projectXObj, function(err, new_project) {
                     projectX = new_project;
+                    done();
                 });
             }
-            done();
         });
-
-
     });
 
     describe('#create', function() {
@@ -221,7 +224,7 @@ describe('User', function() {
             var oldfavs = finn.favorites.length;
             finn.unfavorite(projectX._id, function(err) {
                 var newfavs = finn.favorites.length;
-                if (err.msg==='This project is not among your favorites.') {
+                if (err && err.msg==='This project is not among your favorites.') {
                     assert.equal(oldfavs, newfavs);
                 } else {
                     assert.equal(oldfavs-newfavs, 1);
