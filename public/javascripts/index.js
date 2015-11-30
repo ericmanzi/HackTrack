@@ -100,7 +100,6 @@ var loadProjectPage = function(id, isReload){
             project: response.content.project,
             discussions: response.content.discussions,
             favorited: response.content.favorited
-<<<<<<< HEAD
         });
 
         var owl = $("#owl-demo");
@@ -120,12 +119,10 @@ var loadProjectPage = function(id, isReload){
           });
           console.log("owl initiated");
           console.log(owl);
-        });
-=======
+
         }, isReload);
-    });
->>>>>>> 7e6eb33299f47865e9034297703dca3c3bb526b8
-};
+    };
+
 
 var loadPostProjectPage = function(){
     loadPage('postProject', data);
