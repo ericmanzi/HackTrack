@@ -40,13 +40,13 @@ var utils = (function () {
     // chars: alphabet to choose characters from
     // If chars is not set, we default to alphanumeric alphabet.
     _utils.randString = function(len, chars) {
-	    chars = chars || 'abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789';
-	    var rnd = crypto.randomBytes(len);
-	    var value = new Array(len);
-	    for (var i = 0; i < len; i++) {
-		    value[i] = chars[rnd[i] % chars.length];
-	    }
-	    return value.join('');
+        chars = chars || 'abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789';
+        var rnd = crypto.randomBytes(len);
+        var value = new Array(len);
+        for (var i = 0; i < len; i++) {
+            value[i] = chars[rnd[i] % chars.length];
+        }
+        return value.join('');
     };
 
     _utils.arrayFromRequestString = function(str) {

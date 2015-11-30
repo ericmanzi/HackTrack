@@ -6,18 +6,18 @@
 // calls. Also includes the CSRF token.
 var helpers = (function() {
 
-	var _helpers = {};
+    var _helpers = {};
 
-	_helpers.getFormData = function(form) {
-		var inputs = {};
-		$(form).serializeArray().forEach(function(item) {
-			inputs[item.name] = item.value;
-		});
-		inputs['csrftoken'] = getCSRFToken();
-		return inputs;
-	};
+    _helpers.getFormData = function(form) {
+        var inputs = {};
+        $(form).serializeArray().forEach(function(item) {
+            inputs[item.name] = item.value;
+        });
+        inputs['csrftoken'] = getCSRFToken();
+        return inputs;
+    };
 
-	Object.freeze(_helpers);
-	return _helpers;
+    Object.freeze(_helpers);
+    return _helpers;
 
 })();

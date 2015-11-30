@@ -283,7 +283,7 @@ a{
 }
 
 #searchContainer {
-	width: 400px;
+    width: 400px;
 }
 
 .inline {
@@ -291,5 +291,5 @@ a{
 }
 
 #main-container {
-	margin: 60px;
+    margin: 60px;
 }

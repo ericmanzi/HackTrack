@@ -1,9 +1,9 @@
 {{> navbar}}
 <main class="page-main">
-	<header class="profileHeader">
-		<div class="profileContainer">
-			<div class="profileAvatar">
-				<span class="userImage">
+    <header class="profileHeader">
+        <div class="profileContainer">
+            <div class="profileAvatar">
+                <span class="userImage">
                     <img src="{{profile_picture}}" width="110" height="110" id="profile-md">
                 </span>
                 <div class="thumb_meta">
@@ -11,37 +11,37 @@
                         Change profile picture</a></div>
 
             </div>
-			<div class="profileInfo">
-				<h1 class="profileInfoTitle">
-					{{username}}
-				</h1>
-			</div>
-			<div class="profileNavigation">
-				<ul>
-					<li class="profile-navigation-tab">
-						<a href="#" id="view-favorites">
-							Favorites
-						</a>
-					</li>
-					<li class="profile-navigation-tab" id="view-myprojects">
-						<a href="#">My Projects</a>
-					</li>
-				</ul>
-			</div>
+            <div class="profileInfo">
+                <h1 class="profileInfoTitle">
+                    {{username}}
+                </h1>
+            </div>
+            <div class="profileNavigation">
+                <ul>
+                    <li class="profile-navigation-tab">
+                        <a href="#" id="view-favorites">
+                            Favorites
+                        </a>
+                    </li>
+                    <li class="profile-navigation-tab" id="view-myprojects">
+                        <a href="#">My Projects</a>
+                    </li>
+                </ul>
+            </div>
 
-		</div>
-	</header>
-	<div >
-		<div class= "projectFeed">
-			<ul class="projectList"> 
-			{{#each projects}}
-				{{> project}}
-			{{else}}
-				<p><em>No projects yet!</em></p>
-			{{/each}}
-			</ul>
-		</div>
-	</div>
+        </div>
+    </header>
+    <div >
+        <div class= "projectFeed">
+            <ul class="projectList">
+            {{#each projects}}
+                {{> project}}
+            {{else}}
+                <p><em>No projects yet!</em></p>
+            {{/each}}
+            </ul>
+        </div>
+    </div>
 </main>
 
 <!-- Modal  Add Profile Pic-->

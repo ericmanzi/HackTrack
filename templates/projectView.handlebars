@@ -1,19 +1,19 @@
 
 <div class="project-container" >
-	<div class="proj" >
-		<header class="project-header" id="project-header" data-project-id={{project._id}}>
-				<a href="#" class="home-link">
-	   				<span class="glyphicon glyphicon-remove cancel-button" aria-hidden="true" style="font-size:3em; padding-top:2px; padding-left:2px"></span>
-	   			</a>
-		   	
-			<div class="project-title" id="projectView-title">
-				{{project.title}}
-			</div>
-			<div class="project-description" id="projectView-description">
-				{{project.description}}
+    <div class="proj" >
+        <header class="project-header" id="project-header" data-project-id={{project._id}}>
+                <a href="#" class="home-link">
+                    <span class="glyphicon glyphicon-remove cancel-button" aria-hidden="true" style="font-size:3em; padding-top:2px; padding-left:2px"></span>
+                </a>
+
+            <div class="project-title" id="projectView-title">
+                {{project.title}}
+            </div>
+            <div class="project-description" id="projectView-description">
+                {{project.description}}
                 <br />
                 by <a href="#" id="view-user" view-user-id={{project.owner}}>{{project.owner}}</a>
-			</div>
+            </div>
 
             {{#if user_logged_in}}
                 <button id="myButton-upvote" class="project-actions"><span id="projectView-upvotes">
@@ -31,73 +31,72 @@
             {{/if}}
 
             {{#if is_owner_of_this_project}}
-            	<button id="edit-project-button" class="project-actions">Edit project</button>
+                <button id="edit-project-button" class="project-actions">Edit project</button>
             {{/if}}
-		</header>
-		<div class="project-body">
-			<div class="project-body-left">
-				<div class="project-content project-media">
-					<div class="project-media">
-						<div id="owl-demo" class="owl-carousel owl-theme">
-						  <div class="item"><img src="/images/owl1.jpg" alt="Owl Image"></div>
-						  <div class="item"><img src="/images/owl2.jpg" alt="Owl Image"></div>
-						  <div class="item"><img src="/images/owl3.jpg" alt="Owl Image"></div>
-						  <div class="item"><img src="/images/owl4.jpg" alt="Owl Image"></div>
-						  <div class="item"><img src="/images/owl5.jpg" alt="Owl Image"></div>
-						  <div class="item"><img src="/images/owl6.jpg" alt="Owl Image"></div>
-						  <div class="item"><img src="/images/owl7.jpg" alt="Owl Image"></div>
-						  <div class="item"><img src="/images/owl8.jpg" alt="Owl Image"></div>	 
-						</div>
-						<a href="#" class="prev"><span class="glyphicon glyphicon-menu-left"></span></a>
-						<a href="#" class="next"><span class="glyphicon glyphicon-menu-right" style="float:right;"></span></a>
-					</div>
-				</div>
-				<div class="project-content project-discussion">
-					<div class="project-discussion-title">
-					    Discussion
-				    </div>
-					{{#each discussions}}
-						<div class="project-discussion-post">
-							<div class="post-content project-discussion-head">
-								<span class="userImage"><img src="{{user.profile_picture}}" width="60" height="60"></span>
-							    <span class="post-user"><a href="#" id="view-user" view-user-id={{user.username}}>{{user.username}}</a></span>
-							    <span class="post-time">on {{prettyDate}} at {{prettyTime}}</span>
-							</div>
-							<div class="post-content project-discussion-body">
-								{{content}}
-							</div>
-							{{#each comments}}
-								<div class="project-discussion-comment">
-									<div class="post-content discussion-comment-head">
-										<span class="userImage"><img src="{{user.profile_picture}}" width="60" height="60"></span>
-							            <span class="post-user"><a href="#" id="view-user" view-user-id={{user.username}}>{{user.username}}</a></span>
-							            <span class="post-time">on {{prettyDate}} at {{prettyTime}}</span>
-									</div>
-									<div class="post-content discussion-comment-body">
-										{{content}}
-									</div>
-								</div>
-							{{/each}}
-							{{#if @root.user_logged_in}}
-								<div class="comment-add" data-discussion-id={{id}}>
-									<input type="text" class="comment-add-content" id="comment-add-content-{{id}}" />
-									<button class="comment-add-btn btn btn-default">Reply</button>
-								</div>
-							{{/if}}
-						</div>
-					{{else}}
-						No discussions have been opened yet for this project.
-					{{/each}}
-					{{#if user_logged_in}}
-						<div class="project-discussion-add">
-							<input type="text" id="project-discussion-add-content" />
-							<button id="project-discussion-add-btn" class = "btn btn-default">Add Discussion</button>
-						</div>
-					{{/if}}
-				</div>
-			</div>
-			<div class="project-body-right"></div>
-		</div>
-	</div>
-	</div>
-
+        </header>
+        <div class="project-body">
+            <div class="project-body-left">
+                <div class="project-content project-media">
+                    <div class="project-media">
+                        <div id="owl-demo" class="owl-carousel owl-theme">
+                            <div class="item"><img src="/images/owl1.jpg" alt="Owl Image"></div>
+                            <div class="item"><img src="/images/owl2.jpg" alt="Owl Image"></div>
+                            <div class="item"><img src="/images/owl3.jpg" alt="Owl Image"></div>
+                            <div class="item"><img src="/images/owl4.jpg" alt="Owl Image"></div>
+                            <div class="item"><img src="/images/owl5.jpg" alt="Owl Image"></div>
+                            <div class="item"><img src="/images/owl6.jpg" alt="Owl Image"></div>
+                            <div class="item"><img src="/images/owl7.jpg" alt="Owl Image"></div>
+                            <div class="item"><img src="/images/owl8.jpg" alt="Owl Image"></div>
+                        </div>
+                        <a href="#" class="prev"><span class="glyphicon glyphicon-menu-left"></span></a>
+                        <a href="#" class="next"><span class="glyphicon glyphicon-menu-right" style="float:right;"></span></a>
+                    </div>
+                </div>
+                <div class="project-content project-discussion">
+                    <div class="project-discussion-title">
+                        Discussion
+                    </div>
+                    {{#each discussions}}
+                        <div class="project-discussion-post">
+                            <div class="post-content project-discussion-head">
+                                <span class="userImage"><img src="{{user.profile_picture}}" width="60" height="60"></span>
+                                <span class="post-user"><a href="#" id="view-user" view-user-id={{user.username}}>{{user.username}}</a></span>
+                                <span class="post-time">on {{prettyDate}} at {{prettyTime}}</span>
+                            </div>
+                            <div class="post-content project-discussion-body">
+                                {{content}}
+                            </div>
+                            {{#each comments}}
+                                <div class="project-discussion-comment">
+                                    <div class="post-content discussion-comment-head">
+                                        <span class="userImage"><img src="{{user.profile_picture}}" width="60" height="60"></span>
+                                        <span class="post-user"><a href="#" id="view-user" view-user-id={{user.username}}>{{user.username}}</a></span>
+                                        <span class="post-time">on {{prettyDate}} at {{prettyTime}}</span>
+                                    </div>
+                                    <div class="post-content discussion-comment-body">
+                                        {{content}}
+                                    </div>
+                                </div>
+                            {{/each}}
+                            {{#if @root.user_logged_in}}
+                                <div class="comment-add" data-discussion-id={{id}}>
+                                    <input type="text" class="comment-add-content" id="comment-add-content-{{id}}" />
+                                    <button class="comment-add-btn btn btn-default">Reply</button>
+                                </div>
+                            {{/if}}
+                        </div>
+                    {{else}}
+                        No discussions have been opened yet for this project.
+                    {{/each}}
+                    {{#if user_logged_in}}
+                        <div class="project-discussion-add">
+                            <input type="text" id="project-discussion-add-content" />
+                            <button id="project-discussion-add-btn" class = "btn btn-default">Add Discussion</button>
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+            <div class="project-body-right"></div>
+        </div>
+    </div>
+</div>

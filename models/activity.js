@@ -8,8 +8,8 @@ var mongoose = require("mongoose"),
 var async = require("async");
 
 var activityTypesDetail = {
-	POST_CREATE: {type: 'post-create', key: 'post'},
-	PROJECT_CREATE: {type: 'project-create', key: 'project'},
+    POST_CREATE: {type: 'post-create', key: 'post'},
+    PROJECT_CREATE: {type: 'project-create', key: 'project'},
 };
 // create maps from activityTypesDetail:
 // 1) types: e.g. POST_CREATE -> 'post-create'
@@ -17,11 +17,11 @@ var activityTypesDetail = {
 //              this is used to set/get the correct object
 var types = {};
 Object.keys(activityTypesDetail).forEach(function(ident) {
-	types[ident] = activityTypesDetail[ident].type;
+    types[ident] = activityTypesDetail[ident].type;
 });
 var typeKeys = {};
 Object.keys(activityTypesDetail).forEach(function(ident) {
-	typeKeys[activityTypesDetail[ident].type] = activityTypesDetail[ident].key;
+    typeKeys[activityTypesDetail[ident].type] = activityTypesDetail[ident].key;
 });
 
 var activitySchema = Schema({
