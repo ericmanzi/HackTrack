@@ -9,21 +9,18 @@ var utils = require('../utils/utils');
 var email = require('../utils/email');
 
 /*
- --Borrowed code-- Source: Notes Demo App
- For both login and create user, we want to send an error code if the user
- is logged in, or if the client did not provide a username and password
- This function returns true if an error code was sent; the caller should return
- immediately in this case.
- */
-var isLoggedInOrInvalidBody = function(req, res) {
+Middleware that fails if user is not logged in or has not
+provided both a username and password.
+This is used for both login and registration routes.
+*/
+var alreadyLoggedInOrInvalid = function(req, res, next) {
     if (req.currentUser) {
-        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'There is already a user logged in.');
-        return true;
+        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'You are already logged in.');
     } else if (!(req.body.username && req.body.password)) {
         utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Username or password not provided.');
-        return true;
+    } else {
+        next();
     }
-    return false;
 };
 
 
@@ -45,9 +42,7 @@ var isLoggedInOrInvalidBody = function(req, res) {
  - err: on error, an error message; 'Invalid password' if passwords do not match
                                     'Your account has not been verified' if user has not activated account
  */
-router.post('/login', function(req, res) {
-    if (isLoggedInOrInvalidBody(req, res)) return;
-
+router.post('/login', alreadyLoggedInOrInvalid, function(req, res) {
     User.findByUsername(req.body.username, function(err, user) {
         if (user) {
             if (user.isVerified()) {
@@ -108,9 +103,7 @@ router.post('/logout', function(req, res) {
  - err: on error, an error message: 'That email is already in use by another account.' if email in use
                                     'That username is already taken' if username in use
  */
-router.post('/', function(req, res) {
-    if (isLoggedInOrInvalidBody(req, res)) return;
-
+router.post('/', alreadyLoggedInOrInvalid, function(req, res) {
     var userObj = {
         username: req.body.username,
         email: req.body.email,
