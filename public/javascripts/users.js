@@ -5,6 +5,11 @@
 var files = [];
 
 (function() {
+    /**
+     * Attempt to sign in user with data submitted in form.
+     * Reload the home page.
+     * if error, appropriate error message is shown
+     */
     $(document).on('submit', '#signin-form', function(evt) {
         evt.preventDefault();
         $.post(
@@ -26,6 +31,9 @@ var files = [];
         });
     });
 
+    /**
+     * Enable signup button only when user has agreed to terms of use
+     */
     $(document).on('click', '#agree', function(evt) {
         if (!($(this).is(':checked'))) {
             $('#signup-btn').attr('disabled', 'disabled');
@@ -34,12 +42,20 @@ var files = [];
         }
     });
 
+    /**
+     * Switch to terms of use tab
+     */
     $(document).on('click', '#terms-link', function(evt) {
         $('#terms-nav-tab').addClass("active");
         $('#register-nav-tab').removeClass("active");
     });
 
 
+    /**
+     * Register the user with data submitted in registration form
+     * if error, appropriate error message is shown
+     * else, show modal indicating that a verification email has been sent
+     */
     $(document).on('submit', '#register-form', function(evt) {
         evt.preventDefault();
         var formData = helpers.getFormData(this);
@@ -66,6 +82,9 @@ var files = [];
         });
     });
 
+    /**
+     * Log out the current user
+     */
     $(document).on('click', '#logout-link', function(evt) {
         evt.preventDefault();
         $.post(
@@ -81,6 +100,10 @@ var files = [];
     });
 
 
+    /**
+     * Favorite the project indicated by the project id
+     * if error, appropriate error message is shown
+     */
     $(document).on('click', '#favorite-button', function(evt) {
         evt.preventDefault();
         var item = $(this).parent();
@@ -97,6 +120,10 @@ var files = [];
         });
     });
 
+    /**
+     * Unfavorite the project indicated by the project id
+     * if error, appropriate error message is shown
+     */
     $(document).on('click', '#unfavorite-button', function(evt) {
         evt.preventDefault();
         var item = $(this).parent();
@@ -118,6 +145,10 @@ var files = [];
         files = $(this).get(0).files;
     });
 
+    /**
+     * Upload and set the selected profile picture
+     * If error, appropriate error message is shown
+     */
     $(document).on("click", "#upload_profile_button", function(){
         if (files.length > 0) { // if there's a file to upload
             var file = files[0];
@@ -188,6 +219,10 @@ var files = [];
         });
     });
 
+    /**
+     * Follow the user indicated by the username
+     * if error, appropriate error message is shown
+     */
     $(document).on('click', '#follow-btn', function(evt) {
         evt.preventDefault();
         var item = $(this).parent();
@@ -204,6 +239,10 @@ var files = [];
         });
     });
 
+    /**
+     * Unfollow the user indicated by the username
+     * if error, appropriate error message is shown
+     */
     $(document).on('click', '#unfollow-btn', function(evt) {
         evt.preventDefault();
         var item = $(this).parent();

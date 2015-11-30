@@ -3,6 +3,7 @@
 var utils = require('../utils/utils');
 var STATUS_CODE_BAD_REQUEST = 400;
 var SAFE_METHODS = {'GET': true, 'HEAD': true};
+var STRING_LENGTH_LONG = 32;
 module.exports = function(req, res, next) {
     if((!req.body.csrftoken && !SAFE_METHODS[req.method]) ||
         (req.body.csrftoken && req.cookies.csrftoken !== req.body.csrftoken)) {
@@ -10,7 +11,7 @@ module.exports = function(req, res, next) {
         return;
     }
     if(!req.cookies.csrftoken) {
-        res.cookie('csrftoken', utils.randString(32));
+        res.cookie('csrftoken', utils.randString(STRING_LENGTH_LONG));
     }
     next();
 };

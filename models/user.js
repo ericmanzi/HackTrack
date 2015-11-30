@@ -10,6 +10,7 @@ var mongoose = require('mongoose'),
     Project = require('../models/project'),
     Post = require('../models/post'),
     utils = require('../utils/utils'),
+    strIn = require('../utils/stringInArray'),
     bcrypt = require('bcrypt'),
     SALT_WORK_FACTOR = 10,  // We use the salt to prevent rainbow table attacks and to
                             // resist brute-force attacks in the event that someone
@@ -142,7 +143,7 @@ userSchema.methods.favorite = function(projectID, callback) {
         if (project.owner === user.username) {
             callback({msg: 'Cannot favorite own project'});
         } else {
-            if ( user.favorites.indexOf(projectID) === -1 ) {
+            if ( !projectID.in(user.favorites) ) {
                 user.favorites.push(projectID);
                 user.save(function(err,savedUser) {
                     callback(null);
@@ -166,8 +167,7 @@ userSchema.methods.unfavorite = function(projectID, callback) {
         if (err) {
             callback({msg: 'Invalid project.'});
         } else {
-            var projectIndex = user.favorites.indexOf(projectID);
-            if ( projectIndex === -1 ) {
+            if ( !projectID.in(user.favorites) ) {
                 callback({msg: 'This project is not among your favorites.'});
             } else {
                 user.favorites.splice(projectIndex, 1);
@@ -212,7 +212,7 @@ userSchema.methods.getFavoritesIdList = function() {
  */
 userSchema.methods.follow = function(username, callback) {
     var user = this;
-    if (user.following.indexOf(username) === -1 ) {
+    if ( !username.in(user.following) ) {
         user.following.push(username);
         user.save(function(err,savedUser) {
             callback(null);
@@ -230,10 +230,10 @@ userSchema.methods.follow = function(username, callback) {
  */
 userSchema.methods.unfollow = function(username, callback) {
     var user = this;
-    var userIndex = user.following.indexOf(username);
-    if ( userIndex === -1 ) {
+    if ( !username.in(user.following) ) {
         callback({msg: 'You are not following this user.'});
     } else {
+        var userIndex = user.following.indexOf(username);
         user.following.splice(userIndex, 1);
         user.save(function(err,savedUser) {
             callback(null);
@@ -254,7 +254,7 @@ userSchema.statics.isFollowing = function(currentUser, otherUser, callback) {
             User.findByUsername(otherUser, function(err, found_other_user) {
                 if (err) callback({ msg: 'The user you are trying to follow does not exist.'});
                 else {
-                    var following = found_current_user.following.indexOf(otherUser) !== -1;
+                    var following = otherUser.in(found_current_user.following);
                     callback(null, following);
                 }
             });
