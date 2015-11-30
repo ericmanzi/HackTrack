@@ -3,7 +3,7 @@
 (function() {
     $(document).on('click', '.tagSelector', function(evt) {
         evt.preventDefault();
-        updateHomePage($(this).data('tag'), null);
+        updateHomePage($(this).data('tag'), $('#searchInput').val());
     });
 
     $(document).on('click', '#searchBtn', function(evt) {
