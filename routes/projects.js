@@ -110,7 +110,6 @@ router.get('/:projID', function(req, res) {
                     User.findOne(req.currentUser, function(err, user) {
                         if (user) {
                             var favorites = user.getFavoritesIdList();
-                            console.log(favorites);
                             if (favorites.length>0) {
                                 var pIndex = favorites.indexOf(req.params.projID);
                                 response.favorited = (pIndex!==-1);

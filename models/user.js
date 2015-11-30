@@ -2,6 +2,7 @@
 /**
  * Created by ericmanzi on 11/19/15.
  * Lead author: Eric Manzi
+ * Other authors: Favyen Bastani
  * USER MODEL
  */
 var mongoose = require('mongoose'),
@@ -15,13 +16,13 @@ var mongoose = require('mongoose'),
                             // has gained access to your database
 
 var userSchema = mongoose.Schema({
-    username: {type: String, unique: true},
-    email: {type: String, unique: true}, // restrict email to a single user
+    username: {type: String, unique: true}, // restring username to a single user
+    email: {type: String, unique: true}, // restricting email to a single user
     password: {type: String},
-    verification_key: {type: String},
+    verification_key: {type: String}, // key created when user first registers, checked with key sent when user activates account
     pwreset_key: {type: String},
-    favorites: Array,
-    following: Array,
+    favorites: Array, // array of project ids identifying projects this user has favorited
+    following: Array, // array of usernames identifying users this user follows
     profile_picture: String
 });
 
@@ -107,7 +108,8 @@ userSchema.methods.verifyPassword = function(candidatepw, callback) {
  * Returns true if the user's account is verified, and false otherwise.
  */
 userSchema.methods.isVerified = function() {
-    return this.verification_key === '';
+    //return this.verification_key === ''; TODO: uncomment this line
+    return true;
 };
 
 
@@ -178,16 +180,15 @@ userSchema.methods.getFavorites = function(callback) {
     User.findOne({_id: this._id}, function(err, user) { // reload user so that we get up-to-date favorites array
         if(err) {
             callback({msg: 'Invalid user'});
-            return;
+        } else {
+            Project.find({'_id': { $in: user.favorites }}, function(err, favorites) {
+                if (err) {
+                    callback({ msg: 'Something went wrong while retrieving your projects'});
+                } else {
+                    callback(null, favorites);
+                }
+            });
         }
-        console.log(user);
-        Project.find({'_id': { $in: user.favorites }}, function(err, favorites) {
-            if (err) {
-                callback({ msg: 'Something went wrong while retrieving your projects'});
-            } else {
-                callback(null, favorites);
-            }
-        });
     });
 };
 
@@ -207,20 +208,14 @@ userSchema.methods.getFavoritesIdList = function() {
  */
 userSchema.methods.follow = function(username, callback) {
     var user = this;
-    User.findByUsername(username, function(err, followedUser) {
-        if (err) {
-            callback({ msg: err.msg});
-        } else {
-            if ( user.following.indexOf(username) === -1 ) {
-                user.following.push(projectID);
-                user.save(function(err,savedUser) {
-                    callback(null);
-                });
-            } else {
-                callback({msg: 'You are already following this user.'});
-            }
-        }
-    });
+    if (user.following.indexOf(username) === -1 ) {
+        user.following.push(username);
+        user.save(function(err,savedUser) {
+            callback(null);
+        });
+    } else {
+        callback({msg: 'You are already following this user.'});
+    }
 };
 
 
@@ -246,6 +241,21 @@ userSchema.methods.unfollow = function(username, callback) {
             }
         }
     });
+};
+
+userSchema.statics.isFollowing = function(currentUser, otherUser, callback) {
+    User.findByUsername(currentUser, function(err, found_current_user) {
+        if (err) callback({ msg: "Current username: "+err.msg });
+        else {
+            User.findByUsername(otherUser, function(err, found_other_user) {
+                if (err) callback({ msg: 'The user you are trying to follow does not exist.'});
+                else {
+                    var following = found_current_user.following.indexOf(otherUser) !== -1;
+                    callback(null, following);
+                }
+            });
+        }
+    })
 };
 
 /**
