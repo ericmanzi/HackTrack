@@ -78,3 +78,22 @@
 	padding-top:2px;
 	padding-left: 2px;
 }
+#owl-demo .item{
+  margin: 3px;
+}
+#owl-demo .item img{
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.project-media{
+	overflow:hidden;
+}
+.owl-item{
+    position: relative;
+    min-height: 1px;
+    float: left;
+    -webkit-backface-visibility: hidden;
+    -webkit-tap-highlight-color: transparent;	
+}
+

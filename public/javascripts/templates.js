@@ -178,10 +178,6 @@ templates['projectView'] = template({"1":function(container,depth0,helpers,parti
 },"10":function(container,depth0,helpers,partials,data) {
     return "            	<button id=\"edit-project-button\" class=\"project-actions\">Edit project</button>\n";
 },"12":function(container,depth0,helpers,partials,data) {
-    return "						<img src="
-    + container.escapeExpression(container.lambda(depth0, depth0))
-    + " alt=\"image\" height=\"150px\">\n";
-},"14":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : {}, alias4=helpers.helperMissing, alias5="function";
 
   return "						<div class=\"project-discussion-post\">\n							<div class=\"post-content project-discussion-head\">\n								<span class=\"userImage\"><img src=\""
@@ -197,10 +193,10 @@ templates['projectView'] = template({"1":function(container,depth0,helpers,parti
     + "</span>\n							</div>\n							<div class=\"post-content project-discussion-body\">\n								"
     + alias2(((helper = (helper = helpers.content || (depth0 != null ? depth0.content : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"content","hash":{},"data":data}) : helper)))
     + "\n							</div>\n"
-    + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.comments : depth0),{"name":"each","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers["if"].call(alias3,((stack1 = (data && data.root)) && stack1.user_logged_in),{"name":"if","hash":{},"fn":container.program(17, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.comments : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias3,((stack1 = (data && data.root)) && stack1.user_logged_in),{"name":"if","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "						</div>\n";
-},"15":function(container,depth0,helpers,partials,data) {
+},"13":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : {}, alias4=helpers.helperMissing, alias5="function";
 
   return "								<div class=\"project-discussion-comment\">\n									<div class=\"post-content discussion-comment-head\">\n										<span class=\"userImage\"><img src=\""
@@ -216,7 +212,7 @@ templates['projectView'] = template({"1":function(container,depth0,helpers,parti
     + "</span>\n									</div>\n									<div class=\"post-content discussion-comment-body\">\n										"
     + alias2(((helper = (helper = helpers.content || (depth0 != null ? depth0.content : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"content","hash":{},"data":data}) : helper)))
     + "\n									</div>\n								</div>\n";
-},"17":function(container,depth0,helpers,partials,data) {
+},"15":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
   return "								<div class=\"comment-add\" data-discussion-id="
@@ -224,9 +220,9 @@ templates['projectView'] = template({"1":function(container,depth0,helpers,parti
     + ">\n									<input type=\"text\" class=\"comment-add-content\" id=\"comment-add-content-"
     + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
     + "\" />\n									<button class=\"comment-add-btn btn btn-default\">Reply</button>\n								</div>\n";
-},"19":function(container,depth0,helpers,partials,data) {
+},"17":function(container,depth0,helpers,partials,data) {
     return "						No discussions have been opened yet for this project.\n";
-},"21":function(container,depth0,helpers,partials,data) {
+},"19":function(container,depth0,helpers,partials,data) {
     return "						<div class=\"project-discussion-add\">\n							<input type=\"text\" id=\"project-discussion-add-content\" />\n							<button id=\"project-discussion-add-btn\" class = \"btn btn-default\">Add Discussion</button>\n						</div>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : {};
@@ -246,12 +242,10 @@ templates['projectView'] = template({"1":function(container,depth0,helpers,parti
     + ((stack1 = helpers["if"].call(alias3,(depth0 != null ? depth0.user_logged_in : depth0),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\n"
     + ((stack1 = helpers["if"].call(alias3,(depth0 != null ? depth0.is_owner_of_this_project : depth0),{"name":"if","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "		</header>\n		<div class=\"project-body\">\n			<div class=\"project-body-left\">\n				<div class=\"project-content project-media\">\n"
-    + ((stack1 = helpers.each.call(alias3,((stack1 = (depth0 != null ? depth0.project : depth0)) != null ? stack1.imageLinks : stack1),{"name":"each","hash":{},"fn":container.program(12, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "				</div>\n				<div class=\"project-content project-discussion\">\n					<div class=\"project-discussion-title\">\n					    Discussion\n				    </div>\n"
-    + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.discussions : depth0),{"name":"each","hash":{},"fn":container.program(14, data, 0),"inverse":container.program(19, data, 0),"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers["if"].call(alias3,(depth0 != null ? depth0.user_logged_in : depth0),{"name":"if","hash":{},"fn":container.program(21, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "				</div>\n			</div>\n			<div class=\"project-body-right\"></div>\n		</div>\n	</div>\n	</div>\n";
+    + "		</header>\n		<div class=\"project-body\">\n			<div class=\"project-body-left\">\n				<div class=\"project-content project-media\">\n					<div class=\"project-media\">\n						<div id=\"owl-demo\" class=\"owl-carousel owl-theme\">\n						  <div class=\"item\"><img src=\"/images/owl1.jpg\" alt=\"Owl Image\"></div>\n						  <div class=\"item\"><img src=\"/images/owl2.jpg\" alt=\"Owl Image\"></div>\n						  <div class=\"item\"><img src=\"/images/owl3.jpg\" alt=\"Owl Image\"></div>\n						  <div class=\"item\"><img src=\"/images/owl4.jpg\" alt=\"Owl Image\"></div>\n						  <div class=\"item\"><img src=\"/images/owl5.jpg\" alt=\"Owl Image\"></div>\n						  <div class=\"item\"><img src=\"/images/owl6.jpg\" alt=\"Owl Image\"></div>\n						  <div class=\"item\"><img src=\"/images/owl7.jpg\" alt=\"Owl Image\"></div>\n						  <div class=\"item\"><img src=\"/images/owl8.jpg\" alt=\"Owl Image\"></div>	 \n						</div>\n						<a href=\"#\" class=\"prev\"><span class=\"glyphicon glyphicon-menu-left\"></span></a>\n						<a href=\"#\" class=\"next\"><span class=\"glyphicon glyphicon-menu-right\" style=\"float:right;\"></span></a>\n					</div>\n				</div>\n				<div class=\"project-content project-discussion\">\n					<div class=\"project-discussion-title\">\n					    Discussion\n				    </div>\n"
+    + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.discussions : depth0),{"name":"each","hash":{},"fn":container.program(12, data, 0),"inverse":container.program(17, data, 0),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias3,(depth0 != null ? depth0.user_logged_in : depth0),{"name":"if","hash":{},"fn":container.program(19, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "				</div>\n			</div>\n			<div class=\"project-body-right\"></div>\n		</div>\n	</div>\n	</div>\n\n";
 },"useData":true});
 templates['top_menu'] = template({"1":function(container,depth0,helpers,partials,data) {
     return "			<a href=\"#\" id=\"logout-link\">Logout</a>\n";

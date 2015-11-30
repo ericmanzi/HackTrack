@@ -37,9 +37,20 @@
 		<div class="project-body">
 			<div class="project-body-left">
 				<div class="project-content project-media">
-					{{#each project.imageLinks}}
-						<img src={{this}} alt="image" height="150px">
-					{{/each}}
+					<div class="project-media">
+						<div id="owl-demo" class="owl-carousel owl-theme">
+						  <div class="item"><img src="/images/owl1.jpg" alt="Owl Image"></div>
+						  <div class="item"><img src="/images/owl2.jpg" alt="Owl Image"></div>
+						  <div class="item"><img src="/images/owl3.jpg" alt="Owl Image"></div>
+						  <div class="item"><img src="/images/owl4.jpg" alt="Owl Image"></div>
+						  <div class="item"><img src="/images/owl5.jpg" alt="Owl Image"></div>
+						  <div class="item"><img src="/images/owl6.jpg" alt="Owl Image"></div>
+						  <div class="item"><img src="/images/owl7.jpg" alt="Owl Image"></div>
+						  <div class="item"><img src="/images/owl8.jpg" alt="Owl Image"></div>	 
+						</div>
+						<a href="#" class="prev"><span class="glyphicon glyphicon-menu-left"></span></a>
+						<a href="#" class="next"><span class="glyphicon glyphicon-menu-right" style="float:right;"></span></a>
+					</div>
 				</div>
 				<div class="project-content project-discussion">
 					<div class="project-discussion-title">
@@ -89,3 +100,4 @@
 		</div>
 	</div>
 	</div>
+
