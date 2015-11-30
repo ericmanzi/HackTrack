@@ -137,13 +137,8 @@ a{
 .project-container{
 	display:flex;
 }
-.project-navigation{
-	flex:1;
-	height:100vmax;
-	border-right: 1px solid #e4e2e2;
-}
+
 .project-content{
-	width: 1120px;
 	height:100%;
 }
 
@@ -172,7 +167,7 @@ a{
 	height:100vmax;
 }
 .project-body-left{
-	width:900px;
+	max-width:1000px;
 	border-right: 1px solid #e4e2e2;
 }
 .project-body-right{
@@ -180,7 +175,8 @@ a{
 	height:100%;
 }
 .project-media{
-	min-height:150px;
+	overflow: hidden;
+	min-height:250px;
 	border-bottom: 1px solid #e4e2e2;
 }
 .project-discussion-post{
@@ -192,4 +188,12 @@ a{
 }
 .post-content{
 	display:inline-block;
+}
+#owl-demo .item{
+  margin: 3px;
+}
+#owl-demo .item img{
+  display: block;
+  width: 100%;
+  height: auto;
 }
