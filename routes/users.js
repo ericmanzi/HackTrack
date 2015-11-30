@@ -179,7 +179,7 @@ router.get('/activate', function(req, res) {
                 //console.log("session: "+req.session.username);
 
                 user.verification_key='';
-                res.render('index');
+                //res.render('index');
                 utils.sendSuccessResponse(res, req.query.username);
                 user.save();
             } else {
