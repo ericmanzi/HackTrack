@@ -3,12 +3,18 @@
 		{{> navbar}}
 		<ul id="tagSelection">
 			{{#each tags}}
-				<li class="tagSelector" data-tag="{{this}}">{{this}}</li>
+				<li class="tagSelector btn btn-default" data-tag="{{this}}">{{this}}</li>
 			{{/each}}
 		</ul>
 		<div id="searchContainer">
-			<input type="text" id="searchInput" />
+			<div class="input-group">
+				<input type="text" class="form-control" id="searchInput" placeholder="Enter a search term" />
+				<span class="input-group-btn">
+					<button type="submit" class="btn btn-success" id="searchBtn">Search</button>
+				</span>
+			</div>
 		</div>
 		<div id="projectList"></div>
+		<p><a href="#" id="loadMoreProjects">View more projects</a></p>
 	</div>
 </div>

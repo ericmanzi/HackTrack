@@ -47,6 +47,14 @@ var utils = (function () {
 	    return value.join('');
     };
 
+    _utils.arrayFromRequestString = function(str) {
+        return str.split(/\s*,\s*/).map(function(str) {
+            return str.trim();
+        }).filter(function(str) {
+            return str !== '';
+        });
+    };
+
     Object.freeze(_utils);
     return _utils;
 

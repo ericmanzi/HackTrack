@@ -6,10 +6,20 @@
         updateHomePage($(this).data('tag'), null);
     });
 
+    $(document).on('click', '#searchBtn', function(evt) {
+        evt.preventDefault();
+        updateHomePage(null, $('#searchInput').val());
+    });
+
     $(document).on('keydown', '#searchInput', function(evt) {
         if(evt.keyCode == 13) {
             evt.preventDefault();
             updateHomePage(null, $(this).val());
         }
+    });
+
+    $(document).on('click', '#loadMoreProjects', function(evt) {
+        evt.preventDefault();
+        homeLoadMoreProjects();
     });
 })();

@@ -5,9 +5,7 @@ var currentUser = null;
 var data={};
 var profile_picture = null;
 
-var loadPage = function(template, data) {
-    //var projects = [{project:"project1", _id:1}, {project:"project2", _id:2}];
-    //data = data || {projects:projects};
+var loadPage = function(template, data, isReload) {
     data.user_logged_in = currentUser!==null;
     data.username = currentUser;
     data.profile_picture = profile_picture;
@@ -16,6 +14,11 @@ var loadPage = function(template, data) {
     }
 
     $('#main-container').html(Handlebars.templates[template](data));
+
+    // if we're loading a new "page", scroll to the top
+    if(!isReload) {
+        window.scrollTo(0, 0);
+    }
 
     ///////// DEALING WITH TAGS ////////////
     if (template === 'postProject'){
@@ -60,20 +63,44 @@ var updateHomePage = function(tag, filter) {
         target += '&filter=' + encodeURIComponent(filter);
     }
     $.get(target, function(response) {
-        var data = {
-            projects: response.content.projects,
-            profile_picture: response.content.profile_picture
-        };
+        var data = {projects: response.content.projects};
         $('#projectList').html(Handlebars.templates['projectList'](data));
+
+        // store last load settings so we know what to load if we want
+        // to grab more projects
+        $('#projectList').data('days', data.projects.length);
+        $('#projectList').data('tag', tag);
+        $('#projectList').data('filter', filter);
     });
 };
 
-var loadProjectPage = function(id){
+var homeLoadMoreProjects = function() {
+    // get the last settings, and fetch projects with higher day index
+    // then, append projectList template to the projectList element
+    var startDays = $('#projectList').data('days');
+    var tag = $('#projectList').data('tag');
+    var filter = $('#projectList').data('filter');
+    var target = '/projects?trending=1&days=' + startDays;
+    if(tag) {
+        target += '&tag=' + encodeURIComponent(tag);
+    }
+    if(filter) {
+        target += '&filter=' + encodeURIComponent(filter);
+    }
+    $.get(target, function(response) {
+        var data = {projects: response.content.projects};
+        $('#projectList').append(Handlebars.templates['projectList'](data));
+        $('#projectList').data('days', startDays + data.projects.length);
+    });
+};
+
+var loadProjectPage = function(id, isReload){
     $.get('/projects/'+id, function(response){
         loadPage('projectView', {
             project: response.content.project,
             discussions: response.content.discussions,
             favorited: response.content.favorited
+<<<<<<< HEAD
         });
 
         var owl = $("#owl-demo");
@@ -94,6 +121,10 @@ var loadProjectPage = function(id){
           console.log("owl initiated");
           console.log(owl);
         });
+=======
+        }, isReload);
+    });
+>>>>>>> 7e6eb33299f47865e9034297703dca3c3bb526b8
 };
 
 var loadPostProjectPage = function(){
@@ -101,20 +132,35 @@ var loadPostProjectPage = function(){
 };
 
 var loadProfilePage = function(projectType){
-    var reqUrl = projectType=="favorites"?'/users/favorites':'/users/myprojects';
-    $.get(reqUrl, function(response){
+    $.get(
+        projectType=="favorites"?'/users/favorites':'/users/myprojects'
+    ).done(function(response){
         data.projects = response.content.projects;
         loadPage('profile', data);
-    });    
+    }).fail(function(responseObject){
+        var response = $.parseJSON(responseObject.responseText);
+        console.log(response.err);
+        $('.error').text(response.err);
+    });
 };
 
 var loadUserPage = function(username) {
-    var reqUrl = '/users/profiles/'+username;
-    $.get(reqUrl, function(response) {
-        data.projects = response.content.projects;
-        data.user = username;
-        loadPage('userProfile', data);
-    });
+    if (username === currentUser) loadProfilePage();
+    else {
+        $.get(
+            '/users/profiles/'+username
+        ).done(function(response) {
+            data.projects = response.content.projects;
+            data.following = response.content.following;
+            data.user_profile_picture = response.content.user_profile_picture;
+            data.user = username;
+            loadPage('userProfile', data);
+        }).fail(function(responseObject){
+            var response = $.parseJSON(responseObject.responseText);
+            console.log(response.err);
+            $('.error').text(response.err);
+        });
+    }
 };
 
 var loadEditProjectPage = function(projID){
@@ -181,3 +227,7 @@ $(document).on('click', '.home-link', function(event){
     loadHomePage();
 });
 
+// clear error texts when new modal is displayed
+$(document).on('hide.bs.modal', '.modal', function(event){
+    $('.error').text('');
+});

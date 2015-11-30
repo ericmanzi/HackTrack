@@ -89,7 +89,7 @@ var files = [];
             '/users/favorites',
             data
         ).done(function(response) {
-            loadProjectPage(data.projectID);
+            loadProjectPage(data.projectID, true);
         }).fail(function(responseObject) {
             var response = $.parseJSON(responseObject.responseText);
             $('.error').text(response.err);
@@ -105,7 +105,7 @@ var files = [];
             method: 'DELETE',
             data: data
         }).done(function(response) {
-            loadProjectPage(data.projectID);
+            loadProjectPage(data.projectID, true);
         }).fail(function(responseObject) {
             var response = $.parseJSON(responseObject.responseText);
             console.log(response.err);
@@ -125,12 +125,12 @@ var files = [];
             parseFile.save()
                 .then(function(savedFile) { // save was successful
                     var data = {
-                        username: currentUser,
+                        //username: currentUser,
                         profile_pic_url: savedFile.url(),
                         csrftoken: getCSRFToken()
                     };
                     $.post(
-                        '/users/profile_picture',
+                        '/users/profiles/'+currentUser+'/profile_picture',
                         data
                     ).done(function(response) {
                         $('#uploadProfilePic').modal('hide');
@@ -183,6 +183,39 @@ var files = [];
             $('#pwreset-finished').modal('show');
         }).fail(function(responseObject) {
             var response = $.parseJSON(responseObject.responseText);
+            $('.error').text(response.err);
+        });
+    });
+
+    $(document).on('click', '#follow-btn', function(evt) {
+        evt.preventDefault();
+        var item = $(this).parent();
+        var data = { username: item.data('user-id'), csrftoken: getCSRFToken() };
+        $.post(
+            '/users/following',
+            data
+        ).done(function(response) {
+            loadUserPage(data.username);
+        }).fail(function(responseObject) {
+            var response = $.parseJSON(responseObject.responseText);
+            console.log(response.err);
+            $('.error').text(response.err);
+        });
+    });
+
+    $(document).on('click', '#unfollow-btn', function(evt) {
+        evt.preventDefault();
+        var item = $(this).parent();
+        var data = { username: item.data('user-id'), csrftoken: getCSRFToken() };
+        $.ajax({
+            url: '/users/following',
+            method: 'DELETE',
+            data: data
+        }).done(function(response) {
+            loadUserPage(data.username);
+        }).fail(function(responseObject) {
+            var response = $.parseJSON(responseObject.responseText);
+            console.log(response.err);
             $('.error').text(response.err);
         });
     });

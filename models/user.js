@@ -2,6 +2,7 @@
 /**
  * Created by ericmanzi on 11/19/15.
  * Lead author: Eric Manzi
+ * Other authors: Favyen Bastani
  * USER MODEL
  */
 var mongoose = require('mongoose'),
@@ -15,13 +16,13 @@ var mongoose = require('mongoose'),
                             // has gained access to your database
 
 var userSchema = mongoose.Schema({
-    username: {type: String, unique: true},
-    email: {type: String, unique: true}, // restrict email to a single user
+    username: {type: String, unique: true}, // restring username to a single user
+    email: {type: String, unique: true}, // restricting email to a single user
     password: {type: String},
-    verification_key: {type: String},
+    verification_key: {type: String}, // key created when user first registers, checked with key sent when user activates account
     pwreset_key: {type: String},
-    favorites: Array,
-    following: Array,
+    favorites: Array, // array of project ids identifying projects this user has favorited
+    following: Array, // array of usernames identifying users this user follows
     profile_picture: String
 });
 
@@ -87,7 +88,7 @@ userSchema.statics.findByUsername = function(name, callback) {
 userSchema.statics.isEmailUnique = function(emailAddr, callback) {
     this.findOne({ email: emailAddr }, function(err, user) {
         if (user) callback(null, 'That email is already in use by another account.');
-        else callback({msg: 'No such email.'});
+        else callback({msg: 'That email does not exist.'});
     });
 };
 
@@ -108,6 +109,8 @@ userSchema.methods.verifyPassword = function(candidatepw, callback) {
  */
 userSchema.methods.isVerified = function() {
     return this.verification_key === '';
+    //uncomment this line to test with fake emails
+    //return true
 };
 
 
@@ -133,18 +136,18 @@ userSchema.methods.getMyProjects = function(callback) {
 userSchema.methods.favorite = function(projectID, callback) {
     var user = this;
     Project.findOne({ _id: projectID }, function(err, project) {
-        //if (project.owner === user.username) {
-        //    callback({msg: 'Cannot favorite own project'});
-        //} else {
-        if ( user.favorites.indexOf(projectID) === -1 ) {
-            user.favorites.push(projectID);
-            user.save(function(err,savedUser) {
-                callback(null);
-            });
+        if (project.owner === user.username) {
+            callback({msg: 'Cannot favorite own project'});
         } else {
-            callback({msg: 'This project has already been favorited'});
+            if ( user.favorites.indexOf(projectID) === -1 ) {
+                user.favorites.push(projectID);
+                user.save(function(err,savedUser) {
+                    callback(null);
+                });
+            } else {
+                callback({msg: 'This project has already been favorited'});
+            }
         }
-        //}
     });
 };
 
@@ -165,8 +168,7 @@ userSchema.methods.unfavorite = function(projectID, callback) {
                 callback({msg: 'This project is not among your favorites.'});
             } else {
                 user.favorites.splice(projectIndex, 1);
-                user.save();
-                callback(null);
+                user.save(callback);
             }
         }
     });
@@ -176,12 +178,17 @@ userSchema.methods.unfavorite = function(projectID, callback) {
  * Return this users list of favorite projects
  */
 userSchema.methods.getFavorites = function(callback) {
-    var user = this;
-    Project.find({'_id': { $in: user.favorites }}, function(err, favorites) {
-        if (err) {
-            callback({ msg: 'Something went wrong while retrieving your projects'});
+    User.findOne({_id: this._id}, function(err, user) { // reload user so that we get up-to-date favorites array
+        if(err) {
+            callback({msg: 'Invalid user'});
         } else {
-            callback(null, favorites);
+            Project.find({'_id': { $in: user.favorites }}, function(err, favorites) {
+                if (err) {
+                    callback({ msg: 'Something went wrong while retrieving your projects'});
+                } else {
+                    callback(null, favorites);
+                }
+            });
         }
     });
 };
@@ -190,8 +197,73 @@ userSchema.methods.getFavorites = function(callback) {
  * Return this users list of favorite project ids
  */
 userSchema.methods.getFavoritesIdList = function() {
+    return this.favorites;
+};
+
+
+/**
+ * Add the given username to list of usernames being followed by this user
+ * @param username
+ * @param callback
+ */
+userSchema.methods.follow = function(username, callback) {
     var user = this;
-    return user.favorites;
+    if (user.following.indexOf(username) === -1 ) {
+        user.following.push(username);
+        user.save(function(err,savedUser) {
+            callback(null);
+        });
+    } else {
+        callback({msg: 'You are already following this user.'});
+    }
+};
+
+
+/**
+ * Removes the username from list of usernames being following by this user
+ * @param username
+ * @param callback
+ */
+userSchema.methods.unfollow = function(username, callback) {
+    var user = this;
+    var userIndex = user.following.indexOf(username);
+    if ( userIndex === -1 ) {
+        callback({msg: 'You are not following this user.'});
+    } else {
+        user.following.splice(userIndex, 1);
+        user.save(function(err,savedUser) {
+            callback(null);
+        });
+    }
+};
+
+/**
+ * Returns true if currentUser is following otherUser
+ * @param currentUser
+ * @param otherUser
+ * @param callback
+ */
+userSchema.statics.isFollowing = function(currentUser, otherUser, callback) {
+    User.findByUsername(currentUser, function(err, found_current_user) {
+        if (err) callback({ msg: "Current username: "+err.msg });
+        else {
+            User.findByUsername(otherUser, function(err, found_other_user) {
+                if (err) callback({ msg: 'The user you are trying to follow does not exist.'});
+                else {
+                    var following = found_current_user.following.indexOf(otherUser) !== -1;
+                    callback(null, following);
+                }
+            });
+        }
+    })
+};
+
+/**
+ * Return this user's profile picture link
+ * @returns {*|string}
+ */
+userSchema.methods.getProfilePicture = function() {
+    return this.profile_picture;
 };
 
 /**

@@ -58,8 +58,8 @@ router.post('/', function(req, res) {
     if (!req.currentUser) { // Require authentication to use this feature
         utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
     } else {
-        var imageLinksList = req.body.imageLinks.split(/\s*,\s*/);
-        var tagsList = req.body.tags.split(/\s*,\s*/);
+        var imageLinksList = utils.arrayFromRequestString(req.body.imageLinks);
+        var tagsList = utils.arrayFromRequestString(req.body.tags);
         var videoID = getYouTubeID(req.body.videoLink);
         var projectJSON = {
             title: req.body.title,
@@ -110,7 +110,6 @@ router.get('/:projID', function(req, res) {
                     User.findOne(req.currentUser, function(err, user) {
                         if (user) {
                             var favorites = user.getFavoritesIdList();
-                            console.log(favorites);
                             if (favorites.length>0) {
                                 var pIndex = favorites.indexOf(req.params.projID);
                                 response.favorited = (pIndex!==-1);

@@ -174,7 +174,7 @@
             '/projects/' + id,
             {csrftoken: getCSRFToken()}
         ).done(function(response) {
-            loadProjectPage(id);
+            loadProjectPage(id, true);
         }).fail(function(responseObject) {
             var response = $.parseJSON(responseObject.responseText);
             $('.error').text(response.err);

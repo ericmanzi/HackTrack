@@ -113,7 +113,7 @@ router.post('/', function(req, res) {
         favorites: [],
         verified: false,
         following: [],
-        profile_picture: "https://www.whitehouse.gov/sites/whitehouse.gov/files/images/Administration/People/president_official_portrait_hires.jpg"
+        profile_picture: "./images/user-default.png"
     };
 
     User.findByUsername(req.body.username, function(err, user) {
@@ -154,7 +154,8 @@ router.post('/', function(req, res) {
  Request parameters: username, key
  Response:
  - success.verified: true if the key matches the username. The user is the
-                     saved as verified in the db and logged into the app
+ saved as verified in the db and logged into the app
+ - content: on success, username of user that has been verified
  - error msg: if the key does not match the username
  */
 router.get('/activate', function(req, res) {
@@ -168,13 +169,15 @@ router.get('/activate', function(req, res) {
             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Error verifying account: Invalid username');
         } else {
             if (user.verification_key===key) {
-                console.log("session: "+req.session.username);
+                //console.log("session: "+req.session.username);
                 req.session.username = username;
-                console.log("session: "+req.session.username);
+                //console.log("session: "+req.session.username);
 
                 user.verification_key='';
                 res.render('index');
-                user.save();
+                user.save(function(err, savedUser) {
+                    utils.sendSuccessResponse(res, req.query.username);
+                });
             } else {
                 utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Error verifying account: Invalid key');
             }
@@ -227,7 +230,7 @@ router.post('/favorites', function(req, res) {
                     if (err) {
                         utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
                     } else {
-                        utils.sendSuccessResponse(res);
+                        utils.sendSuccessResponse(res, req.body.projectID);
                     }
                 });
             }
@@ -270,41 +273,6 @@ router.delete('/favorites', function(req, res) {
             'There is no user currently logged in.');
     }
 });
-
-
-/*
- Get this user's favorite projects
-
- GET /users/favorites
- Request body: empty
- Response:
- - success: true if the server succeeded in finding the user's favorites
- - content: all of this user's favorite projects
- - error msg:   error status code 400 if there was an error retrieving the
- user's favorite projects.
- error status code 403 if user isn't authenticated
- */
-router.get('/favorites', function(req, res) {
-    if (req.currentUser) {
-        User.findByUsername(req.currentUser.username, function(err, user) {
-            if (err) {
-                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
-            } else {
-                user.getFavorites(function(err, favorites) {
-                    if (err) {
-                        utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
-                    } else {
-                        utils.sendSuccessResponse(res, { projects: favorites });
-                    }
-                });
-            }
-        });
-    } else {
-        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN,
-            'There is no user currently logged in.');
-    }
-});
-
 
 
 /*
@@ -388,6 +356,7 @@ router.get('/favorites', function(req, res) {
  error status code 403 if user isn't authenticated
  */
 router.get('/profiles/:username', function(req, res) {
+    //console.log("profile username:"+req.params.username);
     User.findByUsername(req.params.username, function(err, user) {
         if (err) {
             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
@@ -396,7 +365,22 @@ router.get('/profiles/:username', function(req, res) {
                 if (err) {
                     utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
                 } else {
-                    utils.sendSuccessResponse(res, { projects: userProjects });
+                    var responseObj = {
+                        projects: userProjects,
+                        user_profile_picture: user.getProfilePicture()
+                    };
+                    if (req.currentUser) {
+                        User.isFollowing(req.currentUser.username, req.params.username, function(err, isFollowing) {
+                            if (err) {
+                                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+                            } else {
+                                responseObj.following = isFollowing;
+                                utils.sendSuccessResponse(res, responseObj);
+                            }
+                        });
+                    } else {
+                        utils.sendSuccessResponse(res, responseObj);
+                    }
                 }
             });
         }
@@ -406,7 +390,7 @@ router.get('/profiles/:username', function(req, res) {
 /*
  Change this user's profile picture
 
- POST: /users/profile_picture
+ POST: /users/profiles/:username/profile_picture
  Request body:
  - username
  - profile picture link
@@ -414,22 +398,92 @@ router.get('/profiles/:username', function(req, res) {
  - success: true if saving the profile picture succeeded
  - err: on error, an error message
  */
-router.post('/profile_picture', function(req, res) {
+router.post('/profiles/:username/profile_picture', function(req, res) {
     if (req.currentUser) {
-        console.log("username:"+req.body.username);
-        console.log("url:"+req.body.profile_pic_url);
-        User.findByUsername(req.body.username, function(err, user) {
+        //console.log("username:"+req.params.username);
+        //console.log("url:"+req.body.profile_pic_url);
+        User.findByUsername(req.params.username, function(err, user) {
             if (err) {
                 utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Invalid username');
             } else {
                 user.profile_picture = req.body.profile_pic_url;
                 user.save(function(err, user) {
-                    utils.sendSuccessResponse(res);
+                    utils.sendSuccessResponse(res, req.body.profile_pic_url);
                 });
             }
         });
     } else {
         utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'There is no user currently logged in.');
+    }
+});
+
+/*
+ Add the user, identified by the username to the list of
+ users that the current user is following
+
+ POST /users/following
+ Request body:
+ - username of user to follow
+ Response:
+ - success: true if follow succeeded; false otherwise
+ - content: on success, username of user that is now being followed
+ - error msg: on error, an error message
+ */
+router.post('/following', function(req, res) {
+    if (req.currentUser) {
+        User.findByUsername(req.currentUser.username, function(err, user) {
+            if (err) {
+                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+            } else {
+                User.findByUsername(req.body.username, function(err, followed_user) {
+                    if (err) {
+                        utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+                    } else {
+                        user.follow(req.body.username, function(err) {
+                            if (err) {
+                                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+                            } else {
+                                utils.sendSuccessResponse(res, req.body.username);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    } else {
+        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN,
+            'There is no user currently logged in.');
+    }
+});
+
+/*
+ Remove this user from the list of users the current user is following
+
+ DELETE /users/following
+ Request body:
+ - username
+ Response:
+ - success: true if the server succeeded in unfollowing this user
+ - error msg: on error, an error message
+ */
+router.delete('/following', function(req, res) {
+    if (req.currentUser) {
+        User.findByUsername(req.currentUser.username, function(err, user) {
+            if (err) {
+                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+            } else {
+                user.unfollow(req.body.username, function(err) {
+                    if (err) {
+                        utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+                    } else {
+                        utils.sendSuccessResponse(res, req.body.username);
+                    }
+                });
+            }
+        });
+    } else {
+        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN,
+            'There is no user currently logged in.');
     }
 });
 
