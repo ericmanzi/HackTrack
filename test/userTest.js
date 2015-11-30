@@ -329,7 +329,7 @@ describe('User', function() {
         it('should return true if currentUser is following otherUser', function(done) {
             jake.follow('finn', function(err) {
                 User.isFollowing('jake', 'finn', function(err, following) {
-                    assert(following);
+                    assert.ok(following);
                     done();
                 });
             });
