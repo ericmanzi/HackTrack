@@ -179,8 +179,8 @@ router.get('/activate', function(req, res) {
                 //console.log("session: "+req.session.username);
 
                 user.verification_key='';
-                //res.render('index');
-                utils.sendSuccessResponse(res, req.query.username);
+                res.render('index');
+                //utils.sendSuccessResponse(res, req.query.username);
                 user.save();
             } else {
                 utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Error verifying account: Invalid key');
