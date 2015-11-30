@@ -63,11 +63,34 @@ var updateHomePage = function(tag, filter) {
         target += '&filter=' + encodeURIComponent(filter);
     }
     $.get(target, function(response) {
-        var data = {
-            projects: response.content.projects,
-            profile_picture: response.content.profile_picture
-        };
+        var data = {projects: response.content.projects};
         $('#projectList').html(Handlebars.templates['projectList'](data));
+
+        // store last load settings so we know what to load if we want
+        // to grab more projects
+        $('#projectList').data('days', data.projects.length);
+        $('#projectList').data('tag', tag);
+        $('#projectList').data('filter', filter);
+    });
+};
+
+var homeLoadMoreProjects = function() {
+    // get the last settings, and fetch projects with higher day index
+    // then, append projectList template to the projectList element
+    var startDays = $('#projectList').data('days');
+    var tag = $('#projectList').data('tag');
+    var filter = $('#projectList').data('filter');
+    var target = '/projects?trending=1&days=' + startDays;
+    if(tag) {
+        target += '&tag=' + encodeURIComponent(tag);
+    }
+    if(filter) {
+        target += '&filter=' + encodeURIComponent(filter);
+    }
+    $.get(target, function(response) {
+        var data = {projects: response.content.projects};
+        $('#projectList').append(Handlebars.templates['projectList'](data));
+        $('#projectList').data('days', startDays + data.projects.length);
     });
 };
 

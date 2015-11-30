@@ -17,4 +17,9 @@
             updateHomePage(null, $(this).val());
         }
     });
+
+    $(document).on('click', '#loadMoreProjects', function(evt) {
+        evt.preventDefault();
+        homeLoadMoreProjects();
+    });
 })();
