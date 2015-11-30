@@ -124,6 +124,18 @@ var loadProjectPage = function(id, isReload){
         });
     };
 
+var loadActFeedPage = function() {
+    $.get(
+        '/activityfeed'
+    ).done(function(response) {
+        data.activities = response.content.activities;
+        loadPage('activityFeed', data);
+    }).fail(function(responseObject) {
+        var response = $.parseJSON(responseObject.responseText);
+        console.log(response.err);
+        $('.error').text(response.err);
+    });
+};
 
 var loadPostProjectPage = function(){
     loadPage('postProject', data);
@@ -167,7 +179,7 @@ var loadEditProjectPage = function(projID){
             project: response.content.project
         });
     });
-}
+};
 
 $(document).ready(function() {
     $.get('/users/current', function(response) {
@@ -223,6 +235,11 @@ $(document).on('click', '#view-favorites', function(event){
 $(document).on('click', '.home-link', function(event){
     event.preventDefault();
     loadHomePage();
+});
+
+$(document).on('click', '.act-feed-link', function(event) {
+    event.preventDefault();
+    loadActFeedPage();
 });
 
 // clear error texts when new modal is displayed
