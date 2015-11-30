@@ -17,10 +17,11 @@ header{
 .navAvatar{
     margin:0 auto;
     width: 50px;
-
+    display: inline;
 }
 .navActions{
     height:80px;
+    display: inline;
 }
 .page-title{
     margin:0 auto;
@@ -224,7 +225,7 @@ a{
 }
 
 #post-project-link {
-    display: block;
+    display: inline-block;
     width: 115px;
     height: 55px;
     background: #4E9CAF;
@@ -285,3 +286,6 @@ a{
 	width: 400px;
 }
 
+.inline {
+    display: inline;
+}

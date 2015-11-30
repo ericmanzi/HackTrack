@@ -74,11 +74,11 @@ templates['modals'] = template({"1":function(container,depth0,helpers,partials,d
 templates['navbar'] = template({"1":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "            <div class=\"pull-right\">\n\n            <a href=\"#\" class=\"profile-link\">\n                <div class=\"navAvatar\">\n                    <div class=\"userImage\"><img src=\""
-    + alias4(((helper = (helper = helpers.profile_picture || (depth0 != null ? depth0.profile_picture : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"profile_picture","hash":{},"data":data}) : helper)))
-    + "\" width=\"50\" height=\"39\" id=\"profile-sm\"></div>\n                </div>\n            </a>\n                <i>Logged in as <strong>"
+  return "            <div class=\"post-project\"><a href=\"#\" id=\"post-project-link\">POST A PROJECT</a></div>\n\n            <div class=\"pull-right\">\n                <i>Logged in as <strong>"
     + alias4(((helper = (helper = helpers.username || (depth0 != null ? depth0.username : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"username","hash":{},"data":data}) : helper)))
-    + "</strong> </i>\n                <a class=\"btn btn-primary\" id=\"logout-link\" >Logout</a>\n            </div>\n            <div class=\"post-project\"><a href=\"#\" id=\"post-project-link\">POST A PROJECT</a></div>\n\n";
+    + "</strong> </i>\n                <div class=\"inline btn-group\">\n                    <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">\n                        <div class=\"navAvatar\">\n                            <div class=\"userImage\"><img src=\""
+    + alias4(((helper = (helper = helpers.profile_picture || (depth0 != null ? depth0.profile_picture : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"profile_picture","hash":{},"data":data}) : helper)))
+    + "\" width=\"50\" height=\"39\" id=\"profile-sm\"></div>\n                        </div>\n                    </a>\n\n                    <ul class=\"dropdown-menu dropdown-menu-right text-center\">\n                        <li><a href=\"#\" class=\"profile-link\">Profile</a></li>\n                        <li role=\"separator\" class=\"divider\"></li>\n                        <li><a href=\"#\" id=\"logout-link\" >Logout</a></li>\n\n                    </ul>\n                </div>\n\n\n            </div>\n\n";
 },"3":function(container,depth0,helpers,partials,data) {
     return "            <div class=\"pull-right\">\n                <a class=\"btn btn-primary\" id=\"login-link\"\n                   data-toggle=\"modal\" data-target=\"#signin\" >Login</a>\n            </div>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {

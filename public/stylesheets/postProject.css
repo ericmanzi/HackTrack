@@ -1,10 +1,12 @@
 .post-project{
 	padding-top:5px;
 	vertical-align: middle;
+    display: inline-block;
 }
 #post-project {
     margin: 0 auto;
     width: 80%;
+    display: inline-block;
 }
 
 .project-post-image-links, .remove_imagelink_field, .add_imagelink_field_button {
