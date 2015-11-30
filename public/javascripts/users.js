@@ -221,4 +221,4 @@ var files = [];
     });
 
 
-})(); // Wrap in an immediately invoked function expression.
+})();

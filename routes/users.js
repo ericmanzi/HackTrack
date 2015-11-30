@@ -118,7 +118,7 @@ router.post('/', function(req, res) {
         favorites: [],
         verified: false,
         following: [],
-        profile_picture: "./images/user-default.png"
+        profile_picture: "//hacktrack-mit.herokuapp.com/images/user-default.png"
     };
 
     User.findByUsername(req.body.username, function(err, user) {
