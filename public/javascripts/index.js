@@ -109,20 +109,34 @@ var loadPostProjectPage = function(){
 };
 
 var loadProfilePage = function(projectType){
-    var reqUrl = projectType=="favorites"?'/users/favorites':'/users/myprojects';
-    $.get(reqUrl, function(response){
+    $.get(
+        projectType=="favorites"?'/users/favorites':'/users/myprojects'
+    ).done(function(response){
         data.projects = response.content.projects;
         loadPage('profile', data);
-    });    
+    }).fail(function(responseObject){
+        var response = $.parseJSON(responseObject.responseText);
+        console.log(response.err);
+        $('.error').text(response.err);
+    });
 };
 
 var loadUserPage = function(username) {
-    var reqUrl = '/users/profiles/'+username;
-    $.get(reqUrl, function(response) {
-        data.projects = response.content.projects;
-        data.user = username;
-        loadPage('userProfile', data);
-    });
+    if (username === currentUser) loadProfilePage();
+    else {
+        $.get(
+            '/users/profiles/'+username
+        ).done(function(response) {
+            data.projects = response.content.projects;
+            data.following = response.content.following;
+            data.user = username;
+            loadPage('userProfile', data);
+        }).fail(function(responseObject){
+            var response = $.parseJSON(responseObject.responseText);
+            console.log(response.err);
+            $('.error').text(response.err);
+        });
+    }
 };
 
 var loadEditProjectPage = function(projID){
