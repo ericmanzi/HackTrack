@@ -9,7 +9,7 @@ var utils = require('../utils/utils');
 var email = require('../utils/email');
 
 /*
-Middleware that fails if user is not logged in or has not
+Middleware that fails if user is already logged in or has not
 provided both a username and password.
 This is used for both login and registration routes.
 */
@@ -18,6 +18,18 @@ var alreadyLoggedInOrInvalid = function(req, res, next) {
         utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'You are already logged in.');
     } else if (!(req.body.username && req.body.password)) {
         utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Username or password not provided.');
+    } else {
+        next();
+    }
+};
+
+/*
+Middleware that fails if user is not logged in.
+*/
+var requireAuthentication = function(req, res, next) {
+    if (!req.currentUser) {
+        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN,
+            'You are not logged in.');
     } else {
         next();
     }
@@ -74,13 +86,9 @@ router.post('/login', alreadyLoggedInOrInvalid, function(req, res) {
 
  --Borrowed code-- Source: Notes Demo App
  */
-router.post('/logout', function(req, res) {
-    if (req.currentUser) {
-        req.session.destroy();
-        utils.sendSuccessResponse(res);
-    } else {
-        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'There is no user currently logged in.');
-    }
+router.post('/logout', requireAuthentication, function(req, res) {
+    req.session.destroy();
+    utils.sendSuccessResponse(res);
 });
 
 
@@ -222,25 +230,20 @@ router.get('/current', function(req, res) {
               'This project has already been favorited' if already favorited
               'There is no user currently logged in.' if user not logged in
  */
-router.post('/favorites', function(req, res) {
-    if (req.currentUser) {
-        User.findByUsername(req.currentUser.username, function(err, user) {
-            if (err) {
-                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
-            } else {
-                user.favorite(req.body.projectID, function(err) {
-                    if (err) {
-                        utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
-                    } else {
-                        utils.sendSuccessResponse(res, req.body.projectID);
-                    }
-                });
-            }
-        });
-    } else {
-        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN,
-            'There is no user currently logged in.');
-    }
+router.post('/favorites', requireAuthentication, function(req, res) {
+    User.findByUsername(req.currentUser.username, function(err, user) {
+        if (err) {
+            utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+        } else {
+            user.favorite(req.body.projectID, function(err) {
+                if (err) {
+                    utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+                } else {
+                    utils.sendSuccessResponse(res, req.body.projectID);
+                }
+            });
+        }
+    });
 });
 
 
@@ -258,25 +261,20 @@ router.post('/favorites', function(req, res) {
               'This project is not among your favorites' if project was not favorited
               'There is no user currently logged in.' if user not logged in
  */
-router.delete('/favorites', function(req, res) {
-    if (req.currentUser) {
-        User.findByUsername(req.currentUser.username, function(err, user) {
-            if (err) {
-                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
-            } else {
-                user.unfavorite(req.body.projectID, function(err) {
-                    if (err) {
-                        utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
-                    } else {
-                        utils.sendSuccessResponse(res, req.body.projectID);
-                    }
-                });
-            }
-        });
-    } else {
-        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN,
-            'There is no user currently logged in.');
-    }
+router.delete('/favorites', requireAuthentication, function(req, res) {
+    User.findByUsername(req.currentUser.username, function(err, user) {
+        if (err) {
+            utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+        } else {
+            user.unfavorite(req.body.projectID, function(err) {
+                if (err) {
+                    utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+                } else {
+                    utils.sendSuccessResponse(res, req.body.projectID);
+                }
+            });
+        }
+    });
 });
 
 
@@ -291,25 +289,20 @@ router.delete('/favorites', function(req, res) {
  - error msg: 'Something went wrong while retrieving your projects' if there was an error retrieving the user's projects.
               'There is no user currently logged in.' if user not logged in
  */
-router.get('/myprojects', function(req, res) {
-    if (req.currentUser) {
-        User.findByUsername(req.currentUser.username, function(err, user) {
-            if (err) {
-                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
-            } else {
-                user.getMyProjects(function(err, myprojects) {
-                    if (err) {
-                        utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
-                    } else {
-                        utils.sendSuccessResponse(res, { projects: myprojects });
-                    }
-                });
-            }
-        });
-    } else {
-        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN,
-            'There is no user currently logged in.');
-    }
+router.get('/myprojects', requireAuthentication, function(req, res) {
+    User.findByUsername(req.currentUser.username, function(err, user) {
+        if (err) {
+            utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+        } else {
+            user.getMyProjects(function(err, myprojects) {
+                if (err) {
+                    utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+                } else {
+                    utils.sendSuccessResponse(res, { projects: myprojects });
+                }
+            });
+        }
+    });
 });
 
 
@@ -326,25 +319,20 @@ router.get('/myprojects', function(req, res) {
               'There is no user currently logged in.' if user not logged in
 
  */
-router.get('/favorites', function(req, res) {
-    if (req.currentUser) {
-        User.findByUsername(req.currentUser.username, function(err, user) {
-            if (err) {
-                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
-            } else {
-                user.getFavorites(function(err, favorites) {
-                    if (err) {
-                        utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
-                    } else {
-                        utils.sendSuccessResponse(res, { projects: favorites });
-                    }
-                });
-            }
-        });
-    } else {
-        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN,
-            'There is no user currently logged in.');
-    }
+router.get('/favorites', requireAuthentication, function(req, res) {
+    User.findByUsername(req.currentUser.username, function(err, user) {
+        if (err) {
+            utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+        } else {
+            user.getFavorites(function(err, favorites) {
+                if (err) {
+                    utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+                } else {
+                    utils.sendSuccessResponse(res, { projects: favorites });
+                }
+            });
+        }
+    });
 });
 
 
@@ -358,7 +346,6 @@ router.get('/favorites', function(req, res) {
  - success.user_profile_picture: This user's profile picture
  - success.following: true if current user follows this user
  - error msg: 'Something went wrong while retrieving your projects' if there was an error retrieving the user's favorited projects.
-              'There is no user currently logged in.' if user not logged in
               'The user you are trying to follow does not exist.' if user does not exist
  */
 router.get('/profiles/:username', function(req, res) {
@@ -406,22 +393,16 @@ router.get('/profiles/:username', function(req, res) {
                   'There is no user currently logged in.' if user not logged in
 
  */
-router.post('/profiles/:username/profile_picture', function(req, res) {
-    if (req.currentUser) {
-        //console.log("username:"+req.params.username);
-        //console.log("url:"+req.body.profile_pic_url);
-        User.findByUsername(req.params.username, function(err, user) {
-            if (err) {
-                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Invalid username');
-            } else {
-                user.setProfilePicture(req.body.profile_pic_url, function(err) {
-                    utils.sendSuccessResponse(res, req.body.profile_pic_url);
-                });
-            }
-        });
-    } else {
-        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'There is no user currently logged in.');
-    }
+router.post('/profiles/:username/profile_picture', requireAuthentication, function(req, res) {
+    User.findByUsername(req.params.username, function(err, user) {
+        if (err) {
+            utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Invalid username');
+        } else {
+            user.setProfilePicture(req.body.profile_pic_url, function(err) {
+                utils.sendSuccessResponse(res, req.body.profile_pic_url);
+            });
+        }
+    });
 });
 
 /*
@@ -438,31 +419,26 @@ router.post('/profiles/:username/profile_picture', function(req, res) {
                 'You are already following this user' if user already followed
                 'There is no user currently logged in.' if user not logged in
  */
-router.post('/following', function(req, res) {
-    if (req.currentUser) {
-        User.findByUsername(req.currentUser.username, function(err, user) {
-            if (err) {
-                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
-            } else {
-                User.findByUsername(req.body.username, function(err, followed_user) {
-                    if (err) {
-                        utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
-                    } else {
-                        user.follow(req.body.username, function(err) {
-                            if (err) {
-                                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
-                            } else {
-                                utils.sendSuccessResponse(res, req.body.username);
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    } else {
-        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN,
-            'There is no user currently logged in.');
-    }
+router.post('/following', requireAuthentication, function(req, res) {
+    User.findByUsername(req.currentUser.username, function(err, user) {
+        if (err) {
+            utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+        } else {
+            User.findByUsername(req.body.username, function(err, followed_user) {
+                if (err) {
+                    utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+                } else {
+                    user.follow(req.body.username, function(err) {
+                        if (err) {
+                            utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+                        } else {
+                            utils.sendSuccessResponse(res, req.body.username);
+                        }
+                    });
+                }
+            });
+        }
+    });
 });
 
 /*
@@ -480,25 +456,20 @@ router.post('/following', function(req, res) {
                 'There is no user currently logged in.' if user not logged in
 
  */
-router.delete('/following', function(req, res) {
-    if (req.currentUser) {
-        User.findByUsername(req.currentUser.username, function(err, user) {
-            if (err) {
-                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
-            } else {
-                user.unfollow(req.body.username, function(err) {
-                    if (err) {
-                        utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
-                    } else {
-                        utils.sendSuccessResponse(res, req.body.username);
-                    }
-                });
-            }
-        });
-    } else {
-        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN,
-            'There is no user currently logged in.');
-    }
+router.delete('/following', requireAuthentication, function(req, res) {
+    User.findByUsername(req.currentUser.username, function(err, user) {
+        if (err) {
+            utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+        } else {
+            user.unfollow(req.body.username, function(err) {
+                if (err) {
+                    utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+                } else {
+                    utils.sendSuccessResponse(res, req.body.username);
+                }
+            });
+        }
+    });
 });
 
 /*
