@@ -101,7 +101,7 @@ var loadProjectPage = function(id, isReload){
             project: response.content.project,
             discussions: response.content.discussions,
             favorited: response.content.favorited
-        });
+        }, isReload);
 
         var owl = $("#owl-demo");
            owl.owlCarousel({
@@ -121,7 +121,7 @@ var loadProjectPage = function(id, isReload){
           console.log("owl initiated");
           console.log(owl);
 
-        }, isReload);
+        });
     };
 
 

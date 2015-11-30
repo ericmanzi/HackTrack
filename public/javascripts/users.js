@@ -92,6 +92,7 @@ var files = [];
             loadProjectPage(data.projectID, true);
         }).fail(function(responseObject) {
             var response = $.parseJSON(responseObject.responseText);
+            console.log(response.err);
             $('.error').text(response.err);
         });
     });
