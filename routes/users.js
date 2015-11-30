@@ -113,7 +113,7 @@ router.post('/', function(req, res) {
         favorites: [],
         verified: false,
         following: [],
-        profile_picture: "https://www.whitehouse.gov/sites/whitehouse.gov/files/images/Administration/People/president_official_portrait_hires.jpg"
+        profile_picture: "./images/user-default.png"
     };
 
     User.findByUsername(req.body.username, function(err, user) {
@@ -365,7 +365,10 @@ router.get('/profiles/:username', function(req, res) {
                 if (err) {
                     utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
                 } else {
-                    var responseObj = { projects: userProjects };
+                    var responseObj = {
+                        projects: userProjects,
+                        user_profile_picture: user.getProfilePicture()
+                    };
                     if (req.currentUser) {
                         User.isFollowing(req.currentUser.username, req.params.username, function(err, isFollowing) {
                             if (err) {

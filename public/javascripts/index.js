@@ -106,6 +106,7 @@ var loadUserPage = function(username) {
         ).done(function(response) {
             data.projects = response.content.projects;
             data.following = response.content.following;
+            data.user_profile_picture = response.content.user_profile_picture;
             data.user = username;
             loadPage('userProfile', data);
         }).fail(function(responseObject){

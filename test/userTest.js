@@ -1,5 +1,6 @@
 
 // Lead author: Eric Manzi (ermanzi@mit.edu)
+// other authors: Favyen Bastani
 // User model tests
 
 var assert = require("assert");
@@ -22,7 +23,9 @@ var jakeObj = {
     username: "jake",
     password: "jake_the_dog",
     email: "jake@mit.edu",
-    favorites: []
+    favorites: [],
+    following: [],
+    profile_picture: 'images/user-default.png'
 };
 
 var finn;
@@ -30,28 +33,36 @@ var validUser = {
     username: "finn",
     password: "finn_the_human",
     email: "finn@mit.edu",
-    favorites: []
+    favorites: [],
+    following: [],
+    profile_picture: 'images/user-default.png'
 };
 
 var invalidUsername = {
     username: " ",
     password: "finn_the_human",
     email: "finn@mit.edu",
-    favorites: []
+    favorites: [],
+    following: [],
+    profile_picture: 'images/user-default.png'
 };
 
 var invalidPassword = {
     username: " ",
     password: "finn the human",
     email: "finn@mit.edu",
-    favorites: []
+    favorites: [],
+    following: [],
+    profile_picture: 'images/user-default.png'
 };
 
 var invalidEmail = {
     username: "",
     password: "finn_the_human",
     email: "finn@harvard.edu",
-    favorites: []
+    favorites: [],
+    following: [],
+    profile_picture: 'images/user-default.png'
 };
 
 var projectX;
@@ -156,6 +167,35 @@ describe('User', function() {
         });
     });
 
+    describe('findByUsername', function() {
+
+        it('should find and return the user specified by ' +
+            'the given username if user exists', function(done) {
+            User.findByUsername("jake", function(err, user) {
+                if (err) {
+                    assert.equal(err.msg, 'No such username.');
+                } else {
+                    assert.equal(user.username, "jake");
+                    done();
+                }
+            });
+        });
+    });
+
+    describe('isEmailUnique', function() {
+        it('should return appropriate message if email is already in use', function(done) {
+            User.isEmailUnique("jake@mit.edu", function(err, msg) {
+                assert.equal(msg, 'That email is already in use by another account.');
+                done();
+            });
+        });
+        it('should return an error if email is not in use', function(done) {
+            User.isEmailUnique("princess@bubble.gum", function(err, msg) {
+                assert.equal(err.msg, 'That email does not exist.');
+                done();
+            });
+        })
+    });
 
     describe('verifyPassword', function() {
 
@@ -253,6 +293,57 @@ describe('User', function() {
                 }
             })
         });
+    });
+
+    describe('follow', function() {
+        it('should add the given username to the list of ' +
+            'usernames being followed by current user ' +
+            'if it does not already exist in that list', function(done) {
+            finn.follow('jake', function(err) {
+                if (err) {
+                    assert.equal(err.msg, 'You are already following this user.');
+                } else {
+                    assert.notEqual(finn.following.indexOf('jake'),-1);
+                }
+                done();
+            });
+        });
+    });
+
+    describe('unfollow', function() {
+        it('should remove the given username from the list of usernames being ' +
+            'followed by current user if it exists in that list', function(done) {
+            var oldNumFollowing = finn.following.length;
+            finn.unfollow('jake', function(err) {
+                if (err) {
+                    assert.equal(err.msg, 'You are not following this user.');
+                } else {
+                    assert.equal(finn.following.length-oldNumFollowing,-1);
+                }
+                done();
+            });
+        });
+    });
+
+    describe('isFollowing', function() {
+        it('should return true if currentUser is following otherUser', function(done) {
+            jake.follow('finn', function(err) {
+                User.isFollowing('jake', 'finn', function(err, following) {
+                    assert(following);
+                    done();
+                });
+            });
+        });
+
+        it('should return appropriate error message if otherUser does not exist', function(done) {
+            jake.follow('finn', function(err) {
+                User.isFollowing('jake', 'orgalog', function(err, following) {
+                    assert(err.msg, 'The user you are trying to follow does not exist.');
+                    done();
+                });
+            });
+        });
+
     });
 
     describe('passwordResetRequest', function() {

@@ -190,7 +190,6 @@ var files = [];
     $(document).on('click', '#follow-btn', function(evt) {
         evt.preventDefault();
         var item = $(this).parent();
-        console.log("user-id:"+item.data('user-id'));
         var data = { username: item.data('user-id'), csrftoken: getCSRFToken() };
         $.post(
             '/users/following',

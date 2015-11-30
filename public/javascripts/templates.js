@@ -282,9 +282,9 @@ templates['userProfile'] = template({"1":function(container,depth0,helpers,parti
   return ((stack1 = container.invokePartial(partials.navbar,depth0,{"name":"navbar","data":data,"helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
     + "<main class=\"page-main\">\n    <header class=\"profileHeader\">\n        <div class=\"profileContainer\" data-user-id="
     + alias4(((helper = (helper = helpers.user || (depth0 != null ? depth0.user : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"user","hash":{},"data":data}) : helper)))
-    + ">\n            <div class=\"profileAvatar\">\n                <span class=\"userImage\"><img src="
-    + alias4(((helper = (helper = helpers.profile_picture || (depth0 != null ? depth0.profile_picture : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"profile_picture","hash":{},"data":data}) : helper)))
-    + " width=\"110\" height=\"110\"></span>\n            </div>\n            <div class=\"profileInfo\">\n                <h1 class=\"profileInfoTitle\">\n                    "
+    + ">\n            <div class=\"profileAvatar\">\n                <span class=\"userImage\"><img src=\""
+    + alias4(((helper = (helper = helpers.user_profile_picture || (depth0 != null ? depth0.user_profile_picture : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"user_profile_picture","hash":{},"data":data}) : helper)))
+    + "\" width=\"110\" height=\"110\"></span>\n            </div>\n            <div class=\"profileInfo\">\n                <h1 class=\"profileInfoTitle\">\n                    "
     + alias4(((helper = (helper = helpers.user || (depth0 != null ? depth0.user : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"user","hash":{},"data":data}) : helper)))
     + "\n                </h1>\n            </div>\n"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.user_logged_in : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
