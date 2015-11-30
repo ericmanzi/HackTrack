@@ -289,3 +289,7 @@ a{
 .inline {
     display: inline;
 }
+
+#main-container {
+	margin: 60px;
+}
