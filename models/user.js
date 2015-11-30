@@ -11,9 +11,10 @@ var mongoose = require('mongoose'),
     Post = require('../models/post'),
     utils = require('../utils/utils'),
     bcrypt = require('bcrypt'),
-    SALT_WORK_FACTOR = 10;  // We use the salt to prevent rainbow table attacks and to
+    SALT_WORK_FACTOR = 10,  // We use the salt to prevent rainbow table attacks and to
                             // resist brute-force attacks in the event that someone
                             // has gained access to your database
+    STRING_LENGTH = 16;
 
 var userSchema = mongoose.Schema({
     username: {type: String, unique: true}, // restring username to a single user
@@ -23,16 +24,17 @@ var userSchema = mongoose.Schema({
     pwreset_key: {type: String},
     favorites: Array, // array of project ids identifying projects this user has favorited
     following: Array, // array of usernames identifying users this user follows
-    profile_picture: String
+    profile_picture: String // a string referencing location of this user's profile picture
 });
 
+// --Contains borrowed code-- Source: http://devsmash.com/blog/password-authentication-with-mongoose-and-bcrypt
 // This middleware automatically hashes the password before it is saved to the database
 // We also generate a verification key if none exists.
 userSchema.pre('save', function(next) {
     var user = this;
     // set verification key if not set
     if (user.verification_key === undefined) {
-        user.verification_key = utils.randString(16);
+        user.verification_key = utils.randString(STRING_LENGTH);
     }
     // only hash the password if it has been modified (or is new)
     if (!user.isModified('password')) return next();
@@ -53,7 +55,8 @@ userSchema.pre('save', function(next) {
 
 var usernameRegex = /^\w+$/; // username can't be an empty string
 var passwordRegex = /\s+/g; // passwords cannot be empty or have empty spaces
-var emailRegex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,66}\.)*mit.edu$/i; // must be a **.mit.edu or @mit.edu email
+// must be a **.mit.edu or @mit.edu email. --Some borrowed code-- Source: http://stackoverflow.com/a/46181
+var emailRegex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,50}\.)*mit.edu$/i;
 
 userSchema.path('username').validate(function(value) {
     return usernameRegex.test(value);
@@ -109,7 +112,7 @@ userSchema.methods.verifyPassword = function(candidatepw, callback) {
  */
 userSchema.methods.isVerified = function() {
     return this.verification_key === '';
-    //uncomment this line to test with fake emails
+    //uncomment this line to test with fake mit emails
     //return true
 };
 
@@ -153,7 +156,7 @@ userSchema.methods.favorite = function(projectID, callback) {
 
 
 /**
- * Removes a project from this user's list of favorites
+ * Removes project identified by projectID from this user's list of favorites
  * @param projectID
  * @param callback
  */
@@ -176,6 +179,7 @@ userSchema.methods.unfavorite = function(projectID, callback) {
 
 /**
  * Return this users list of favorite projects
+ * @param callback
  */
 userSchema.methods.getFavorites = function(callback) {
     User.findOne({_id: this._id}, function(err, user) { // reload user so that we get up-to-date favorites array
@@ -202,7 +206,7 @@ userSchema.methods.getFavoritesIdList = function() {
 
 
 /**
- * Add the given username to list of usernames being followed by this user
+ * current user follows the user identified by the given username
  * @param username
  * @param callback
  */
@@ -220,7 +224,7 @@ userSchema.methods.follow = function(username, callback) {
 
 
 /**
- * Removes the username from list of usernames being following by this user
+ * current user unfollows the user identified by the given username
  * @param username
  * @param callback
  */
@@ -238,7 +242,7 @@ userSchema.methods.unfollow = function(username, callback) {
 };
 
 /**
- * Returns true if currentUser is following otherUser
+ * Check if currentUser is following otherUser
  * @param currentUser
  * @param otherUser
  * @param callback
@@ -267,6 +271,19 @@ userSchema.methods.getProfilePicture = function() {
 };
 
 /**
+ * Set this user's profile picture link to the provided link
+ * @param picture_url
+ * @param callback
+ */
+userSchema.methods.setProfilePicture = function(picture_url, callback) {
+    var user = this;
+    user.profile_picture = picture_url;
+    user.save(function(err) {
+        callback(null);
+    });
+};
+
+/**
  * Request a password reset.
  * @param email the user's email address to validate
  * @param callback a callback function(err, key)
@@ -281,7 +298,7 @@ userSchema.methods.passwordResetRequest = function(email, callback) {
         callback({msg: 'Your account has not been verified'});
         return;
     }
-    user.pwreset_key = utils.randString(16);
+    user.pwreset_key = utils.randString(STRING_LENGTH);
     user.save(function(err) {
         if(err) {
             callback({msg: 'Something went wrong while requesting the password reset'});

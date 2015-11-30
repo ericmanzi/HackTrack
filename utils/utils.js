@@ -1,6 +1,5 @@
 var crypto = require('crypto');
 
-// Source: Notes Demo App
 // These methods abstract out the basic mechanism
 // of creating server responses with some content
 // (error code, message, etc.).
@@ -9,19 +8,22 @@ var utils = (function () {
 
     _utils.STATUS_CODE_BAD_REQUEST = 400;
     _utils.STATUS_CODE_FORBIDDEN = 403;
+    _utils.STATUS_CODE_SUCCESS = 200;
     /*
+     --Borrowed code-- Source: Notes Demo App
      Send a 200 OK with success:true in the request body to the
      response argument provided.
      The caller of this function should return after calling
      */
     _utils.sendSuccessResponse = function(res, content) {
-        res.status(200).json({
+        res.status(_utils.STATUS_CODE_SUCCESS).json({
             success: true,
             content: content
         }).end();
     };
 
     /*
+     --Borrowed code-- Source: Notes Demo App
      Send an error code with success:false and error message
      as provided in the arguments to the response argument provided.
      The caller of this function should return after calling

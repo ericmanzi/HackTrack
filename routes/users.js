@@ -9,6 +9,7 @@ var utils = require('../utils/utils');
 var email = require('../utils/email');
 
 /*
+ --Borrowed code-- Source: Notes Demo App
  For both login and create user, we want to send an error code if the user
  is logged in, or if the client did not provide a username and password
  This function returns true if an error code was sent; the caller should return
@@ -40,8 +41,9 @@ var isLoggedInOrInvalidBody = function(req, res) {
  - password
  Response:
  - success: true if login succeeded; false otherwise
- - content: on success, an object with a single field 'user', the object of the logged in user
- - err: on error, an error message
+ - content: on success, an object with a single field 'user', the logged in user's username
+ - err: on error, an error message; 'Invalid password' if passwords do not match
+                                    'Your account has not been verified' if user has not activated account
  */
 router.post('/login', function(req, res) {
     if (isLoggedInOrInvalidBody(req, res)) return;
@@ -73,7 +75,9 @@ router.post('/login', function(req, res) {
  Request body: empty
  Response:
  - success: true if logout succeeded; false otherwise
- - err: on error, an error message
+ - err: on error, an error message: 'There is no user currently logged in.'
+
+ --Borrowed code-- Source: Notes Demo App
  */
 router.post('/logout', function(req, res) {
     if (req.currentUser) {
@@ -101,7 +105,8 @@ router.post('/logout', function(req, res) {
  - password
  Response:
  - success: true if user creation succeeded; false otherwise
- - err: on error, an error message
+ - err: on error, an error message: 'That email is already in use by another account.' if email in use
+                                    'That username is already taken' if username in use
  */
 router.post('/', function(req, res) {
     if (isLoggedInOrInvalidBody(req, res)) return;
@@ -132,7 +137,7 @@ router.post('/', function(req, res) {
                             utils.sendSuccessResponse(res, req.body.username);
                             email(req.body.email, 'Verify your account with MIT HackTrack', 'verification', {
                                 username: user.username,
-                                key: user.verification_key,
+                                key: user.verification_key
                             });
                         }
                     });
@@ -153,10 +158,10 @@ router.post('/', function(req, res) {
  GET /users/activate
  Request parameters: username, key
  Response:
- - success.verified: true if the key matches the username. The user is the
- saved as verified in the db and logged into the app
- - content: on success, username of user that has been verified
- - error msg: if the key does not match the username
+ - success: true if the key matches the username. The user is saved as verified and logged into the app
+ - content: on success, username of user whose account has been verified
+ - error msg: 'Error verifying account: Invalid key' if the key does not match the username
+              'Error verifying account: Invalid username' if username does not belong to user in system
  */
 router.get('/activate', function(req, res) {
     var username = req.query.username;
@@ -194,6 +199,8 @@ router.get('/activate', function(req, res) {
  Response:
  - success.loggedIn: true if there is a user logged in; false otherwise
  - success.user: if success.loggedIn, the currently logged in user
+ - success.profile_picture: link profile picture of current user
+ --Contains borrowed code-- Source: Notes Demo App
  */
 router.get('/current', function(req, res) {
     if (req.currentUser) {
@@ -217,8 +224,11 @@ router.get('/current', function(req, res) {
  Request body:
  - projectID
  Response:
- - success
- - error msg: if user tries to favorite own or already favorited project
+ - success: true if succeeded in favoriting project
+ - content: on success, ID of project that was favorited
+ - error msg: 'Cannot favorite own project' if user tries to favorite own project
+              'This project has already been favorited' if already favorited
+              'There is no user currently logged in.' if user not logged in
  */
 router.post('/favorites', function(req, res) {
     if (req.currentUser) {
@@ -250,8 +260,11 @@ router.post('/favorites', function(req, res) {
  Request body:
  - projectID
  Response:
- - success
- - error msg: unfavoriting project that wasn't favorited
+ - success: true if succeeded in removing project from favorites
+ - content: on success, ID of project that was removed from favorites
+ - error msg: 'Invalid project' if project does not exist
+              'This project is not among your favorites' if project was not favorited
+              'There is no user currently logged in.' if user not logged in
  */
 router.delete('/favorites', function(req, res) {
     if (req.currentUser) {
@@ -263,7 +276,7 @@ router.delete('/favorites', function(req, res) {
                     if (err) {
                         utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
                     } else {
-                        utils.sendSuccessResponse(res);
+                        utils.sendSuccessResponse(res, req.body.projectID);
                     }
                 });
             }
@@ -282,10 +295,9 @@ router.delete('/favorites', function(req, res) {
  Request body: empty
  Response:
  - success: true if the server succeeded in finding the user's projects
- - content: all of this user's projects
- - error msg:   error status code 400 if there was an error retrieving the
- user's projects.
- error status code 403 if user isn't authenticated
+ - content: on success, an object with a single field 'projects', all of the current user's projects
+ - error msg: 'Something went wrong while retrieving your projects' if there was an error retrieving the user's projects.
+              'There is no user currently logged in.' if user not logged in
  */
 router.get('/myprojects', function(req, res) {
     if (req.currentUser) {
@@ -316,10 +328,10 @@ router.get('/myprojects', function(req, res) {
  Request body: empty
  Response:
  - success: true if the server succeeded in finding the user's favorites
- - content: all of this user's favorite projects
- - error msg:   error status code 400 if there was an error retrieving the
- user's favorite projects.
- error status code 403 if user isn't authenticated
+ - content: on success, an object with a single field 'projects', all of the current user's favorite projects
+ - error msg: 'Something went wrong while retrieving your projects' if there was an error retrieving the user's favorited projects.
+              'There is no user currently logged in.' if user not logged in
+
  */
 router.get('/favorites', function(req, res) {
     if (req.currentUser) {
@@ -344,16 +356,17 @@ router.get('/favorites', function(req, res) {
 
 
 /*
- Get this user's projects
+ Get this user's projects, profile picture and following state
 
  GET /users/profiles/:username
  Request body: empty
  Response:
- - success: true if the server succeeded in finding the user's projects
- - content: all of this user's projects
- - error msg:   error status code 400 if there was an error retrieving the
- user's projects.
- error status code 403 if user isn't authenticated
+ - success.projects: All of this user's projects
+ - success.user_profile_picture: This user's profile picture
+ - success.following: true if current user follows this user
+ - error msg: 'Something went wrong while retrieving your projects' if there was an error retrieving the user's favorited projects.
+              'There is no user currently logged in.' if user not logged in
+              'The user you are trying to follow does not exist.' if user does not exist
  */
 router.get('/profiles/:username', function(req, res) {
     //console.log("profile username:"+req.params.username);
@@ -396,7 +409,9 @@ router.get('/profiles/:username', function(req, res) {
  - profile picture link
  Response:
  - success: true if saving the profile picture succeeded
- - err: on error, an error message
+ - err: on error, 'Invalid username' if user does not exist
+                  'There is no user currently logged in.' if user not logged in
+
  */
 router.post('/profiles/:username/profile_picture', function(req, res) {
     if (req.currentUser) {
@@ -406,8 +421,7 @@ router.post('/profiles/:username/profile_picture', function(req, res) {
             if (err) {
                 utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Invalid username');
             } else {
-                user.profile_picture = req.body.profile_pic_url;
-                user.save(function(err, user) {
+                user.setProfilePicture(req.body.profile_pic_url, function(err) {
                     utils.sendSuccessResponse(res, req.body.profile_pic_url);
                 });
             }
@@ -427,7 +441,9 @@ router.post('/profiles/:username/profile_picture', function(req, res) {
  Response:
  - success: true if follow succeeded; false otherwise
  - content: on success, username of user that is now being followed
- - error msg: on error, an error message
+ - error msg:   'No such username' if attempting to follow user that does not exist
+                'You are already following this user' if user already followed
+                'There is no user currently logged in.' if user not logged in
  */
 router.post('/following', function(req, res) {
     if (req.currentUser) {
@@ -464,7 +480,12 @@ router.post('/following', function(req, res) {
  - username
  Response:
  - success: true if the server succeeded in unfollowing this user
- - error msg: on error, an error message
+ - success: true if follow succeeded; false otherwise
+ - content: on success, username of user that is now being followed
+ - error msg:   'No such username' if attempting to unfollow user that does not exist
+                'You are not following this user.' if attempting to unfollow user that is not followed
+                'There is no user currently logged in.' if user not logged in
+
  */
 router.delete('/following', function(req, res) {
     if (req.currentUser) {

@@ -1,3 +1,5 @@
+// This file contains some borrowed code from the Notes Demo App
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');

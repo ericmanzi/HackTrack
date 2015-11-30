@@ -1,5 +1,6 @@
 Handlebars.registerPartial('project', Handlebars.templates['project']);
 Handlebars.registerPartial('navbar', Handlebars.templates['navbar']);
+Handlebars.registerPartial('modals', Handlebars.templates['modals']);
 
 var currentUser = null;
 var data={};
