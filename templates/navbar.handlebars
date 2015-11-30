@@ -5,11 +5,10 @@
     </div>
 
     <div class="navActions">
-
-        {{#if user_logged_in}}
-            <div class="post-project"><a href="#" id="post-project-link">POST A PROJECT</a></div>
-
-            <div class="pull-right">
+        <div class="pull-right">
+            <a href="#" class="home-link ht-navbar-btn">HOME<br />&nbsp;</a>
+            <a href="#" id="post-project-link" class="ht-navbar-btn">POST A PROJECT</a>
+            {{#if user_logged_in}}
                 <i>Logged in as <strong>{{username}}</strong> </i>
                 <div class="inline btn-group">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -26,16 +25,11 @@
 
                     </ul>
                 </div>
-
-
-            </div>
-
-        {{else}}
-            <div class="pull-right">
+            {{else}}
                 <a class="btn btn-primary" id="login-link"
                    data-toggle="modal" data-target="#signin" >Login</a>
-            </div>
-        {{/if}}
+            {{/if}}
+        </div>
 
         <div class="profile">
         </div>

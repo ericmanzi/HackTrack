@@ -224,7 +224,7 @@ a{
     margin-bottom: 10px;
 }
 
-#post-project-link {
+.ht-navbar-btn {
     display: inline-block;
     width: 115px;
     height: 55px;
@@ -288,4 +288,8 @@ a{
 
 .inline {
     display: inline;
+}
+
+#main-container {
+	margin: 60px;
 }
