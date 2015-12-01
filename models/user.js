@@ -9,6 +9,8 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     Project = require('../models/project'),
     Post = require('../models/post'),
+    Activity = require('../models/activity'),
+    async = require('async'),
     utils = require('../utils/utils'),
     strIn = require('../utils/stringInArray'),
     bcrypt = require('bcrypt'),
@@ -204,6 +206,81 @@ userSchema.methods.getFavoritesIdList = function() {
     return this.favorites;
 };
 
+/**
+ * Return list of usernames followed by this user
+ */
+userSchema.methods.getFollowingIDs = function(callback) {
+    var usernames = this.following;
+    async.map(usernames, function(username, callback) {
+        User.findOne({username: username}, function(err, user) {
+            if(err) {
+                callback(err);
+            } else if(!user) {
+                callback('could not find user with username ' + username);
+            } else {
+                callback(null, user.id);
+            }
+        });
+    }, function(err, userIDs) {
+        if(err) {
+            callback(err);
+        } else {
+            callback(null, userIDs);
+        }
+    });
+};
+
+userSchema.methods.getActivityFeed = function(callback) {
+    var user = this;
+    user.getFollowingIDs(function(err, following) {
+        if (err) {
+            utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+        } else {
+            Activity.getActivities(following, 50, function(err, activities) {
+                if (err) {
+                    utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err);
+                } else {
+                    // have activities: [{userID, type, obj, time}]
+                    // want activityList: [{userName, profile_pic, isProject, projID, post_text}]
+                    async.map(activities, function(activity, callback) {
+                        var newActivity = {
+                            isProject: activity.type==='project-create',
+                            time: activity.time
+                        };
+
+                        User.findOne({id:Schema.ObjectId(activity.user.id)}, function(err, user) {
+                            if (err) {callback(err);}
+                            else if (!user) {callback({msg:'User not found'});}
+                            else {
+                                newActivity.user_profile_picture = user.getProfilePicture();
+                                newActivity.user = user.getUsername();
+                                if (newActivity.isProject) {
+                                    newActivity.projID = activity.project.id;
+                                    newActivity.project_title = activity.project.title;
+                                } else {
+                                    newActivity.projID = activity.post.project.id;
+                                    newActivity.project_title = activity.post.project.title;
+                                    newActivity.post_text = activity.post.content;
+                                }
+                                console.log(JSON.stringify(newActivity));
+                                callback(null, newActivity);
+                            }
+                        });
+                    }, function(err, activityList_) {
+                        if (err) {
+                            callback(err);
+                            console.log(JSON.stringify(err));
+                        } else {
+                            console.log(JSON.stringify(activityList_));
+                            callback(null, activityList_);
+                        }
+                    });
+                }
+            });
+        }
+    });
+};
+
 
 /**
  * current user follows the user identified by the given username
@@ -268,6 +345,15 @@ userSchema.statics.isFollowing = function(currentUser, otherUser, callback) {
  */
 userSchema.methods.getProfilePicture = function() {
     return this.profile_picture;
+};
+
+
+/**
+ * Return this user's username
+ * @returns {*|string}
+ */
+userSchema.methods.getUsername = function() {
+    return this.username;
 };
 
 /**

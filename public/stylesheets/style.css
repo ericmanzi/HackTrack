@@ -293,3 +293,23 @@ a{
 #main-container {
     margin: 60px;
 }
+
+.activity {
+    width: 100%;
+    padding: 3px;
+}
+
+.activity.project-title a {
+    text-decoration: none;
+    color: #00b3ee;
+}
+
+.activity.project-title a:hover {
+    text-decoration: none;
+    color: #2b669a;
+}
+
+.activity.post-text {
+    color: #555555;
+    font-size: 1em;
+}

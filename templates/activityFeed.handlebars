@@ -1,0 +1,12 @@
+<div class="activityFeed">
+    {{> navbar}}
+    <div class="text-center"><h3>Your feed</h3></div>
+    {{#each activities}}
+        <h3>{{prettyDate}}</h3>
+        {{#each activities}}
+            {{> activity}}
+        {{else}}
+            <p><em>No activity on this day!</em></p>
+        {{/each}}
+    {{/each}}
+</div>

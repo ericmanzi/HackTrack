@@ -1,43 +1,96 @@
 (function() {
   var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};
+templates['activity'] = template({"1":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "        created a new project\n        <span class=\"project-title\"><a href=\"/projects/"
+    + alias4(((helper = (helper = helpers.projID || (depth0 != null ? depth0.projID : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"projID","hash":{},"data":data}) : helper)))
+    + "\">"
+    + alias4(((helper = (helper = helpers.project_title || (depth0 != null ? depth0.project_title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"project_title","hash":{},"data":data}) : helper)))
+    + "</a> </span>\n";
+},"3":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "        posted in <span class=\"project-title\"><a href=\"/projects/"
+    + alias4(((helper = (helper = helpers.projID || (depth0 != null ? depth0.projID : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"projID","hash":{},"data":data}) : helper)))
+    + "\">"
+    + alias4(((helper = (helper = helpers.project_title || (depth0 != null ? depth0.project_title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"project_title","hash":{},"data":data}) : helper)))
+    + "</a> </span>\n        <br/> <span class=\"post-text\">"
+    + alias4(((helper = (helper = helpers.post_text || (depth0 != null ? depth0.post_text : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"post_text","hash":{},"data":data}) : helper)))
+    + "</span>\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<li class=\"activity inline\">\n    <a href=\"users/profiles/"
+    + alias4(((helper = (helper = helpers.user || (depth0 != null ? depth0.user : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"user","hash":{},"data":data}) : helper)))
+    + "\">\n        <div class=\"userImage\">\n            <img style=\"height:75px; width:75px\" src="
+    + alias4(((helper = (helper = helpers.user_profile_picture || (depth0 != null ? depth0.user_profile_picture : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"user_profile_picture","hash":{},"data":data}) : helper)))
+    + ">\n        </div>\n        "
+    + alias4(((helper = (helper = helpers.user || (depth0 != null ? depth0.user : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"user","hash":{},"data":data}) : helper)))
+    + "\n    </a>\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isProject : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+    + "\n</li>\n";
+},"useData":true});
+templates['activityFeed'] = template({"1":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {};
+
+  return "        <h3>"
+    + container.escapeExpression(((helper = (helper = helpers.prettyDate || (depth0 != null ? depth0.prettyDate : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"prettyDate","hash":{},"data":data}) : helper)))
+    + "</h3>\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.activities : depth0),{"name":"each","hash":{},"fn":container.program(2, data, 0),"inverse":container.program(4, data, 0),"data":data})) != null ? stack1 : "");
+},"2":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = container.invokePartial(partials.activity,depth0,{"name":"activity","data":data,"indent":"            ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
+},"4":function(container,depth0,helpers,partials,data) {
+    return "            <p><em>No activity on this day!</em></p>\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "<div class=\"activityFeed\">\n"
+    + ((stack1 = container.invokePartial(partials.navbar,depth0,{"name":"navbar","data":data,"indent":"    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
+    + "    <div class=\"text-center\"><h3>Your feed</h3></div>\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.activities : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "</div>\n";
+},"usePartial":true,"useData":true});
 templates['edit-project'] = template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "      <input type=\"text\" class=\"form-control\" id=\"project-edit-videoLink\" value=\"https://www.youtube.com/watch?v="
+  return "            <input type=\"text\" class=\"form-control\" id=\"project-edit-videoLink\" value=\"https://www.youtube.com/watch?v="
     + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.project : depth0)) != null ? stack1.videoID : stack1), depth0))
     + "\" required>\n";
 },"3":function(container,depth0,helpers,partials,data) {
-    return "      <input type=\"text\" class=\"form-control\" id=\"project-edit-videoLink\" placeholder=\"Enter project video link...\" required>\n";
+    return "            <input type=\"text\" class=\"form-control\" id=\"project-edit-videoLink\" placeholder=\"Enter project video link...\" required>\n";
 },"5":function(container,depth0,helpers,partials,data) {
     var stack1;
 
   return ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},((stack1 = (depth0 != null ? depth0.project : depth0)) != null ? stack1.imageLinks : stack1),{"name":"each","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 },"6":function(container,depth0,helpers,partials,data) {
-    return "          <div><input type=\"text\" class=\"form-control project-edit-image-links\" value="
+    return "                    <div><input type=\"text\" class=\"form-control project-edit-image-links\" value="
     + container.escapeExpression(container.lambda(depth0, depth0))
-    + ">\n          <button class=\"btn btn-warning btn-sm remove_imagelink_field\">Remove</button></div>\n";
+    + ">\n                    <button class=\"btn btn-warning btn-sm remove_imagelink_field\">Remove</button></div>\n";
 },"8":function(container,depth0,helpers,partials,data) {
-    return "        <div><input type=\"text\" class=\"form-control project-edit-image-links\" placeholder=\"Enter project image link...\">\n        <button class=\"btn btn-warning btn-sm remove_imagelink_field\">Remove</button></div>\n";
+    return "                <div><input type=\"text\" class=\"form-control project-edit-image-links\" placeholder=\"Enter project image link...\">\n                <button class=\"btn btn-warning btn-sm remove_imagelink_field\">Remove</button></div>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : {};
 
   return ((stack1 = container.invokePartial(partials.navbar,depth0,{"name":"navbar","data":data,"helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
     + "<form id=\"edit-project\" data-project-edit-id="
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.project : depth0)) != null ? stack1._id : stack1), depth0))
-    + ">\n    <h1 class=\"project-edit-label-h1\">Edit Project</h1>\n  <div class=\"alert alert-danger\" id=\"edit-project-error\" style=\"display:none;\"></div>\n  <fieldset class=\"form-group\">\n    <label for=\"projectTitle\">Edit Project Title</label>\n    <input type=\"text\" class=\"form-control\" id=\"project-edit-title\" maxlength=\"100\" value="
+    + ">\n    <h1 class=\"project-edit-label-h1\">Edit Project</h1>\n    <div class=\"alert alert-danger\" id=\"edit-project-error\" style=\"display:none;\"></div>\n    <fieldset class=\"form-group\">\n        <label for=\"projectTitle\">Edit Project Title</label>\n        <input type=\"text\" class=\"form-control\" id=\"project-edit-title\" maxlength=\"100\" value="
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.project : depth0)) != null ? stack1.title : stack1), depth0))
-    + " required>\n  </fieldset>\n  <fieldset class=\"form-group\">\n    <label for=\"projectDescription\">Edit Project Description *</label>\n    <textarea class=\"form-control\" id=\"project-edit-description\" rows=\"3\" required>"
+    + " required>\n    </fieldset>\n    <fieldset class=\"form-group\">\n        <label for=\"projectDescription\">Edit Project Description *</label>\n        <textarea class=\"form-control\" id=\"project-edit-description\" rows=\"3\" required>"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.project : depth0)) != null ? stack1.description : stack1), depth0))
-    + "</textarea>\n  </fieldset>\n  <fieldset class=\"form-group\">\n    <label for=\"projectVideoLink\">Edit Project Video Link </label>\n    <small class=\"text-muted\">(Only one YouTube video link)</small>\n"
+    + "</textarea>\n    </fieldset>\n    <fieldset class=\"form-group\">\n        <label for=\"projectVideoLink\">Edit Project Video Link </label>\n        <small class=\"text-muted\">(Only one YouTube video link)</small>\n"
     + ((stack1 = helpers["if"].call(alias3,((stack1 = (depth0 != null ? depth0.project : depth0)) != null ? stack1.videoID : stack1),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
-    + "  </fieldset>\n  <fieldset class=\"form-group\">\n    <label for=\"projectTags\">Edit Project Tags</label>\n    <small class=\"text-muted\">(Click enter after entering each tag)</small>\n    <ul id=\"project-edit-tags\" class=\"form-control\"></ul>\n  </fieldset>\n  <fieldset class=\"form-group\">\n    <div class=\"image_input_fields_wrap\">\n      <label for=\"projectImageLinks\">Edit Project Image Links</label>\n      <small class=\"text-muted\">(Enter one link per input field, max 5 images)</small>\n"
+    + "    </fieldset>\n    <fieldset class=\"form-group\">\n        <label for=\"projectTags\">Edit Project Tags</label>\n        <small class=\"text-muted\">(Click enter after entering each tag)</small>\n        <ul id=\"project-edit-tags\" class=\"form-control\"></ul>\n    </fieldset>\n    <fieldset class=\"form-group\">\n        <div class=\"image_input_fields_wrap\">\n            <label for=\"projectImageLinks\">Edit Project Image Links</label>\n            <small class=\"text-muted\">(Enter one link per input field, max 5 images)</small>\n"
     + ((stack1 = helpers["if"].call(alias3,((stack1 = ((stack1 = (depth0 != null ? depth0.project : depth0)) != null ? stack1.imageLinks : stack1)) != null ? stack1["0"] : stack1),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.program(8, data, 0),"data":data})) != null ? stack1 : "")
-    + "      <button type=\"button\" class=\"btn btn-success btn-sm add_imagelinkEdit_field_button\">Add more images</button>\n    </div>\n  </fieldset>\n  <hr />\n  <button type=\"button\" class=\"btn btn-primary\" id=\"submit-project-edit\">Submit</button>\n  <button type=\"button\" class=\"btn btn-danger\" id=\"cancel-project-edit\">Cancel</button>\n</form>";
+    + "            <button type=\"button\" class=\"btn btn-success btn-sm add_imagelinkEdit_field_button\">Add more images</button>\n        </div>\n    </fieldset>\n    <hr />\n    <button type=\"button\" class=\"btn btn-primary\" id=\"submit-project-edit\">Submit</button>\n    <button type=\"button\" class=\"btn btn-danger\" id=\"cancel-project-edit\">Cancel</button>\n</form>\n";
 },"usePartial":true,"useData":true});
 templates['index'] = template({"1":function(container,depth0,helpers,partials,data) {
     var alias1=container.lambda, alias2=container.escapeExpression;
 
-  return "				<li class=\"tagSelector btn btn-default\" data-tag=\""
+  return "                <li class=\"tagSelector btn btn-default\" data-tag=\""
     + alias2(alias1(depth0, depth0))
     + "\">"
     + alias2(alias1(depth0, depth0))
@@ -45,12 +98,12 @@ templates['index'] = template({"1":function(container,depth0,helpers,partials,da
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "<div id=\"projects\" >\n	<div class=\"projectFeed\">\n"
-    + ((stack1 = container.invokePartial(partials.navbar,depth0,{"name":"navbar","data":data,"indent":"\t\t","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
+  return "<div id=\"projects\" >\n    <div class=\"projectFeed\">\n"
+    + ((stack1 = container.invokePartial(partials.navbar,depth0,{"name":"navbar","data":data,"indent":"        ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
     + ((stack1 = container.invokePartial(partials.modals,depth0,{"name":"modals","data":data,"indent":"        ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
-    + "		<ul id=\"tagSelection\">\n"
+    + "        <ul id=\"tagSelection\">\n            <li class=\"tagSelector btn btn-default\" data-tag=\"\">All</li>\n"
     + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.tags : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "		</ul>\n		<div id=\"searchContainer\">\n			<div class=\"input-group\">\n				<input type=\"text\" class=\"form-control\" id=\"searchInput\" placeholder=\"Enter a search term\" />\n				<span class=\"input-group-btn\">\n					<button type=\"submit\" class=\"btn btn-success\" id=\"searchBtn\">Search</button>\n				</span>\n			</div>\n		</div>\n		<div id=\"projectList\"></div>\n		<p><a href=\"#\" id=\"loadMoreProjects\">View more projects</a></p>\n	</div>\n</div>\n";
+    + "        </ul>\n        <div id=\"searchContainer\">\n            <div class=\"input-group\">\n                <input type=\"text\" class=\"form-control\" id=\"searchInput\" placeholder=\"Enter a search term\" />\n                <span class=\"input-group-btn\">\n                    <button type=\"submit\" class=\"btn btn-success\" id=\"searchBtn\">Search</button>\n                </span>\n            </div>\n        </div>\n        <div id=\"projectList\"></div>\n        <p><a href=\"#\" id=\"loadMoreProjects\">View more projects</a></p>\n    </div>\n</div>\n";
 },"usePartial":true,"useData":true});
 templates['modals'] = template({"1":function(container,depth0,helpers,partials,data) {
     var helper;
@@ -74,52 +127,52 @@ templates['modals'] = template({"1":function(container,depth0,helpers,partials,d
 templates['navbar'] = template({"1":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "            <div class=\"post-project\"><a href=\"#\" id=\"post-project-link\">POST A PROJECT</a></div>\n\n            <div class=\"pull-right\">\n                <i>Logged in as <strong>"
+  return "                <i>Logged in as <strong>"
     + alias4(((helper = (helper = helpers.username || (depth0 != null ? depth0.username : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"username","hash":{},"data":data}) : helper)))
     + "</strong> </i>\n                <div class=\"inline btn-group\">\n                    <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">\n                        <div class=\"navAvatar\">\n                            <div class=\"userImage\"><img src=\""
     + alias4(((helper = (helper = helpers.profile_picture || (depth0 != null ? depth0.profile_picture : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"profile_picture","hash":{},"data":data}) : helper)))
-    + "\" width=\"50\" height=\"39\" id=\"profile-sm\"></div>\n                        </div>\n                    </a>\n\n                    <ul class=\"dropdown-menu dropdown-menu-right text-center\">\n                        <li><a href=\"#\" class=\"profile-link\">Profile</a></li>\n                        <li role=\"separator\" class=\"divider\"></li>\n                        <li><a href=\"#\" id=\"logout-link\" >Logout</a></li>\n\n                    </ul>\n                </div>\n\n\n            </div>\n\n";
+    + "\" width=\"50\" height=\"39\" id=\"profile-sm\"></div>\n                        </div>\n                    </a>\n\n                    <ul class=\"dropdown-menu dropdown-menu-right text-center\">\n                        <li><a href=\"#\" class=\"profile-link\">Profile</a></li>\n                        <li><a href=\"#\" class=\"act-feed-link\">Activity feed</a></li>\n                        <li role=\"separator\" class=\"divider\"></li>\n                        <li><a href=\"#\" id=\"logout-link\" >Logout</a></li>\n\n                    </ul>\n                </div>\n";
 },"3":function(container,depth0,helpers,partials,data) {
-    return "            <div class=\"pull-right\">\n                <a class=\"btn btn-primary\" id=\"login-link\"\n                   data-toggle=\"modal\" data-target=\"#signin\" >Login</a>\n            </div>\n";
+    return "                <a class=\"btn btn-primary\" id=\"login-link\"\n                   data-toggle=\"modal\" data-target=\"#signin\" >Login</a>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "<div class=\"navBar\">\n\n    <div class=\"page-title\">\n        <h1 class=\"home-link\"><a href=\"#\" style=\"text-decoration:none;\">MIT HACKTRACK</a></h1>\n    </div>\n\n    <div class=\"navActions\">\n\n"
+  return "<div class=\"navBar\">\n\n    <div class=\"page-title\">\n        <h1 class=\"home-link\"><a href=\"#\" style=\"text-decoration:none;\">MIT HACKTRACK</a></h1>\n    </div>\n\n    <div class=\"navActions\">\n        <div class=\"pull-right\">\n            <a href=\"#\" class=\"home-link ht-navbar-btn\">HOME<br />&nbsp;</a>\n            <a href=\"#\" id=\"post-project-link\" class=\"ht-navbar-btn\">POST A PROJECT</a>\n"
     + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.user_logged_in : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
-    + "\n        <div class=\"profile\">\n        </div>\n    </div>\n    <div class=\"mainImg\">\n    </div>\n</div>\n\n";
+    + "        </div>\n\n        <div class=\"profile\">\n        </div>\n    </div>\n    <div class=\"mainImg\">\n    </div>\n</div>\n\n";
 },"useData":true});
 templates['postProject'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1;
 
   return ((stack1 = container.invokePartial(partials.navbar,depth0,{"name":"navbar","data":data,"helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
-    + "<form id=\"post-project\">\n    <h1 class=\"project-post-label-h1\">Post New Project</h1>\n  <div class=\"alert alert-danger\" id=\"post-project-error\" style=\"display:none;\"></div>\n  <fieldset class=\"form-group\">\n    <label for=\"projectTitle\">Project Title *</label>\n    <input type=\"text\" class=\"form-control\" id=\"project-post-title\" placeholder=\"Enter project title...\" maxlength=\"100\" required>\n  </fieldset>\n  <fieldset class=\"form-group\">\n    <label for=\"projectDescription\">Project Description *</label>\n    <textarea class=\"form-control\" id=\"project-post-description\" rows=\"3\" placeholder=\"Enter project description...\" required></textarea>\n  </fieldset>\n  <fieldset class=\"form-group\">\n    <label for=\"projectVideoLink\">Project Video Link </label>\n    <small class=\"text-muted\">(Only YouTube videos)</small>\n    <input type=\"text\" class=\"form-control\" id=\"project-post-videoLink\" placeholder=\"Enter project video link...\" required>\n  </fieldset>\n  <fieldset class=\"form-group\">\n    <label for=\"projectTags\">Project Tags</label>\n    <small class=\"text-muted\">(Click enter after entering each tag)</small>\n    <ul id=\"project-post-tags\" class=\"form-control\"></ul>\n  </fieldset>\n  <fieldset class=\"form-group\">\n    <div class=\"image_input_fields_wrap\">\n      <label for=\"projectImageLinks\">Project Image Links</label>\n      <small class=\"text-muted\">(Enter one link per input field, max 5 images)</small>\n      <div><input type=\"text\" class=\"form-control project-post-image-links\" placeholder=\"Enter project image link...\"></div>\n      <button type=\"button\" class=\"btn btn-success btn-sm add_imagelink_field_button\">Add more images</button>\n    </div>\n  </fieldset>\n  <hr />\n  <button type=\"button\" class=\"btn btn-primary\" id=\"submit-project-post\">Submit</button>\n  <button type=\"button\" class=\"btn btn-danger\" id=\"cancel-project-post\">Cancel</button>\n</form>";
+    + "<form id=\"post-project\">\n    <h1 class=\"project-post-label-h1\">Post New Project</h1>\n    <div class=\"alert alert-danger\" id=\"post-project-error\" style=\"display:none;\"></div>\n    <fieldset class=\"form-group\">\n        <label for=\"projectTitle\">Project Title *</label>\n        <input type=\"text\" class=\"form-control\" id=\"project-post-title\" placeholder=\"Enter project title...\" maxlength=\"100\" required>\n    </fieldset>\n    <fieldset class=\"form-group\">\n        <label for=\"projectDescription\">Project Description *</label>\n        <textarea class=\"form-control\" id=\"project-post-description\" rows=\"3\" placeholder=\"Enter project description...\" required></textarea>\n    </fieldset>\n    <fieldset class=\"form-group\">\n        <label for=\"projectVideoLink\">Project Video Link </label>\n        <small class=\"text-muted\">(Only YouTube videos)</small>\n        <input type=\"text\" class=\"form-control\" id=\"project-post-videoLink\" placeholder=\"Enter project video link...\" required>\n    </fieldset>\n    <fieldset class=\"form-group\">\n        <label for=\"projectTags\">Project Tags</label>\n        <small class=\"text-muted\">(Click enter after entering each tag)</small>\n        <ul id=\"project-post-tags\" class=\"form-control\"></ul>\n    </fieldset>\n    <fieldset class=\"form-group\">\n        <div class=\"image_input_fields_wrap\">\n            <label for=\"projectImageLinks\">Project Image Links</label>\n            <small class=\"text-muted\">(Enter one link per input field, max 5 images)</small>\n            <div><input type=\"text\" class=\"form-control project-post-image-links\" placeholder=\"Enter project image link...\"></div>\n            <button type=\"button\" class=\"btn btn-success btn-sm add_imagelink_field_button\">Add more images</button>\n        </div>\n    </fieldset>\n    <hr />\n    <button type=\"button\" class=\"btn btn-primary\" id=\"submit-project-post\">Submit</button>\n    <button type=\"button\" class=\"btn btn-danger\" id=\"cancel-project-post\">Cancel</button>\n</form>\n";
 },"usePartial":true,"useData":true});
 templates['profile'] = template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return ((stack1 = container.invokePartial(partials.project,depth0,{"name":"project","data":data,"indent":"\t\t\t\t","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
+  return ((stack1 = container.invokePartial(partials.project,depth0,{"name":"project","data":data,"indent":"                ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
 },"3":function(container,depth0,helpers,partials,data) {
-    return "				<p><em>No projects yet!</em></p>\n";
+    return "                <p><em>No projects yet!</em></p>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
   return ((stack1 = container.invokePartial(partials.navbar,depth0,{"name":"navbar","data":data,"helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
-    + "<main class=\"page-main\">\n	<header class=\"profileHeader\">\n		<div class=\"profileContainer\">\n			<div class=\"profileAvatar\">\n				<span class=\"userImage\">\n                    <img src=\""
+    + "<main class=\"page-main\">\n    <header class=\"profileHeader\">\n        <div class=\"profileContainer\">\n            <div class=\"profileAvatar\">\n                <span class=\"userImage\">\n                    <img src=\""
     + alias4(((helper = (helper = helpers.profile_picture || (depth0 != null ? depth0.profile_picture : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"profile_picture","hash":{},"data":data}) : helper)))
-    + "\" width=\"110\" height=\"110\" id=\"profile-md\">\n                </span>\n                <div class=\"thumb_meta\">\n                    <a href=\"#uploadProfilePic\" data-toggle=\"modal\" id=\"change-profile\">\n                        Change profile picture</a></div>\n\n            </div>\n			<div class=\"profileInfo\">\n				<h1 class=\"profileInfoTitle\">\n					"
+    + "\" width=\"110\" height=\"110\" id=\"profile-md\">\n                </span>\n                <div class=\"thumb_meta\">\n                    <a href=\"#uploadProfilePic\" data-toggle=\"modal\" id=\"change-profile\">\n                        Change profile picture</a></div>\n\n            </div>\n            <div class=\"profileInfo\">\n                <h1 class=\"profileInfoTitle\">\n                    "
     + alias4(((helper = (helper = helpers.username || (depth0 != null ? depth0.username : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"username","hash":{},"data":data}) : helper)))
-    + "\n				</h1>\n			</div>\n			<div class=\"profileNavigation\">\n				<ul>\n					<li class=\"profile-navigation-tab\">\n						<a href=\"#\" id=\"view-favorites\">\n							Favorites\n						</a>\n					</li>\n					<li class=\"profile-navigation-tab\" id=\"view-myprojects\">\n						<a href=\"#\">My Projects</a>\n					</li>\n				</ul>\n			</div>\n\n		</div>\n	</header>\n	<div >\n		<div class= \"projectFeed\">\n			<ul class=\"projectList\"> \n"
+    + "\n                </h1>\n            </div>\n            <div class=\"profileNavigation\">\n                <ul>\n                    <li class=\"profile-navigation-tab\">\n                        <a href=\"#\" id=\"view-favorites\">\n                            Favorites\n                        </a>\n                    </li>\n                    <li class=\"profile-navigation-tab\" id=\"view-myprojects\">\n                        <a href=\"#\">My Projects</a>\n                    </li>\n                </ul>\n            </div>\n\n        </div>\n    </header>\n    <div >\n        <div class= \"projectFeed\">\n            <ul class=\"projectList\">\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.projects : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
-    + "			</ul>\n		</div>\n	</div>\n</main>\n\n<!-- Modal  Add Profile Pic-->\n<div class=\"modal fade\" id=\"uploadProfilePic\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\">x</button>\n                <h4 class=\"modal-title\">Change Profile Picture</h4>\n            </div>\n            <div id = 'upload_modal' class=\"modal-body\">\n                <input type=\"file\" name=\"fileselect\" id=\"fileselect\" accept='image/*'>\n                <p class=\"help-block\">Browse for picture to add.</p>\n            </div>\n            <div class=\"modal-footer\">\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Cancel</button>\n                <button id='upload_profile_button' type=\"button\" class=\"btn btn-default\">Upload</button>\n            </div>\n        </div>\n    </div>\n</div>";
+    + "            </ul>\n        </div>\n    </div>\n</main>\n\n<!-- Modal  Add Profile Pic-->\n<div class=\"modal fade\" id=\"uploadProfilePic\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\">x</button>\n                <h4 class=\"modal-title\">Change Profile Picture</h4>\n            </div>\n            <div id = 'upload_modal' class=\"modal-body\">\n                <input type=\"file\" name=\"fileselect\" id=\"fileselect\" accept='image/*'>\n                <p class=\"help-block\">Browse for picture to add.</p>\n            </div>\n            <div class=\"modal-footer\">\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Cancel</button>\n                <button id='upload_profile_button' type=\"button\" class=\"btn btn-default\">Upload</button>\n            </div>\n        </div>\n    </div>\n</div>\n";
 },"usePartial":true,"useData":true});
 templates['project'] = template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "		<div class=\"projectContent projectImage\"><img style=\"height:75px; width:75px\" src="
+  return "        <div class=\"projectContent projectImage\"><img style=\"height:75px; width:75px\" src="
     + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.imageLinks : depth0)) != null ? stack1["0"] : stack1), depth0))
     + "></div>\n";
 },"3":function(container,depth0,helpers,partials,data) {
-    return "		<div class=\"projectContent projectImage\"><img style=\"height:75px; width:75px\" src=\"http://sloansocialimpact.mit.edu/wp-content/uploads/2014/02/MIT_Dome_night1_Edit.jpg\"></div>\n";
+    return "        <div class=\"projectContent projectImage\"><img style=\"height:75px; width:75px\" src=\"http://sloansocialimpact.mit.edu/wp-content/uploads/2014/02/MIT_Dome_night1_Edit.jpg\"></div>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
@@ -127,29 +180,29 @@ templates['project'] = template({"1":function(container,depth0,helpers,partials,
     + alias4(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"_id","hash":{},"data":data}) : helper)))
     + ">\n<a href=\"projects/"
     + alias4(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"_id","hash":{},"data":data}) : helper)))
-    + "\" class=\"project-link\">\n	<div class=\"projectContent voteCount\">\n		"
+    + "\" class=\"project-link\">\n    <div class=\"projectContent voteCount\">\n        "
     + alias4(container.lambda(((stack1 = (depth0 != null ? depth0.upvoterUsernames : depth0)) != null ? stack1.length : stack1), depth0))
-    + "\n	</div>\n"
+    + "\n    </div>\n"
     + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.imageLinks : depth0)) != null ? stack1["0"] : stack1),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
-    + "\n	<div class=\"projectContent projectDetails\">\n		<div class=\"projectTitle\">\n			"
+    + "\n    <div class=\"projectContent projectDetails\">\n        <div class=\"projectTitle\">\n            "
     + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
-    + "\n		</div>\n		<div class=\"projectBlurb\">\n			"
+    + "\n        </div>\n        <div class=\"projectBlurb\">\n            "
     + alias4(((helper = (helper = helpers.description || (depth0 != null ? depth0.description : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"description","hash":{},"data":data}) : helper)))
-    + "\n		</div>\n	</div>\n</a>	\n</li>\n";
+    + "\n        </div>\n    </div>\n</a>\n</li>\n";
 },"useData":true});
 templates['projectList'] = template({"1":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {};
 
-  return "	<h3>"
+  return "    <h3>"
     + container.escapeExpression(((helper = (helper = helpers.prettyDate || (depth0 != null ? depth0.prettyDate : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"prettyDate","hash":{},"data":data}) : helper)))
     + "</h3>\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.projects : depth0),{"name":"each","hash":{},"fn":container.program(2, data, 0),"inverse":container.program(4, data, 0),"data":data})) != null ? stack1 : "");
 },"2":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return ((stack1 = container.invokePartial(partials.project,depth0,{"name":"project","data":data,"indent":"\t\t","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
+  return ((stack1 = container.invokePartial(partials.project,depth0,{"name":"project","data":data,"indent":"        ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
 },"4":function(container,depth0,helpers,partials,data) {
-    return "		<p><em>No projects posted on this day!</em></p>\n";
+    return "        <p><em>No projects posted on this day!</em></p>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1;
 
@@ -176,87 +229,87 @@ templates['projectView'] = template({"1":function(container,depth0,helpers,parti
 },"8":function(container,depth0,helpers,partials,data) {
     return "                    <button id=\"favorite-button\" class=\"project-actions\">Add to favorites</button>\n";
 },"10":function(container,depth0,helpers,partials,data) {
-    return "            	<button id=\"edit-project-button\" class=\"project-actions\">Edit project</button>\n";
+    return "                <button id=\"edit-project-button\" class=\"project-actions\">Edit project</button>\n";
 },"12":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : {}, alias4=helpers.helperMissing, alias5="function";
 
-  return "						<div class=\"project-discussion-post\">\n							<div class=\"post-content project-discussion-head\">\n								<span class=\"userImage\"><img src=\""
+  return "                        <div class=\"project-discussion-post\">\n                            <div class=\"post-content project-discussion-head\">\n                                <span class=\"userImage\"><img src=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.user : depth0)) != null ? stack1.profile_picture : stack1), depth0))
-    + "\" width=\"60\" height=\"60\"></span>\n							    <span class=\"post-user\"><a href=\"#\" id=\"view-user\" view-user-id="
+    + "\" width=\"60\" height=\"60\"></span>\n                                <span class=\"post-user\"><a href=\"#\" id=\"view-user\" view-user-id="
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.user : depth0)) != null ? stack1.username : stack1), depth0))
     + ">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.user : depth0)) != null ? stack1.username : stack1), depth0))
-    + "</a></span>\n							    <span class=\"post-time\">on "
+    + "</a></span>\n                                <span class=\"post-time\">on "
     + alias2(((helper = (helper = helpers.prettyDate || (depth0 != null ? depth0.prettyDate : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"prettyDate","hash":{},"data":data}) : helper)))
     + " at "
     + alias2(((helper = (helper = helpers.prettyTime || (depth0 != null ? depth0.prettyTime : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"prettyTime","hash":{},"data":data}) : helper)))
-    + "</span>\n							</div>\n							<div class=\"post-content project-discussion-body\">\n								"
+    + "</span>\n                            </div>\n                            <div class=\"post-content project-discussion-body\">\n                                "
     + alias2(((helper = (helper = helpers.content || (depth0 != null ? depth0.content : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"content","hash":{},"data":data}) : helper)))
-    + "\n							</div>\n"
+    + "\n                            </div>\n"
     + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.comments : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ((stack1 = helpers["if"].call(alias3,((stack1 = (data && data.root)) && stack1.user_logged_in),{"name":"if","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "						</div>\n";
+    + "                        </div>\n";
 },"13":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : {}, alias4=helpers.helperMissing, alias5="function";
 
-  return "								<div class=\"project-discussion-comment\">\n									<div class=\"post-content discussion-comment-head\">\n										<span class=\"userImage\"><img src=\""
+  return "                                <div class=\"project-discussion-comment\">\n                                    <div class=\"post-content discussion-comment-head\">\n                                        <span class=\"userImage\"><img src=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.user : depth0)) != null ? stack1.profile_picture : stack1), depth0))
-    + "\" width=\"60\" height=\"60\"></span>\n							            <span class=\"post-user\"><a href=\"#\" id=\"view-user\" view-user-id="
+    + "\" width=\"60\" height=\"60\"></span>\n                                        <span class=\"post-user\"><a href=\"#\" id=\"view-user\" view-user-id="
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.user : depth0)) != null ? stack1.username : stack1), depth0))
     + ">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.user : depth0)) != null ? stack1.username : stack1), depth0))
-    + "</a></span>\n							            <span class=\"post-time\">on "
+    + "</a></span>\n                                        <span class=\"post-time\">on "
     + alias2(((helper = (helper = helpers.prettyDate || (depth0 != null ? depth0.prettyDate : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"prettyDate","hash":{},"data":data}) : helper)))
     + " at "
     + alias2(((helper = (helper = helpers.prettyTime || (depth0 != null ? depth0.prettyTime : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"prettyTime","hash":{},"data":data}) : helper)))
-    + "</span>\n									</div>\n									<div class=\"post-content discussion-comment-body\">\n										"
+    + "</span>\n                                    </div>\n                                    <div class=\"post-content discussion-comment-body\">\n                                        "
     + alias2(((helper = (helper = helpers.content || (depth0 != null ? depth0.content : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"content","hash":{},"data":data}) : helper)))
-    + "\n									</div>\n								</div>\n";
+    + "\n                                    </div>\n                                </div>\n";
 },"15":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "								<div class=\"comment-add\" data-discussion-id="
+  return "                                <div class=\"comment-add\" data-discussion-id="
     + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
-    + ">\n									<input type=\"text\" class=\"comment-add-content\" id=\"comment-add-content-"
+    + ">\n                                    <input type=\"text\" class=\"comment-add-content\" id=\"comment-add-content-"
     + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\" />\n									<button class=\"comment-add-btn btn btn-default\">Reply</button>\n								</div>\n";
+    + "\" />\n                                    <button class=\"comment-add-btn btn btn-default\">Reply</button>\n                                </div>\n";
 },"17":function(container,depth0,helpers,partials,data) {
-    return "						No discussions have been opened yet for this project.\n";
+    return "                        No discussions have been opened yet for this project.\n";
 },"19":function(container,depth0,helpers,partials,data) {
-    return "						<div class=\"project-discussion-add\">\n							<input type=\"text\" id=\"project-discussion-add-content\" />\n							<button id=\"project-discussion-add-btn\" class = \"btn btn-default\">Add Discussion</button>\n						</div>\n";
+    return "                        <div class=\"project-discussion-add\">\n                            <input type=\"text\" id=\"project-discussion-add-content\" />\n                            <button id=\"project-discussion-add-btn\" class = \"btn btn-default\">Add Discussion</button>\n                        </div>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : {};
 
-  return "\n<div class=\"project-container\" >\n	<div class=\"proj\" >\n		<header class=\"project-header\" id=\"project-header\" data-project-id="
+  return "\n<div class=\"project-container\" >\n    <div class=\"proj\" >\n        <header class=\"project-header\" id=\"project-header\" data-project-id="
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.project : depth0)) != null ? stack1._id : stack1), depth0))
-    + ">\n				<a href=\"#\" class=\"home-link\">\n	   				<span class=\"glyphicon glyphicon-remove cancel-button\" aria-hidden=\"true\" style=\"font-size:3em; padding-top:2px; padding-left:2px\"></span>\n	   			</a>\n		   	\n			<div class=\"project-title\" id=\"projectView-title\">\n				"
+    + ">\n                <a href=\"#\" class=\"home-link\">\n                    <span class=\"glyphicon glyphicon-remove cancel-button\" aria-hidden=\"true\" style=\"font-size:3em; padding-top:2px; padding-left:2px\"></span>\n                </a>\n\n            <div class=\"project-title\" id=\"projectView-title\">\n                "
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.project : depth0)) != null ? stack1.title : stack1), depth0))
-    + "\n			</div>\n			<div class=\"project-description\" id=\"projectView-description\">\n				"
+    + "\n            </div>\n            <div class=\"project-description\" id=\"projectView-description\">\n                "
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.project : depth0)) != null ? stack1.description : stack1), depth0))
     + "\n                <br />\n                by <a href=\"#\" id=\"view-user\" view-user-id="
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.project : depth0)) != null ? stack1.owner : stack1), depth0))
     + ">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.project : depth0)) != null ? stack1.owner : stack1), depth0))
-    + "</a>\n			</div>\n\n"
+    + "</a>\n            </div>\n\n"
     + ((stack1 = helpers["if"].call(alias3,(depth0 != null ? depth0.user_logged_in : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + ((stack1 = helpers["if"].call(alias3,(depth0 != null ? depth0.user_logged_in : depth0),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\n"
     + ((stack1 = helpers["if"].call(alias3,(depth0 != null ? depth0.is_owner_of_this_project : depth0),{"name":"if","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "		</header>\n		<div class=\"project-body\">\n			<div class=\"project-body-left\">\n				<div class=\"project-content project-media\">\n					<div class=\"project-media\">\n						<div id=\"owl-demo\" class=\"owl-carousel owl-theme\">\n						  <div class=\"item\"><img src=\"/images/owl1.jpg\" alt=\"Owl Image\"></div>\n						  <div class=\"item\"><img src=\"/images/owl2.jpg\" alt=\"Owl Image\"></div>\n						  <div class=\"item\"><img src=\"/images/owl3.jpg\" alt=\"Owl Image\"></div>\n						  <div class=\"item\"><img src=\"/images/owl4.jpg\" alt=\"Owl Image\"></div>\n						  <div class=\"item\"><img src=\"/images/owl5.jpg\" alt=\"Owl Image\"></div>\n						  <div class=\"item\"><img src=\"/images/owl6.jpg\" alt=\"Owl Image\"></div>\n						  <div class=\"item\"><img src=\"/images/owl7.jpg\" alt=\"Owl Image\"></div>\n						  <div class=\"item\"><img src=\"/images/owl8.jpg\" alt=\"Owl Image\"></div>	 \n						</div>\n						<a href=\"#\" class=\"prev\"><span class=\"glyphicon glyphicon-menu-left\"></span></a>\n						<a href=\"#\" class=\"next\"><span class=\"glyphicon glyphicon-menu-right\" style=\"float:right;\"></span></a>\n					</div>\n				</div>\n				<div class=\"project-content project-discussion\">\n					<div class=\"project-discussion-title\">\n					    Discussion\n				    </div>\n"
+    + "        </header>\n        <div class=\"project-body\">\n            <div class=\"project-body-left\">\n                <div class=\"project-content project-media\">\n                    <div class=\"project-media\">\n                        <div id=\"owl-demo\" class=\"owl-carousel owl-theme\">\n                            <div class=\"item\"><img src=\"/images/owl1.jpg\" alt=\"Owl Image\"></div>\n                            <div class=\"item\"><img src=\"/images/owl2.jpg\" alt=\"Owl Image\"></div>\n                            <div class=\"item\"><img src=\"/images/owl3.jpg\" alt=\"Owl Image\"></div>\n                            <div class=\"item\"><img src=\"/images/owl4.jpg\" alt=\"Owl Image\"></div>\n                            <div class=\"item\"><img src=\"/images/owl5.jpg\" alt=\"Owl Image\"></div>\n                            <div class=\"item\"><img src=\"/images/owl6.jpg\" alt=\"Owl Image\"></div>\n                            <div class=\"item\"><img src=\"/images/owl7.jpg\" alt=\"Owl Image\"></div>\n                            <div class=\"item\"><img src=\"/images/owl8.jpg\" alt=\"Owl Image\"></div>\n                        </div>\n                        <a href=\"#\" class=\"prev\"><span class=\"glyphicon glyphicon-menu-left\"></span></a>\n                        <a href=\"#\" class=\"next\"><span class=\"glyphicon glyphicon-menu-right\" style=\"float:right;\"></span></a>\n                    </div>\n                </div>\n                <div class=\"project-content project-discussion\">\n                    <div class=\"project-discussion-title\">\n                        Discussion\n                    </div>\n"
     + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.discussions : depth0),{"name":"each","hash":{},"fn":container.program(12, data, 0),"inverse":container.program(17, data, 0),"data":data})) != null ? stack1 : "")
     + ((stack1 = helpers["if"].call(alias3,(depth0 != null ? depth0.user_logged_in : depth0),{"name":"if","hash":{},"fn":container.program(19, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "				</div>\n			</div>\n			<div class=\"project-body-right\"></div>\n		</div>\n	</div>\n	</div>\n\n";
+    + "                </div>\n            </div>\n            <div class=\"project-body-right\"></div>\n        </div>\n    </div>\n</div>\n";
 },"useData":true});
 templates['top_menu'] = template({"1":function(container,depth0,helpers,partials,data) {
-    return "			<a href=\"#\" id=\"logout-link\">Logout</a>\n";
+    return "            <a href=\"#\" id=\"logout-link\">Logout</a>\n";
 },"3":function(container,depth0,helpers,partials,data) {
-    return "			<a href=\"#\" id=\"login-link\">Login</a>\n";
+    return "            <a href=\"#\" id=\"login-link\">Login</a>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "<div id=\"top_menu\">\n\n	<p>\n		<input type=\"text\" name=\"search_box\" placeholder=\"search\">\n"
+  return "<div id=\"top_menu\">\n\n    <p>\n        <input type=\"text\" name=\"search_box\" placeholder=\"search\">\n"
     + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.user_logged_in : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
-    + "	</p>\n\n</div>\n";
+    + "    </p>\n\n</div>\n";
 },"useData":true});
 templates['userProfile'] = template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;

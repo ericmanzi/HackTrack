@@ -5,6 +5,7 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
+var Activity = require('../models/activity');
 var utils = require('../utils/utils');
 var email = require('../utils/email');
 
@@ -353,6 +354,38 @@ router.get('/favorites', function(req, res) {
             'There is no user currently logged in.');
     }
 });
+
+
+
+/*
+ Get this user's favorite projects
+
+ GET /users/myfeed
+ Request body: empty
+ Response:
+ - success: true if the server succeeded in finding activities by users this user follows
+ - content: on success, an object with a single field 'activities', all of the activities by users that the current user follows
+ - error msg: 'Something went wrong while retrieving your projects' if there was an error retrieving the user's favorited projects.
+ 'There is no user currently logged in.' if user not logged in
+
+ */
+router.get('/myfeed', function(req, res) {
+    if (req.currentUser) {
+        User.findByUsername(req.currentUser.username, function(err, user) {
+            if (err) {
+                utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
+            } else {
+                user.getActivityFeed(function(err, activities) {
+                    utils.sendSuccessResponse(res, { activites: activities });
+                });
+            }
+        })
+    } else {
+        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN,
+            'There is no user currently logged in.');
+    }
+});
+
 
 
 /*

@@ -1,4 +1,5 @@
 Handlebars.registerPartial('project', Handlebars.templates['project']);
+Handlebars.registerPartial('activity', Handlebars.templates['activity']);
 Handlebars.registerPartial('navbar', Handlebars.templates['navbar']);
 Handlebars.registerPartial('modals', Handlebars.templates['modals']);
 
@@ -126,7 +127,7 @@ var loadProjectPage = function(id, isReload){
 
 var loadActFeedPage = function() {
     $.get(
-        '/activityfeed'
+        'users/myfeed'
     ).done(function(response) {
         data.activities = response.content.activities;
         loadPage('activityFeed', data);

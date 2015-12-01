@@ -1,0 +1,16 @@
+<li class="activity inline">
+    <a href="users/profiles/{{user}}">
+        <div class="userImage">
+            <img style="height:75px; width:75px" src={{user_profile_picture}}>
+        </div>
+        {{user}}
+    </a>
+    {{#if isProject}}
+        created a new project
+        <span class="project-title"><a href="/projects/{{projID}}">{{project_title}}</a> </span>
+    {{else}}
+        posted in <span class="project-title"><a href="/projects/{{projID}}">{{project_title}}</a> </span>
+        <br/> <span class="post-text">{{post_text}}</span>
+    {{/if}}
+
+</li>
