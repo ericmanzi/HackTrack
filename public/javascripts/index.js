@@ -127,7 +127,7 @@ var loadProjectPage = function(id, isReload){
 
 var loadActFeedPage = function() {
     $.get(
-        'users/myfeed'
+        '/users/myfeed'
     ).done(function(response) {
         data.activities = response.content.activities;
         loadPage('activityFeed', data);
