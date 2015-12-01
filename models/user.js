@@ -19,8 +19,8 @@ var mongoose = require('mongoose'),
     SALT_WORK_FACTOR = 10,  // We use the salt to prevent rainbow table attacks and to
                             // resist brute-force attacks in the event that someone
                             // has gained access to your database
-    STRING_LENGTH = 16;
-NUM_ACTIVITIES = 30;
+    STRING_LENGTH = 16,
+    NUM_ACTIVITIES = 30;
 
 var userSchema = mongoose.Schema({
     username: {type: String, unique: true}, // restring username to a single user
@@ -250,7 +250,6 @@ userSchema.methods.getActivityFeed = function(callback) {
                 if (err) {
                     utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err);
                 } else {
-                    //console.log("Activities:"+JSON.stringify(activities));
                     async.map(activities, function(activity, callback) {
                         var newActivity = {
                             isProject: activity.type === Activity.Types.PROJECT_CREATE,
@@ -260,8 +259,6 @@ userSchema.methods.getActivityFeed = function(callback) {
 
                         newActivity.user_profile_picture = activity.user.profile_picture;
                         newActivity.user = activity.user.username;
-                        //console.log("username:" + activity.user.username);
-                        //console.log("user id:" + activity.user.id);
                         if (newActivity.isProject) {
                             newActivity.projID = activity.obj.id;
                             newActivity.project_title = activity.obj.title;
@@ -297,9 +294,7 @@ userSchema.methods.getActivityFeed = function(callback) {
                     }, function(err, activityList_) {
                         if (err) {
                             callback(err);
-                            //console.log(JSON.stringify(err));
                         } else {
-                            //console.log(JSON.stringify(activityList_));
                             callback(null, activityList_);
                         }
                     });

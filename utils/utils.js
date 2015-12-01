@@ -8,7 +8,10 @@ var utils = (function () {
 
     _utils.STATUS_CODE_BAD_REQUEST = 400;
     _utils.STATUS_CODE_FORBIDDEN = 403;
+    _utils.STATUS_CODE_NOT_FOUND = 404;
     _utils.STATUS_CODE_SUCCESS = 200;
+    _utils.STATUS_CODE_UNKNOWN_ERROR = 500;
+
     /*
      --Borrowed code-- Source: Notes Demo App
      Send a 200 OK with success:true in the request body to the

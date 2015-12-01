@@ -56,7 +56,7 @@ router.get('/', function(req, res) {
  */
 router.post('/', function(req, res) {
     if (!req.currentUser) { // Require authentication to use this feature
-        utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
+        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'Must be logged in to use this feature.');
     } else {
         var imageLinksList = utils.arrayFromRequestString(req.body.imageLinks);
         var tagsList = utils.arrayFromRequestString(req.body.tags);
@@ -73,7 +73,7 @@ router.post('/', function(req, res) {
         };
         Project.createNewProject(projectJSON, function (err) {
             if (err) {
-                utils.sendErrResponse(res, 500, 'An unknown error occurred.');
+                utils.sendErrResponse(res, utils.STATUS_CODE_UNKNOWN_ERROR, 'An unknown error occurred.');
             } else {
                 utils.sendSuccessResponse(res);
             }
@@ -96,15 +96,15 @@ router.get('/:projID', function(req, res) {
     Project.getProject(req.params.projID, function(err, foundProject){
         if (err){
             if (err.projectNotFound){
-                utils.sendErrResponse(res, 404, 'Project not found');
+                utils.sendErrResponse(res, utils.STATUS_CODE_NOT_FOUND, 'Project not found');
             } else {
-                utils.sendErrResponse(res, 500, 'An unknown error occurred.');
+                utils.sendErrResponse(res, utils.STATUS_CODE_UNKNOWN_ERROR, 'An unknown error occurred.');
             }
         } else {
             response.project = foundProject;
             Post.getDiscussions(foundProject.id, function(err, discussions) {
                 if (err){
-                    utils.sendErrResponse(res, 500, 'Error retrieving project: ' + err.message + '.');
+                    utils.sendErrResponse(res, utils.STATUS_CODE_UNKNOWN_ERROR, 'Error retrieving project: ' + err.message + '.');
                 } else {
                     response.discussions = discussions;
                     User.findOne(req.currentUser, function(err, user) {
@@ -133,7 +133,7 @@ router.get('/:projID', function(req, res) {
  */
 router.post('/:projID/edit', function(req, res) {
     if (!req.currentUser) { // Require authentication to use this feature
-        utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
+        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'Must be logged in to use this feature.');
     } else {
         var imageLinksList = [];
         if (req.body.imageLinks !== ""){
@@ -157,9 +157,9 @@ router.post('/:projID/edit', function(req, res) {
             if (err){
 
                 if (err.projectNotFound){
-                    utils.sendErrResponse(res, 404, 'Project not found.');
+                    utils.sendErrResponse(res, utils.STATUS_CODE_NOT_FOUND, 'Project not found.');
                 } else {
-                    utils.sendErrResponse(res, 500, 'An unknown error occurred.');
+                    utils.sendErrResponse(res, utils.STATUS_CODE_UNKNOWN_ERROR, 'An unknown error occurred.');
                 }
             } else {
                 utils.sendSuccessResponse(res);
@@ -178,16 +178,16 @@ router.post('/:projID/edit', function(req, res) {
  */
 router.post('/:projID', function(req, res) {
     if (!req.currentUser) { // Require authentication to use this feature
-        utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
+        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'Must be logged in to use this feature.');
     } else {
         Project.upvoteProject(req.params.projID, req.currentUser.username, function(err){
             if (err){
                 if (err.projectNotFound){
-                    utils.sendErrResponse(res, 404, 'Project not found.');
+                    utils.sendErrResponse(res, utils.STATUS_CODE_NOT_FOUND, 'Project not found.');
                 } else if (err.alreadyVoted){
-                    utils.sendErrResponse(res, 403, "You already voted for this project.")
+                    utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, "You already voted for this project.")
                 }else {
-                    utils.sendErrResponse(res, 500, 'An unknown error occurred.');
+                    utils.sendErrResponse(res, utils.STATUS_CODE_UNKNOWN_ERROR, 'An unknown error occurred.');
                 }
             } else {
                 utils.sendSuccessResponse(res);
@@ -207,11 +207,11 @@ router.post('/:projID', function(req, res) {
  */
 router.post('/:projID/discussion', function(req, res) {
     if (!req.currentUser) { // Require authentication to use this feature
-        utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
+        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'Must be logged in to use this feature.');
     } else {
         Post.addDiscussion(req.params.projID, req.currentUser.id, req.body.content, function(err, discussion){
             if (err){
-                utils.sendErrResponse(res, 500, 'Error adding discussion: ' + err.message + '.');
+                utils.sendErrResponse(res, utils.STATUS_CODE_UNKNOWN_ERROR, 'Error adding discussion: ' + err.message + '.');
             } else {
                 utils.sendSuccessResponse(res, {discussion: discussion});
             }
@@ -230,11 +230,11 @@ router.post('/:projID/discussion', function(req, res) {
  */
 router.post('/:projID/discussions/:discussionID/comment', function(req, res) {
     if (!req.currentUser) { // Require authentication to use this feature
-        utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
+        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'Must be logged in to use this feature.');
     } else {
         Post.addComment(req.params.projID, req.params.discussionID, req.currentUser.id, req.body.content, function(err, comment){
             if (err){
-                utils.sendErrResponse(res, 500, 'Error adding comment: ' + err.message + '.');
+                utils.sendErrResponse(res, utils.STATUS_CODE_UNKNOWN_ERROR, 'Error adding comment: ' + err.message + '.');
             } else {
                 utils.sendSuccessResponse(res, {comment: comment});
             }

@@ -347,6 +347,24 @@ describe('User', function() {
 
     });
 
+    describe('getFollowingIDs', function() {
+        it('should return ids of users that you follow', function(done) {
+            jake.follow('finn', function(err) {
+                User.findByUsername('finn', function(err, finn) {
+                    jake.getFollowingIDs(function(err, ids) {
+                        assert.ok(finn.id.in(ids));
+                        done();
+                    })
+                });
+            });
+        });
+    });
+
+    // note: user.getActivityFeed not tested here since
+    // testing user.getFollowingIDs and Activity.getActivities
+    // serve as proof of concept
+
+
     describe('passwordResetRequest', function() {
         // set finn as verified user
         before(function(done) {

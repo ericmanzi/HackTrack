@@ -6,6 +6,8 @@ var utils = require('../utils/utils');
 
 var Project = require('../models/project');
 
+var DEFAULT_TAG_COUNT = 7; //the number of tags to return defaults to 7
+var MAX_TAG_COUNT = 100;
 /*
     GET /tags
     Request parameters:
@@ -16,10 +18,10 @@ var Project = require('../models/project');
     - err: on failure, an error message
 */
 router.get('/', function(req, res) {
-    var count = 7;
+    var count = DEFAULT_TAG_COUNT;
     if(req.query.count) {
         var queryCount = parseInt(req.query.count);
-        if(queryCount > 0 && queryCount <= 100) {
+        if(queryCount > 0 && queryCount <= MAX_TAG_COUNT) {
             count = queryCount;
         }
     }

@@ -6,6 +6,7 @@
 var mongoose = require("mongoose"),
     Schema = mongoose.Schema;
 var async = require("async");
+var MAX_ACTIVITIES_COUNT = 100;
 
 var activityTypesDetail = {
     POST_CREATE: {type: 'post-create', key: 'post'},
@@ -71,7 +72,7 @@ activitySchema.statics.addActivity = function(userID, type, ref, callback) {
 //    activities is an array of activity objects
 //    each activity object is {user, type, obj, time}, where obj is referenced object (populated)
 activitySchema.statics.getActivities = function(userIDs, count, callback) {
-    if(typeof count !== 'number' || count <= 0 || count > 100) {
+    if(typeof count !== 'number' || count <= 0 || count > MAX_ACTIVITIES_COUNT) {
         callback(new Error('count must be between 1 and 100'));
         return;
     }
