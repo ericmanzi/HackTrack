@@ -11,6 +11,8 @@ var mongoose = require('mongoose'),
     Post = require('../models/post'),
     Activity = require('../models/activity'),
     async = require('async'),
+    moment = require('moment'),
+    common = require('./common.js'),
     utils = require('../utils/utils'),
     strIn = require('../utils/stringInArray'),
     bcrypt = require('bcrypt'),
@@ -18,6 +20,7 @@ var mongoose = require('mongoose'),
                             // resist brute-force attacks in the event that someone
                             // has gained access to your database
     STRING_LENGTH = 16;
+NUM_ACTIVITIES = 30;
 
 var userSchema = mongoose.Schema({
     username: {type: String, unique: true}, // restring username to a single user
@@ -208,9 +211,11 @@ userSchema.methods.getFavoritesIdList = function() {
 
 /**
  * Return list of usernames followed by this user
+ * @param callback
  */
 userSchema.methods.getFollowingIDs = function(callback) {
     var usernames = this.following;
+    console.log("this user follows:"+usernames);
     async.map(usernames, function(username, callback) {
         User.findOne({username: username}, function(err, user) {
             if(err) {
@@ -229,61 +234,72 @@ userSchema.methods.getFollowingIDs = function(callback) {
         }
     });
 };
-
+/**
+ * Get this user's activity feed
+ * @param callback
+ */
 userSchema.methods.getActivityFeed = function(callback) {
     var user = this;
+    console.log("this user:"+user.username);
     user.getFollowingIDs(function(err, following) {
         if (err) {
             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
         } else {
-            Activity.getActivities(following, 50, function(err, activities) {
+            console.log("following:"+following);
+            Activity.getActivities(following, NUM_ACTIVITIES, function(err, activities) {
                 if (err) {
                     utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err);
                 } else {
-                    // have activities: [{userID, type, obj, time}]
-                    // want activityList: [{userName, profile_pic, isProject, projID, post_text}]
+                    //console.log("Activities:"+JSON.stringify(activities));
                     async.map(activities, function(activity, callback) {
                         var newActivity = {
-                            isProject: activity.type===Activity.Types.PROJECT_CREATE,
-                            time: activity.time
+                            isProject: activity.type === Activity.Types.PROJECT_CREATE,
+                            prettyDate: moment(activity.time).format(common.DATE_FORMAT),
+                            prettyTime: moment(activity.time).format(common.TIME_FORMAT)
                         };
 
-                        User.findOne({id:Schema.ObjectId(activity.user.id)}, function(err, user) {
-                            if (err) {callback(err);}
-                            else if (!user) {callback({msg:'User not found'});}
-                            else {
-                                newActivity.user_profile_picture = user.getProfilePicture();
-                                newActivity.user = user.getUsername();
-                                if (newActivity.isProject) {
-                                    newActivity.projID = activity.obj.id;
-                                    newActivity.project_title = activity.obj.title;
+                        newActivity.user_profile_picture = activity.user.profile_picture;
+                        newActivity.user = activity.user.username;
+                        //console.log("username:" + activity.user.username);
+                        //console.log("user id:" + activity.user.id);
+                        if (newActivity.isProject) {
+                            newActivity.projID = activity.obj.id;
+                            newActivity.project_title = activity.obj.title;
+                            callback(null, newActivity);
+                        } else {
+                            newActivity.post_text = activity.obj.content;
+                            newActivity.isDiscussion = activity.obj.isDiscussion;
+                            // populate project to get the project title
+                            var populateFunc;
+                            if (newActivity.isDiscussion) {
+                                populateFunc = Post.populate(activity.obj, 'project');
+                            } else {
+                                populateFunc = Post.populate(activity.obj, 'parent', 'project');
+                            }
+                            populateFunc.then(function (post) {
+                                console.log("post:"+JSON.stringify(post));
+                                var project = newActivity.isDiscussion ? post.project : post.parent.project;
+                                if (newActivity.isDiscussion) {
+                                    project = post.project;
+                                    newActivity.projID = project.id;
+                                    newActivity.project_title = project.title;
                                     callback(null, newActivity);
                                 } else {
-                                    newActivity.post_text = activity.obj.content;
-                                    newActivity.isDiscussion = activity.obj.isDiscussion;
-                                    // populate project to get the project title
-                                    var populateFunc;
-                                    if(newActivity.isDiscussion) {
-                                        populateFunc = Post.populate(activity.obj, 'project');
-                                    } else {
-                                        populateFunc = Post.populate(activity.obj, 'parent', 'project');
-                                    }
-                                    populateFunc.then(function(post) {
-                                        var project = newActivity.isDiscussion ? post.project : post.parent.project;
+                                    Post.populate(post.parent, 'project').then(function(parent) {
+                                        project=parent.project;
                                         newActivity.projID = project.id;
                                         newActivity.project_title = project.title;
-                                        console.log(JSON.stringify(newActivity));
                                         callback(null, newActivity);
                                     });
                                 }
-                            }
-                        });
+                            });
+                        }
                     }, function(err, activityList_) {
                         if (err) {
                             callback(err);
-                            console.log(JSON.stringify(err));
+                            //console.log(JSON.stringify(err));
                         } else {
-                            console.log(JSON.stringify(activityList_));
+                            //console.log(JSON.stringify(activityList_));
                             callback(null, activityList_);
                         }
                     });

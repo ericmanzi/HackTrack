@@ -357,7 +357,7 @@ router.get('/myfeed', function(req, res) {
                 utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
             } else {
                 user.getActivityFeed(function(err, activities) {
-                    utils.sendSuccessResponse(res, { activites: activities });
+                    utils.sendSuccessResponse(res, { activities: activities });
                 });
             }
         })

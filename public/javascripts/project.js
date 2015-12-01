@@ -181,7 +181,7 @@
         });
     });
 
-    $(document).on('click', '#view-user', function(event) {
+    $(document).on('click', '.view-user', function(event) {
         event.preventDefault();
         var user = $(this).text();
         loadUserPage(user);

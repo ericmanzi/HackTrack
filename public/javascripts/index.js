@@ -130,6 +130,7 @@ var loadActFeedPage = function() {
         '/users/myfeed'
     ).done(function(response) {
         data.activities = response.content.activities;
+        console.log("activities:"+JSON.stringify(data));
         loadPage('activityFeed', data);
     }).fail(function(responseObject) {
         var response = $.parseJSON(responseObject.responseText);
@@ -147,6 +148,7 @@ var loadProfilePage = function(projectType){
         projectType=="favorites"?'/users/favorites':'/users/myprojects'
     ).done(function(response){
         data.projects = response.content.projects;
+        data.isFavorites = projectType=="favorites";
         loadPage('profile', data);
     }).fail(function(responseObject){
         var response = $.parseJSON(responseObject.responseText);

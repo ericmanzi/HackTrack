@@ -49,10 +49,12 @@ ul.projectList{
 /* for profile page */
 .profileHeader{
     display:block;
-    height:223px;
+    height:inherit;
     background: #534540;
     color: white;
-
+}
+.profileHeader.user-profile {
+    height: 170px;
 }
 
 .page-main{
@@ -126,12 +128,21 @@ ul.projectList{
     table-layout: fixed;
     width: 100%;
 }
+
 .profileNavigation ul{
     list-style: none;
     padding: 0px;
     margin: 0px;
     display: table-row;
 }
+
+.profile-navigation-tab a:hover{
+    text-decoration: none;
+    background: #9E9794;
+    color: #322314;
+}
+
+
 ul{
     display: block;
     -webkit-margin-before: 1em;
@@ -152,10 +163,18 @@ li{
     padding: 6px 0px;
     color: #C4BFBD;
 }
+
+.profile-navigation-tab.isActive a{
+    text-decoration: none;
+    background: #9E9794;
+    color: #322314;
+}
+
 a{
     text-decoration: none;
     background-color: transparent;
 }
+
 /*For Project Page*/
 /*.project-container{
     display:flex;
@@ -212,8 +231,8 @@ a{
     margin-top: 5px;
     margin-left: 2px;
 }
-.project-discussion-comment{
-    margin:10px 0px 10px 10px;
+.project-discussion-comment, .comment-add{
+    margin:10px 0px 10px 40px;
 }
 .post-content{
     display:inline-block;
@@ -289,6 +308,12 @@ a{
 .inline {
     display: inline;
 }
+.inline.block {
+    display: inline-block;
+    height: inherit;
+    vertical-align: middle;
+}
+
 
 #main-container {
     margin: 60px;
@@ -296,20 +321,15 @@ a{
 
 .activity {
     width: 100%;
-    padding: 3px;
+    padding: 7px;
 }
 
-.activity.project-title a {
-    text-decoration: none;
-    color: #00b3ee;
-}
-
-.activity.project-title a:hover {
-    text-decoration: none;
-    color: #2b669a;
-}
-
-.activity.post-text {
-    color: #555555;
+.post-text {
+    color: #737373;
     font-size: 1em;
+}
+
+
+li {
+    list-style-type: none;
 }

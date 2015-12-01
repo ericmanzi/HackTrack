@@ -18,14 +18,26 @@
             </div>
             <div class="profileNavigation">
                 <ul>
-                    <li class="profile-navigation-tab">
-                        <a href="#" id="view-favorites">
-                            Favorites
-                        </a>
-                    </li>
-                    <li class="profile-navigation-tab" id="view-myprojects">
-                        <a href="#">My Projects</a>
-                    </li>
+                    {{#if isFavorites}}
+                        <li class="profile-navigation-tab isActive">
+                            <a href="#" id="view-favorites">
+                                Favorites
+                            </a>
+                        </li>
+                        <li class="profile-navigation-tab" id="view-myprojects">
+                            <a href="#">My Projects</a>
+                        </li>
+                    {{else}}
+                        <li class="profile-navigation-tab">
+                            <a href="#" id="view-favorites">
+                                Favorites
+                            </a>
+                        </li>
+                        <li class="profile-navigation-tab isActive" id="view-myprojects">
+                            <a href="#">My Projects</a>
+                        </li>
+                    {{/if}}
+
                 </ul>
             </div>
 

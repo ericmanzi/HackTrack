@@ -1,12 +1,9 @@
 <div class="activityFeed">
     {{> navbar}}
-    <div class="text-center"><h3>Your feed</h3></div>
+    <div class="text-center"><h3>Latest activity</h3></div><br/>
     {{#each activities}}
-        <h3>{{prettyDate}}</h3>
-        {{#each activities}}
-            {{> activity}}
-        {{else}}
-            <p><em>No activity on this day!</em></p>
-        {{/each}}
+        {{> activity}}
+    {{else}}
+        No activity yet. Follow another member of hacktrack to have their activity appear here.
     {{/each}}
 </div>

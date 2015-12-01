@@ -12,7 +12,7 @@
             <div class="project-description" id="projectView-description">
                 {{project.description}}
                 <br />
-                by <a href="#" id="view-user" view-user-id={{project.owner}}>{{project.owner}}</a>
+                by <a href="#" class="view-user" view-user-id={{project.owner}}>{{project.owner}}</a>
             </div>
 
             {{#if user_logged_in}}
@@ -59,8 +59,8 @@
                     {{#each discussions}}
                         <div class="project-discussion-post">
                             <div class="post-content project-discussion-head">
-                                <span class="userImage"><img src="{{user.profile_picture}}" width="60" height="60"></span>
-                                <span class="post-user"><a href="#" id="view-user" view-user-id={{user.username}}>{{user.username}}</a></span>
+                                <span class="userImage"><img src="{{user.profile_picture}}" width="35" height="35"></span>
+                                <span class="post-user"><a href="#" class="view-user" view-user-id={{user.username}}>{{user.username}}</a></span>
                                 <span class="post-time">on {{prettyDate}} at {{prettyTime}}</span>
                             </div>
                             <div class="post-content project-discussion-body">
@@ -69,8 +69,8 @@
                             {{#each comments}}
                                 <div class="project-discussion-comment">
                                     <div class="post-content discussion-comment-head">
-                                        <span class="userImage"><img src="{{user.profile_picture}}" width="60" height="60"></span>
-                                        <span class="post-user"><a href="#" id="view-user" view-user-id={{user.username}}>{{user.username}}</a></span>
+                                        <span class="userImage"><img src="{{user.profile_picture}}" width="35" height="35"></span>
+                                        <span class="post-user"><a href="#" class="view-user" view-user-id={{user.username}}>{{user.username}}</a></span>
                                         <span class="post-time">on {{prettyDate}} at {{prettyTime}}</span>
                                     </div>
                                     <div class="post-content discussion-comment-body">
