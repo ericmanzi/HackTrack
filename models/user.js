@@ -244,7 +244,7 @@ userSchema.methods.getActivityFeed = function(callback) {
                     // want activityList: [{userName, profile_pic, isProject, projID, post_text}]
                     async.map(activities, function(activity, callback) {
                         var newActivity = {
-                            isProject: activity.type==='project-create',
+                            isProject: activity.type===Activity.Types.PROJECT_CREATE,
                             time: activity.time
                         };
 
@@ -255,15 +255,27 @@ userSchema.methods.getActivityFeed = function(callback) {
                                 newActivity.user_profile_picture = user.getProfilePicture();
                                 newActivity.user = user.getUsername();
                                 if (newActivity.isProject) {
-                                    newActivity.projID = activity.project.id;
-                                    newActivity.project_title = activity.project.title;
+                                    newActivity.projID = activity.obj.id;
+                                    newActivity.project_title = activity.obj.title;
+                                    callback(null, newActivity);
                                 } else {
-                                    newActivity.projID = activity.post.project.id;
-                                    newActivity.project_title = activity.post.project.title;
-                                    newActivity.post_text = activity.post.content;
+                                    newActivity.post_text = activity.obj.content;
+                                    newActivity.isDiscussion = activity.obj.isDiscussion;
+                                    // populate project to get the project title
+                                    var populateFunc;
+                                    if(newActivity.isDiscussion) {
+                                        populateFunc = Post.populate(activity.obj, 'project');
+                                    } else {
+                                        populateFunc = Post.populate(activity.obj, 'parent', 'project');
+                                    }
+                                    populateFunc.then(function(post) {
+                                        var project = newActivity.isDiscussion ? post.project : post.parent.project;
+                                        newActivity.projID = project.id;
+                                        newActivity.project_title = project.title;
+                                        console.log(JSON.stringify(newActivity));
+                                        callback(null, newActivity);
+                                    });
                                 }
-                                console.log(JSON.stringify(newActivity));
-                                callback(null, newActivity);
                             }
                         });
                     }, function(err, activityList_) {
