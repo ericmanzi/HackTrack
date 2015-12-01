@@ -416,7 +416,7 @@ router.get('/profiles/:username', function(req, res) {
 /*
  Change this user's profile picture
 
- POST: /users/profiles/:username/profile_picture
+ PUT: /users/profiles/:username
  Request body:
  - username
  - profile picture link
@@ -426,7 +426,7 @@ router.get('/profiles/:username', function(req, res) {
                   'There is no user currently logged in.' if user not logged in
 
  */
-router.post('/profiles/:username/profile_picture', requireAuthentication, function(req, res) {
+router.put('/profiles/:username', requireAuthentication, function(req, res) {
     User.findByUsername(req.params.username, function(err, user) {
         if (err) {
             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Invalid username');

@@ -161,10 +161,11 @@ var files = [];
                         profile_pic_url: savedFile.url(),
                         csrftoken: getCSRFToken()
                     };
-                    $.post(
-                        '/users/profiles/'+currentUser+'/profile_picture',
-                        data
-                    ).done(function(response) {
+                    $.ajax({
+                        url: '/users/profiles/' + currentUser,
+                        method: 'PUT',
+                        data: data
+                    }).done(function(response) {
                         $('#uploadProfilePic').modal('hide');
                         $('.modal-backdrop').modal('hide');
                         $('body,html').removeClass("modal-open");

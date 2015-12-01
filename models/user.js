@@ -215,7 +215,7 @@ userSchema.methods.getFavoritesIdList = function() {
  */
 userSchema.methods.getFollowingIDs = function(callback) {
     var usernames = this.following;
-    console.log("this user follows:"+usernames);
+    //console.log("this user follows:"+usernames);
     async.map(usernames, function(username, callback) {
         User.findOne({username: username}, function(err, user) {
             if(err) {
@@ -240,12 +240,12 @@ userSchema.methods.getFollowingIDs = function(callback) {
  */
 userSchema.methods.getActivityFeed = function(callback) {
     var user = this;
-    console.log("this user:"+user.username);
+    //console.log("this user:"+user.username);
     user.getFollowingIDs(function(err, following) {
         if (err) {
             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
         } else {
-            console.log("following:"+following);
+            //console.log("following:"+following);
             Activity.getActivities(following, NUM_ACTIVITIES, function(err, activities) {
                 if (err) {
                     utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err);
@@ -274,7 +274,7 @@ userSchema.methods.getActivityFeed = function(callback) {
                                 populateFunc = Post.populate(activity.obj, 'parent', 'project');
                             }
                             populateFunc.then(function (post) {
-                                console.log("post:"+JSON.stringify(post));
+                                //console.log("post:"+JSON.stringify(post));
                                 var project = newActivity.isDiscussion ? post.project : post.parent.project;
                                 if (newActivity.isDiscussion) {
                                     project = post.project;

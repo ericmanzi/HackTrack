@@ -130,7 +130,6 @@ var loadActFeedPage = function() {
         '/users/myfeed'
     ).done(function(response) {
         data.activities = response.content.activities;
-        console.log("activities:"+JSON.stringify(data));
         loadPage('activityFeed', data);
     }).fail(function(responseObject) {
         var response = $.parseJSON(responseObject.responseText);
