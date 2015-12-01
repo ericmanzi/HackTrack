@@ -8,6 +8,7 @@ var Project = require('../models/project');
 var User = require('../models/user');
 var Post = require('../models/post');
 var getYouTubeID = require('get-youtube-id');
+var common = require('./common');
 
 /*
  GET /projects
@@ -54,31 +55,27 @@ router.get('/', function(req, res) {
  - success: true if the server succeeded in recording the user's project
  - err: on failure, an error message
  */
-router.post('/', function(req, res) {
-    if (!req.currentUser) { // Require authentication to use this feature
-        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'Must be logged in to use this feature.');
-    } else {
-        var imageLinksList = utils.arrayFromRequestString(req.body.imageLinks);
-        var tagsList = utils.arrayFromRequestString(req.body.tags);
-        var videoID = getYouTubeID(req.body.videoLink);
-        var projectJSON = {
-            title: req.body.title,
-            description: req.body.description,
-            owner: req.currentUser.username,
-            imageLinks: imageLinksList,
-            upvoterUsernames: [],
-            videoID : videoID,
-            tags: tagsList,
-            date: new Date()
-        };
-        Project.createNewProject(projectJSON, function (err) {
-            if (err) {
-                utils.sendErrResponse(res, utils.STATUS_CODE_UNKNOWN_ERROR, 'An unknown error occurred.');
-            } else {
-                utils.sendSuccessResponse(res);
-            }
-        });
-    }
+router.post('/', common.requireAuthentication, function(req, res) {
+    var imageLinksList = utils.arrayFromRequestString(req.body.imageLinks);
+    var tagsList = utils.arrayFromRequestString(req.body.tags);
+    var videoID = getYouTubeID(req.body.videoLink);
+    var projectJSON = {
+        title: req.body.title,
+        description: req.body.description,
+        owner: req.currentUser.username,
+        imageLinks: imageLinksList,
+        upvoterUsernames: [],
+        videoID : videoID,
+        tags: tagsList,
+        date: new Date()
+    };
+    Project.createNewProject(projectJSON, function (err) {
+        if (err) {
+            utils.sendErrResponse(res, utils.STATUS_CODE_UNKNOWN_ERROR, 'An unknown error occurred.');
+        } else {
+            utils.sendSuccessResponse(res);
+        }
+    });
 });
 
 
@@ -131,41 +128,37 @@ router.get('/:projID', function(req, res) {
  - success: true if the server succeeded in updating a project
  - err: on failure, an error message
  */
-router.post('/:projID/edit', function(req, res) {
-    if (!req.currentUser) { // Require authentication to use this feature
-        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'Must be logged in to use this feature.');
-    } else {
-        var imageLinksList = [];
-        if (req.body.imageLinks !== ""){
-            imageLinksList = req.body.imageLinks.split(/\s*,\s*/);
-        }
-
-        var tagsList = [];
-        if (req.body.tags !== ""){
-            tagsList = req.body.tags.split(/\s*,\s*/);
-        }
-        var videoID = getYouTubeID(req.body.videoLink);
-        var projectJSON = {
-            title: req.body.title,
-            description: req.body.description,
-            imageLinks: imageLinksList,
-            videoID : videoID,
-            tags: tagsList,
-        };
-
-        Project.updateProject(projectJSON, req.params.projID, req.currentUser.username, function(err){
-            if (err){
-
-                if (err.projectNotFound){
-                    utils.sendErrResponse(res, utils.STATUS_CODE_NOT_FOUND, 'Project not found.');
-                } else {
-                    utils.sendErrResponse(res, utils.STATUS_CODE_UNKNOWN_ERROR, 'An unknown error occurred.');
-                }
-            } else {
-                utils.sendSuccessResponse(res);
-            }
-        })
+router.post('/:projID/edit', common.requireAuthentication, function(req, res) {
+    var imageLinksList = [];
+    if (req.body.imageLinks !== ""){
+        imageLinksList = req.body.imageLinks.split(/\s*,\s*/);
     }
+
+    var tagsList = [];
+    if (req.body.tags !== ""){
+        tagsList = req.body.tags.split(/\s*,\s*/);
+    }
+    var videoID = getYouTubeID(req.body.videoLink);
+    var projectJSON = {
+        title: req.body.title,
+        description: req.body.description,
+        imageLinks: imageLinksList,
+        videoID : videoID,
+        tags: tagsList,
+    };
+
+    Project.updateProject(projectJSON, req.params.projID, req.currentUser.username, function(err){
+        if (err){
+
+            if (err.projectNotFound){
+                utils.sendErrResponse(res, utils.STATUS_CODE_NOT_FOUND, 'Project not found.');
+            } else {
+                utils.sendErrResponse(res, utils.STATUS_CODE_UNKNOWN_ERROR, 'An unknown error occurred.');
+            }
+        } else {
+            utils.sendSuccessResponse(res);
+        }
+    })
 });
 
 /*
@@ -176,24 +169,20 @@ router.post('/:projID/edit', function(req, res) {
  - success: true if the server succeeded upvoting the project
  - err: on failure, an error message
  */
-router.post('/:projID', function(req, res) {
-    if (!req.currentUser) { // Require authentication to use this feature
-        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'Must be logged in to use this feature.');
-    } else {
-        Project.upvoteProject(req.params.projID, req.currentUser.username, function(err){
-            if (err){
-                if (err.projectNotFound){
-                    utils.sendErrResponse(res, utils.STATUS_CODE_NOT_FOUND, 'Project not found.');
-                } else if (err.alreadyVoted){
-                    utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, "You already voted for this project.")
-                }else {
-                    utils.sendErrResponse(res, utils.STATUS_CODE_UNKNOWN_ERROR, 'An unknown error occurred.');
-                }
-            } else {
-                utils.sendSuccessResponse(res);
+router.post('/:projID', common.requireAuthentication, function(req, res) {
+    Project.upvoteProject(req.params.projID, req.currentUser.username, function(err){
+        if (err){
+            if (err.projectNotFound){
+                utils.sendErrResponse(res, utils.STATUS_CODE_NOT_FOUND, 'Project not found.');
+            } else if (err.alreadyVoted){
+                utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, "You already voted for this project.")
+            }else {
+                utils.sendErrResponse(res, utils.STATUS_CODE_UNKNOWN_ERROR, 'An unknown error occurred.');
             }
-        });
-    }
+        } else {
+            utils.sendSuccessResponse(res);
+        }
+    });
 });
 
 /*
@@ -205,18 +194,14 @@ router.post('/:projID', function(req, res) {
  - success: if the server succeeded in adding the discussion
  - err: on failure, an error message
  */
-router.post('/:projID/discussion', function(req, res) {
-    if (!req.currentUser) { // Require authentication to use this feature
-        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'Must be logged in to use this feature.');
-    } else {
-        Post.addDiscussion(req.params.projID, req.currentUser.id, req.body.content, function(err, discussion){
-            if (err){
-                utils.sendErrResponse(res, utils.STATUS_CODE_UNKNOWN_ERROR, 'Error adding discussion: ' + err.message + '.');
-            } else {
-                utils.sendSuccessResponse(res, {discussion: discussion});
-            }
-        });
-    }
+router.post('/:projID/discussion', common.requireAuthentication, function(req, res) {
+    Post.addDiscussion(req.params.projID, req.currentUser.id, req.body.content, function(err, discussion){
+        if (err){
+            utils.sendErrResponse(res, utils.STATUS_CODE_UNKNOWN_ERROR, 'Error adding discussion: ' + err.message + '.');
+        } else {
+            utils.sendSuccessResponse(res, {discussion: discussion});
+        }
+    });
 });
 
 /*
@@ -228,18 +213,14 @@ router.post('/:projID/discussion', function(req, res) {
  - success: if the server succeeded in adding the comment
  - err: on failure, an error message
  */
-router.post('/:projID/discussions/:discussionID/comment', function(req, res) {
-    if (!req.currentUser) { // Require authentication to use this feature
-        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN, 'Must be logged in to use this feature.');
-    } else {
-        Post.addComment(req.params.projID, req.params.discussionID, req.currentUser.id, req.body.content, function(err, comment){
-            if (err){
-                utils.sendErrResponse(res, utils.STATUS_CODE_UNKNOWN_ERROR, 'Error adding comment: ' + err.message + '.');
-            } else {
-                utils.sendSuccessResponse(res, {comment: comment});
-            }
-        });
-    }
+router.post('/:projID/discussions/:discussionID/comment', common.requireAuthentication, function(req, res) {
+    Post.addComment(req.params.projID, req.params.discussionID, req.currentUser.id, req.body.content, function(err, comment){
+        if (err){
+            utils.sendErrResponse(res, utils.STATUS_CODE_UNKNOWN_ERROR, 'Error adding comment: ' + err.message + '.');
+        } else {
+            utils.sendSuccessResponse(res, {comment: comment});
+        }
+    });
 });
 
 

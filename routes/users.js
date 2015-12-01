@@ -8,6 +8,7 @@ var User = require('../models/user');
 var Activity = require('../models/activity');
 var utils = require('../utils/utils');
 var email = require('../utils/email');
+var common = require('./common');
 
 /*
 Middleware that fails if user is already logged in or has not
@@ -23,19 +24,6 @@ var alreadyLoggedInOrInvalid = function(req, res, next) {
         next();
     }
 };
-
-/*
-Middleware that fails if user is not logged in.
-*/
-var requireAuthentication = function(req, res, next) {
-    if (!req.currentUser) {
-        utils.sendErrResponse(res, utils.STATUS_CODE_FORBIDDEN,
-            'You are not logged in.');
-    } else {
-        next();
-    }
-};
-
 
 /*
  This function will check to see that the provided username-password combination
@@ -87,7 +75,7 @@ router.post('/login', alreadyLoggedInOrInvalid, function(req, res) {
 
  --Borrowed code-- Source: Notes Demo App
  */
-router.post('/logout', requireAuthentication, function(req, res) {
+router.post('/logout', common.requireAuthentication, function(req, res) {
     req.session.destroy();
     utils.sendSuccessResponse(res);
 });
@@ -231,7 +219,7 @@ router.get('/current', function(req, res) {
               'This project has already been favorited' if already favorited
               'There is no user currently logged in.' if user not logged in
  */
-router.post('/myfavorites', requireAuthentication, function(req, res) {
+router.post('/myfavorites', common.requireAuthentication, function(req, res) {
     User.findByUsername(req.currentUser.username, function(err, user) {
         if (err) {
             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
@@ -262,7 +250,7 @@ router.post('/myfavorites', requireAuthentication, function(req, res) {
               'This project is not among your favorites' if project was not favorited
               'There is no user currently logged in.' if user not logged in
  */
-router.delete('/myfavorites', requireAuthentication, function(req, res) {
+router.delete('/myfavorites', common.requireAuthentication, function(req, res) {
     User.findByUsername(req.currentUser.username, function(err, user) {
         if (err) {
             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
@@ -290,7 +278,7 @@ router.delete('/myfavorites', requireAuthentication, function(req, res) {
  - error msg: 'Something went wrong while retrieving your projects' if there was an error retrieving the user's projects.
               'There is no user currently logged in.' if user not logged in
  */
-router.get('/myprojects', requireAuthentication, function(req, res) {
+router.get('/myprojects', common.requireAuthentication, function(req, res) {
     User.findByUsername(req.currentUser.username, function(err, user) {
         if (err) {
             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
@@ -320,7 +308,7 @@ router.get('/myprojects', requireAuthentication, function(req, res) {
               'There is no user currently logged in.' if user not logged in
 
  */
-router.get('/myfavorites', requireAuthentication, function(req, res) {
+router.get('/myfavorites', common.requireAuthentication, function(req, res) {
     User.findByUsername(req.currentUser.username, function(err, user) {
         if (err) {
             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
@@ -426,7 +414,7 @@ router.get('/profiles/:username', function(req, res) {
                   'There is no user currently logged in.' if user not logged in
 
  */
-router.put('/profiles/:username', requireAuthentication, function(req, res) {
+router.put('/profiles/:username', common.requireAuthentication, function(req, res) {
     User.findByUsername(req.params.username, function(err, user) {
         if (err) {
             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Invalid username');
@@ -452,7 +440,7 @@ router.put('/profiles/:username', requireAuthentication, function(req, res) {
                 'You are already following this user' if user already followed
                 'There is no user currently logged in.' if user not logged in
  */
-router.post('/following', requireAuthentication, function(req, res) {
+router.post('/following', common.requireAuthentication, function(req, res) {
     User.findByUsername(req.currentUser.username, function(err, user) {
         if (err) {
             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
@@ -489,7 +477,7 @@ router.post('/following', requireAuthentication, function(req, res) {
                 'There is no user currently logged in.' if user not logged in
 
  */
-router.delete('/following', requireAuthentication, function(req, res) {
+router.delete('/following', common.requireAuthentication, function(req, res) {
     User.findByUsername(req.currentUser.username, function(err, user) {
         if (err) {
             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
