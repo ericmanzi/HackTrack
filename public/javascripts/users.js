@@ -109,7 +109,7 @@ var files = [];
         var item = $(this).parent();
         var data = { projectID: item.data('project-id'), csrftoken: getCSRFToken() };
         $.post(
-            '/users/favorites',
+            '/users/myfavorites',
             data
         ).done(function(response) {
             loadProjectPage(data.projectID, true);
@@ -129,7 +129,7 @@ var files = [];
         var item = $(this).parent();
         var data = { projectID: item.data('project-id'), csrftoken: getCSRFToken() };
         $.ajax({
-            url: '/users/favorites',
+            url: '/users/myfavorites',
             method: 'DELETE',
             data: data
         }).done(function(response) {

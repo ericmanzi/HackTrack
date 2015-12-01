@@ -145,7 +145,7 @@ var loadPostProjectPage = function(){
 
 var loadProfilePage = function(projectType){
     $.get(
-        projectType=="favorites"?'/users/favorites':'/users/myprojects'
+        projectType=="favorites"?'/users/myfavorites':'/users/myprojects'
     ).done(function(response){
         data.projects = response.content.projects;
         data.isFavorites = projectType=="favorites";

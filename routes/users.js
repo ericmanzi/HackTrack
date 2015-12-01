@@ -221,7 +221,7 @@ router.get('/current', function(req, res) {
 /*
  Add the given project to user's favorites
 
- POST /users/favorites
+ POST /users/myfavorites
  Request body:
  - projectID
  Response:
@@ -231,7 +231,7 @@ router.get('/current', function(req, res) {
               'This project has already been favorited' if already favorited
               'There is no user currently logged in.' if user not logged in
  */
-router.post('/favorites', requireAuthentication, function(req, res) {
+router.post('/myfavorites', requireAuthentication, function(req, res) {
     User.findByUsername(req.currentUser.username, function(err, user) {
         if (err) {
             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
@@ -252,7 +252,7 @@ router.post('/favorites', requireAuthentication, function(req, res) {
 /*
  Remove the given project from user's favorites
 
- DELETE /users/favorites
+ DELETE /users/myfavorites
  Request body:
  - projectID
  Response:
@@ -262,7 +262,7 @@ router.post('/favorites', requireAuthentication, function(req, res) {
               'This project is not among your favorites' if project was not favorited
               'There is no user currently logged in.' if user not logged in
  */
-router.delete('/favorites', requireAuthentication, function(req, res) {
+router.delete('/myfavorites', requireAuthentication, function(req, res) {
     User.findByUsername(req.currentUser.username, function(err, user) {
         if (err) {
             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);
@@ -311,7 +311,7 @@ router.get('/myprojects', requireAuthentication, function(req, res) {
 /*
  Get this user's favorite projects
 
- GET /users/favorites
+ GET /users/myfavorites
  Request body: empty
  Response:
  - success: true if the server succeeded in finding the user's favorites
@@ -320,7 +320,7 @@ router.get('/myprojects', requireAuthentication, function(req, res) {
               'There is no user currently logged in.' if user not logged in
 
  */
-router.get('/favorites', requireAuthentication, function(req, res) {
+router.get('/myfavorites', requireAuthentication, function(req, res) {
     User.findByUsername(req.currentUser.username, function(err, user) {
         if (err) {
             utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, err.msg);

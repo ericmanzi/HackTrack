@@ -175,7 +175,7 @@ userSchema.methods.unfavorite = function(projectID, callback) {
             if ( !projectID.in(user.favorites) ) {
                 callback({msg: 'This project is not among your favorites.'});
             } else {
-                user.favorites.splice(projectIndex, 1);
+                user.favorites.splice(user.favorites.indexOf(projectID), 1);
                 user.save(callback);
             }
         }
