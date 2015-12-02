@@ -56,6 +56,24 @@
 
 #projectView-upvotes {
     color: red;
+    width:30px;
+    margin:0 auto;
+    text-align: center;
+}
+
+/*To handle project upvotes*/
+.vote {
+  size:2em;
+  display: inline-block;
+  overflow: hidden;
+  width: 40px;
+  height: 25px;
+  cursor: pointer;
+  background-position: 0 -25px;
+} 
+
+.vote.on {
+  color: #FFA500;
 }
 
 .project-header{

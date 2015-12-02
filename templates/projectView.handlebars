@@ -16,8 +16,12 @@
             </div>
 
             {{#if user_logged_in}}
-                <button id="myButton-upvote" class="project-actions"><span id="projectView-upvotes">
-                    {{project.upvoterUsernames.length}}</span> | Upvote</button>
+            	<div style="display:inline-block;">
+            	<span id="myButton-upvote" class="vote glyphicon glyphicon-chevron-up" style="font-size:3em;"> </span>
+            	<div id="projectView-upvotes" style="font-size:14px">
+                    {{project.upvoterUsernames.length}}
+                </div>
+                </div>
             {{else}}
                 <button id="myButton-upvote" class="project-actions" disabled><span id="projectView-upvotes">
                     {{project.upvoterUsernames.length}}</span> | Upvote</button>

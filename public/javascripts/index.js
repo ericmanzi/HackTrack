@@ -125,8 +125,10 @@ var loadProjectPage = function(id, isReload){
           $(".prev").click(function(){
             owl.trigger('owl.prev');
           });
-          console.log("owl initiated");
-          console.log(owl);
+
+          $('.vote').click(function () {
+            $(this).toggleClass('on');
+            });
 
         });
     };
