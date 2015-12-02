@@ -42,12 +42,6 @@ var loadPage = function(template, data, isReload) {
             $('#project-header').css("background", "linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(" + data.project.imageLinks[0] + ")");    
         } 
     } 
-
-    /////////// Dealing with next and prev buttons //////////
-    if (template === 'projectView'){
-        $('.owl-prev').remove();
-        $('.owl-next').remove();
-    }
 };
 
 
@@ -112,21 +106,22 @@ var loadProjectPage = function(id, isReload){
 
         var owl = $("#owl-demo");
            owl.owlCarousel({
-              items : 4,
+              items : 3,
               itemsDesktop : [1199,3],
               itemsDesktopSmall : [979,3],
               navigation : true
          
-          });
-          $(".next").click(function(){
-           console.log("show next");
+        });
+
+        $(".next").click(function(){
+            console.log("show next");
             owl.trigger('owl.next');
-          })
-          $(".prev").click(function(){
+        })
+        $(".prev").click(function(){
             owl.trigger('owl.prev');
-          });
-          console.log("owl initiated");
-          console.log(owl);
+        });
+        console.log("owl initiated");
+        console.log(owl);
 
         });
     };
