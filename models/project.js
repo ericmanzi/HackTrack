@@ -244,12 +244,14 @@ projectSchema.statics.getTags = function(count, callback) {
 //////////////// - START - INSTANCE METHODS OF INSTANCES OF THE USER MODEL////////////////////
 
 /**
-    Instance method for upvoting this by a specific user
+    Instance method for upvoting this by a specific user. If user had already
+    voted for this project, the upvote is removed
     @param {String} id of the user that is upvoting this project
     @param {function} a callback function
 */
 projectSchema.methods.upvoteProjectMethod = function(username, callback){
-    if (!(this.upvoterUsernames.indexOf(username) > -1)){
+    var usernameIndex = this.upvoterUsernames.indexOf(username);
+    if (!(usernameIndex > -1)){
         this.upvoterUsernames.push(username);
         this.save(function(error){
             if (error){
@@ -259,8 +261,14 @@ projectSchema.methods.upvoteProjectMethod = function(username, callback){
             }
         });
     } else {
-        // notfy the user that s/he has voted already or just keep silent???
-        callback({alreadyVoted : true});
+        this.upvoterUsernames.splice(usernameIndex, 1);
+        this.save(function(err){
+            if (err){
+                callback(err);
+            } else {
+                callback(null);
+            }
+        });
     }
 };
 

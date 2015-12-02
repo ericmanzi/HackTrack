@@ -2,6 +2,15 @@ Handlebars.registerPartial('project', Handlebars.templates['project']);
 Handlebars.registerPartial('activity', Handlebars.templates['activity']);
 Handlebars.registerPartial('navbar', Handlebars.templates['navbar']);
 Handlebars.registerPartial('modals', Handlebars.templates['modals']);
+Handlebars.registerHelper('trimString', function(passedString) {
+    if (passedString.length > 140){
+        var theString = passedString.substring(0,140);
+        theString += "...";
+        return new Handlebars.SafeString(theString);
+    } else {
+        return new Handlebars.SafeString(passedString);
+    }
+});
 
 var currentUser = null;
 var data={};
@@ -42,12 +51,6 @@ var loadPage = function(template, data, isReload) {
             $('#project-header').css("background", "linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(" + data.project.imageLinks[0] + ")");    
         } 
     } 
-
-    /////////// Dealing with next and prev buttons //////////
-    if (template === 'projectView'){
-        $('.owl-prev').remove();
-        $('.owl-next').remove();
-    }
 };
 
 
@@ -112,17 +115,18 @@ var loadProjectPage = function(id, isReload){
 
         var owl = $("#owl-demo");
            owl.owlCarousel({
-              items : 4,
+              items : 3,
               itemsDesktop : [1199,3],
               itemsDesktopSmall : [979,3],
               navigation : true
          
-          });
-          $(".next").click(function(){
-           console.log("show next");
+        });
+
+        $(".next").click(function(){
+            console.log("show next");
             owl.trigger('owl.next');
-          })
-          $(".prev").click(function(){
+        })
+        $(".prev").click(function(){
             owl.trigger('owl.prev');
           });
 
