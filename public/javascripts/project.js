@@ -183,7 +183,7 @@
 
     $(document).on('click', '.view-user', function(event) {
         event.preventDefault();
-        var user = $(this).text();
+        var user = $(this).attr('view-user-id');
         loadUserPage(user);
     });
 

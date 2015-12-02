@@ -11,6 +11,7 @@ var async = require("async");
 var moment = require('moment');
 var Activity = require('./activity.js');
 var common = require('./common.js');
+var email = require('../utils/email.js');
 
 var postSchema = Schema({
     // the author of the post
@@ -57,6 +58,7 @@ postSchema.statics.addDiscussion = function(projectID, userID, content, callback
             return;
         }
         Activity.addActivity(userID, Activity.Types.POST_CREATE, discussion.id, function(err) {
+            alertMentionedUsers(discussion.content);
             if(callback) {
                 callback(err, discussion.id);
             }
@@ -152,13 +154,48 @@ postSchema.statics.addComment = function(projectID, discussionID, userID, conten
                     callback(err);
                 } else {
                     Activity.addActivity(userID, Activity.Types.POST_CREATE, comment.id, function(err) {
+                        alertMentionedUsers(comment.content);
                         callback(err, comment.id);
                     });
                 }
             }
         });
     });
-}
+};
+
+// Detects mentions in post content and alerts those users.
+// Alerts are sent asynchronously, so callback is unnecessary.
+var alertMentionedUsers = function(content) {
+    var usernames = [];
+    var mentionStart = false;
+    for(var i = 0; i < content.length; i++) {
+        if(mentionStart === false) {
+            // look for @ symbol that is preceded by whitespace
+            if(content[i] == '@' && (i == 0 || /\s/.test(content[i - 1]))) {
+                mentionStart = i + 1;
+            }
+        } else {
+            // look for whitespace
+            // end of string is handled after the loop
+            if(/\s/.test(content[i])) {
+                usernames.push(content.substr(mentionStart, i - mentionStart));
+                mentionStart = false;
+            }
+        }
+    }
+    // add end of string mention
+    if(mentionStart !== false) {
+        usernames.push(content.substr(mentionStart));
+    }
+    // loop through usernames, try to find match, and alert
+    var User = require('./user.js'); // prevent require loop
+    usernames.forEach(function(username) {
+        User.findByUsername(username, function(err, user) {
+            if(err) return; // probably mention detector false positive, no reason for concern
+            email(user.email, 'You were mentioned in a post', 'mentioned', {content: content});
+        });
+    });
+};
 
 var Post = mongoose.model('Post', postSchema);
 

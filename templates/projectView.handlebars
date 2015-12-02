@@ -59,7 +59,7 @@
                                 <span class="post-time">on {{prettyDate}} at {{prettyTime}}</span>
                             </div>
                             <div class="post-content project-discussion-body">
-                                {{content}}
+                                {{postContent content}}
                             </div>
                             {{#each comments}}
                                 <div class="project-discussion-comment">
@@ -69,7 +69,7 @@
                                         <span class="post-time">on {{prettyDate}} at {{prettyTime}}</span>
                                     </div>
                                     <div class="post-content discussion-comment-body">
-                                        {{content}}
+                                        {{postContent content}}
                                     </div>
                                 </div>
                             {{/each}}

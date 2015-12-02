@@ -56,4 +56,25 @@
             addComment($(this).parent().data('discussion-id'));
         }
     });
+
+    // helpers for post template to convert @mentions to links
+    Handlebars.registerHelper('postContent', function(content) {
+        content = Handlebars.Utils.escapeExpression(content);
+        var mentionStart = false;
+        for(var i = 0; i <= content.length; i++) {
+            if(mentionStart === false) {
+                if(i < content.length && content[i] == '@' && (i == 0 || /\s/.test(content[i - 1]))) {
+                    mentionStart = i;
+                }
+            } else {
+                if(i == content.length || /\s/.test(content[i])) {
+                    var safeUsername = Handlebars.Utils.escapeExpression(content.substr(mentionStart + 1, i - mentionStart - 1));
+                    var userlink = '<a href="#" class="view-user" view-user-id="' + safeUsername + '">@' + safeUsername + '</a>';
+                    content = content.substr(0, mentionStart) + userlink + content.substr(i);
+                    mentionStart = false;
+                }
+            }
+        }
+        return new Handlebars.SafeString(content);
+    });
 })();
