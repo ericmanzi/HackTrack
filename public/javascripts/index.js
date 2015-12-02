@@ -42,6 +42,12 @@ var loadPage = function(template, data, isReload) {
             $('#project-header').css("background", "linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(" + data.project.imageLinks[0] + ")");    
         } 
     } 
+
+    /////////// Dealing with next and prev buttons //////////
+    if (template === 'projectView'){
+        $('.owl-prev').remove();
+        $('.owl-next').remove();
+    }
 };
 
 
