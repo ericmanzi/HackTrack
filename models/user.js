@@ -145,9 +145,9 @@ userSchema.methods.getMyProjects = function(callback) {
 userSchema.methods.favorite = function(projectID, callback) {
     var user = this;
     Project.findOne({ _id: projectID }, function(err, project) {
-        if (project.owner === user.username) {
-            callback({msg: 'Cannot favorite own project'});
-        } else {
+        //if (project.owner === user.username) {
+        //    callback({msg: 'Cannot favorite own project'});
+        //} else {
             if ( !projectID.in(user.favorites) ) {
                 user.favorites.push(projectID);
                 user.save(function(err,savedUser) {
@@ -156,7 +156,7 @@ userSchema.methods.favorite = function(projectID, callback) {
             } else {
                 callback({msg: 'This project has already been favorited'});
             }
-        }
+        //}
     });
 };
 
