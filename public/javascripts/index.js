@@ -2,6 +2,15 @@ Handlebars.registerPartial('project', Handlebars.templates['project']);
 Handlebars.registerPartial('activity', Handlebars.templates['activity']);
 Handlebars.registerPartial('navbar', Handlebars.templates['navbar']);
 Handlebars.registerPartial('modals', Handlebars.templates['modals']);
+Handlebars.registerHelper('trimString', function(passedString) {
+    if (passedString.length > 140){
+        var theString = passedString.substring(0,140);
+        theString += "...";
+        return new Handlebars.SafeString(theString);
+    } else {
+        return new Handlebars.SafeString(passedString);
+    }
+});
 
 var currentUser = null;
 var data={};
