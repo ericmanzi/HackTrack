@@ -24,7 +24,21 @@
             	{{/ifAlreadyVoted}}
                 
             {{else}}
-            	<span id="myButton-upvote" class="not-logged-in-vote glyphicon glyphicon-chevron-up" style="font-size:3em;"> </span>
+            	<span id="myButton-upvote" data-toggle="modal" data-target=".bs-example-modal-sm" class="not-logged-in-vote glyphicon glyphicon-chevron-up" style="font-size:3em;"> </span>
+
+				<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+				  <div class="modal-dialog modal-sm">
+				    <div class="modal-content">
+				        <div class="modal-header">
+				            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+				        </div>
+				        <div class="modal-body">
+				          <p style="background-color:#ffffff">You must log in to upvote!</p>
+				        </div>
+				    </div>
+				  </div>
+				</div>
 
             {{/if}}
                 <div id="projectView-upvotes" style="font-size:14px">
