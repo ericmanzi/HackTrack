@@ -62,7 +62,7 @@
 }
 
 /*To handle project upvotes*/
-.vote {
+.vote, .not-logged-in-vote {
   size:2em;
   display: inline-block;
   overflow: hidden;
@@ -75,6 +75,8 @@
 .vote.on {
   color: #FFA500;
 }
+
+
 
 .project-header{
     min-height: 250px;

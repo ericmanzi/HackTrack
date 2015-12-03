@@ -168,7 +168,7 @@
 
     $(document).on('click', '#myButton-upvote', function(evt) {
         evt.preventDefault();
-        var item = $(this).parent();
+        var item = $(this).parent().parent();
         var id = item.data('project-id');
         $.post(
             '/projects/' + id,
