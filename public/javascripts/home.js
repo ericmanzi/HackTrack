@@ -1,20 +1,26 @@
 // Lead author: Favyen Bastani
 
 (function() {
+	var reloadProjectList = function() {
+		updateHomePage($('.tagSelector.active').data('tag'), $('#searchInput').val());
+	};
+
     $(document).on('click', '.tagSelector', function(evt) {
         evt.preventDefault();
-        updateHomePage($(this).data('tag'), $('#searchInput').val());
+        $('.tagSelector.active').removeClass('active');
+        $(this).addClass('active');
+        reloadProjectList();
     });
 
     $(document).on('click', '#searchBtn', function(evt) {
         evt.preventDefault();
-        updateHomePage(null, $('#searchInput').val());
+        reloadProjectList();
     });
 
     $(document).on('keydown', '#searchInput', function(evt) {
         if(evt.keyCode == 13) {
             evt.preventDefault();
-            updateHomePage(null, $(this).val());
+            reloadProjectList();
         }
     });
 
