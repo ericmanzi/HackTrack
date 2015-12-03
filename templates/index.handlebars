@@ -2,21 +2,22 @@
     <div class="projectFeed">
         {{> navbar}}
         {{> modals}}
-        <ul id="tagSelection">
-            <li class="tagSelector btn btn-default active" data-tag="">All</li>
-            {{#each tags}}
-                <li class="tagSelector btn btn-default" data-tag="{{this}}">{{this}}</li>
-            {{/each}}
-        </ul>
-        <div id="searchContainer">
-            <div class="input-group">
-                <input type="text" class="form-control" id="searchInput" placeholder="Enter a search term" />
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-success" id="searchBtn">Search</button>
-                </span>
+
+            <ul id="tagSelection" style="position:relative;top:80px;">
+                <li class="tagSelector btn btn-default active" data-tag="">All</li>
+                {{#each tags}}
+                    <li class="tagSelector btn btn-default" data-tag="{{this}}">{{this}}</li>
+                {{/each}}
+            </ul>
+            <div id="searchContainer" style="top:-20px; position:relative;">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Enter a search term" />
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-success" id="searchBtn">Search</button>
+                    </span>
+                </div>
             </div>
+            <div id="projectList" style="top:30px;position:relative;"></div>
+            <p><a href="#" id="loadMoreProjects">View more projects</a></p>
         </div>
-        <div id="projectList"></div>
-        <p><a href="#" id="loadMoreProjects">View more projects</a></p>
-    </div>
 </div>

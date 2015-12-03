@@ -20,17 +20,22 @@ header{
     display: inline;
 }
 .navActions{
-    height:80px;
-    display: inline;
+    left:70%;
+    height:75px;
+    display: flex;
+    align-items:center;
+    position:absolute;
+    z-index: 10;
 }
 .page-title{
     margin:0 auto;
     width:300px;
 }
 .mainImg{
-    margin:0 auto;
     height:75px;
-    min-width:350px;
+    left:0;
+    right:0;
+    position:absolute;
     background-color:#f7f7fa;
     border-bottom:1px solid #e4e2e2;
 }
