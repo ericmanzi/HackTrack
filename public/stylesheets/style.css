@@ -2,6 +2,8 @@
 
 html, body {
     height:100%;
+    width:100vw;
+    overflow-x:hidden;
     margin: 0;
     padding: 0;
     border: 0;
@@ -28,11 +30,11 @@ header{
     display: inline;
 }
 .navActions{
-    left:70%;
+    top:20px;
     height:75px;
-    display: flex;
+    display: block;
     align-items:center;
-    position:absolute;
+    position: relative;
     z-index: 10;
 }
 .page-title{
@@ -41,9 +43,8 @@ header{
 }
 .mainImg{
     height:75px;
-    left:0;
-    right:0;
-    position:absolute;
+    width:100%;
+    position:relative;
     background-color:#f7f7fa;
     border-bottom:1px solid #e4e2e2;
 }
@@ -71,6 +72,7 @@ ul.projectList{
 }
 
 .page-main{
+    position:relative;
     margin:0;
     padding:0;
     min-width:100%;
@@ -315,7 +317,11 @@ a{
 }
 
 #searchContainer {
+    float:left;
     width: 400px;
+}
+.nav-buttons{
+    float:right;
 }
 
 .inline {

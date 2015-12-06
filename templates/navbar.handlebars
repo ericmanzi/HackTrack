@@ -4,8 +4,17 @@
         <h1 class="home-link"><a href="#" style="text-decoration:none;">MIT HACKTRACK</a></h1>
     </div>
 
+    <div class="mainImg">
     <div class="navActions">
-        <div class="pull-right">
+        <div id="searchContainer" >
+            <div class="input-group">
+                <input type="text" class="form-control" id="searchInput" placeholder="Enter a search term" />
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-success" id="searchBtn">Search</button>
+                </span>
+            </div>
+        </div>
+        <div class="nav-buttons">
             <a href="#" class="home-link btn btn-primary">HOME</a>
             <a href="#" id="post-project-link" class="btn btn-primary">POST A PROJECT</a>
             {{#if user_logged_in}}
@@ -31,10 +40,7 @@
                    data-toggle="modal" data-target="#signin" >Login</a>
             {{/if}}
         </div>
-
-        <div class="profile">
-        </div>
     </div>
 </div>
-<div class="mainImg">
+
 </div>
