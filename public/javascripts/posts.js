@@ -1,11 +1,22 @@
 // Lead author: Favyen Bastani <fbastani@mit.edu>
 
 (function() {
+    var showError = function(msg) {
+        $('.project-error-div').hide();
+        $('.project-error-div').text(msg);
+        $('.project-error-div').show();
+        document.body.scrollTop = 0;
+    };
+
     // Discussion form submission.
     // POST to /projects/{id}/addDiscussion with discussion text content
     var addDiscussion = function() {
         var projectID = $('#project-header').data('project-id');
         var content = $('#project-discussion-add-content').val();
+        if(!content) {
+            showError('Content is required.');
+            return;
+        }
         var data = { content: content, csrftoken: getCSRFToken() };
         $.post(
             '/projects/' + projectID + '/discussion',
@@ -34,6 +45,10 @@
     var addComment = function(discussionID) {
         var projectID = $('#project-header').data('project-id');
         var content = $('#comment-add-content-' + discussionID).val();
+        if(!content) {
+            showError('Content is required.');
+            return;
+        }
         var data = { content: content, csrftoken: getCSRFToken() };
         $.post(
             '/projects/' + projectID + '/discussions/' + discussionID + '/comment',
