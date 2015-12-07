@@ -139,7 +139,7 @@ templates['navbar'] = template({"1":function(container,depth0,helpers,partials,d
     var stack1, alias1=depth0 != null ? depth0 : {};
 
   return "<div class=\"navBar\">\n\n    <div class=\"page-title\">\n        <h1 class=\"home-link\"><a href=\"#\" style=\"text-decoration:none;\">MIT HACKTRACK</a></h1>\n    </div>\n\n    <div class=\"mainImg\">\n    <div class=\"navActions\">\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isHome : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.onHomePage : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "        <div class=\"nav-buttons\">\n            <a href=\"#\" class=\"home-link btn btn-primary\">HOME</a>\n"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.user_logged_in : depth0),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.program(5, data, 0),"data":data})) != null ? stack1 : "")
     + "        </div>\n    </div>\n</div>\n\n</div>\n";
@@ -317,7 +317,7 @@ templates['projectView'] = template({"1":function(container,depth0,helpers,parti
     + ((stack1 = helpers["if"].call(alias3,(depth0 != null ? depth0.user_logged_in : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\n"
     + ((stack1 = helpers["if"].call(alias3,(depth0 != null ? depth0.is_owner_of_this_project : depth0),{"name":"if","hash":{},"fn":container.program(13, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "        </header>\n        <div class=\"project-body\">\n            <div class=\"project-body-left\">\n                <div class=\"project-content project-media\">\n                    <div class=\"project-media\">\n                        <div id=\"owl-demo\" class=\"owl-carousel owl-theme\">\n"
+    + "        </header>\n        <div class=\"project-body\">\n            <div class=\"project-body-left\">\n                <div class=\"project-error-div alert alert-danger\">\n                </div>\n                <div class=\"project-content project-media\">\n                    <div class=\"project-media\">\n                        <div id=\"owl-demo\" class=\"owl-carousel owl-theme\">\n"
     + ((stack1 = helpers["if"].call(alias3,((stack1 = (depth0 != null ? depth0.project : depth0)) != null ? stack1.videoID : stack1),{"name":"if","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ((stack1 = helpers.each.call(alias3,((stack1 = (depth0 != null ? depth0.project : depth0)) != null ? stack1.imageLinks : stack1),{"name":"each","hash":{},"fn":container.program(17, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                        </div>\n                        <a href=\"#\" class=\"prev\"><span class=\"glyphicon glyphicon-menu-left\"></span></a>\n                        <a href=\"#\" class=\"next\"><span class=\"glyphicon glyphicon-menu-right\" style=\"float:right;\"></span></a>\n                    </div>\n                </div>\n                <div class=\"project-content project-discussion\">\n                    <div class=\"project-discussion-title\">\n                        Discussion\n                    </div>\n"
