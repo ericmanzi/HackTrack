@@ -33,6 +33,12 @@ var loadPage = function(template, data, isReload) {
     if (template === "projectView"){
         data.is_owner_of_this_project = data.project.owner === currentUser;
     }
+    //Hiding search button
+    if (template === 'index') {
+        data.isHome = true;
+    } else {
+        data.isHome = false;
+    }
 
     $('#main-container').html(Handlebars.templates[template](data));
 

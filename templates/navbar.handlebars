@@ -6,14 +6,17 @@
 
     <div class="mainImg">
     <div class="navActions">
-        <div id="searchContainer" >
-            <div class="input-group">
-                <input type="text" class="form-control" id="searchInput" placeholder="Enter a search term" />
+        {{#if isHome}}
+            <div id="searchContainer" >
+                <div class="input-group">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Enter a search term" />
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-success" id="searchBtn">Search</button>
                 </span>
+                </div>
             </div>
-        </div>
+
+        {{/if}}
         <div class="nav-buttons">
             <a href="#" class="home-link btn btn-primary">HOME</a>
             {{#if user_logged_in}}
