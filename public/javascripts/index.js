@@ -33,12 +33,9 @@ var loadPage = function(template, data, isReload) {
     if (template === "projectView"){
         data.is_owner_of_this_project = data.project.owner === currentUser;
     }
-    //Hiding search button
-    if (template === 'index') {
-        data.isHome = true;
-    } else {
-        data.isHome = false;
-    }
+
+    // Only show search button on homepage
+    data.onHomePage = template === 'index';
 
     $('#main-container').html(Handlebars.templates[template](data));
 
@@ -170,6 +167,7 @@ var loadPostProjectPage = function(){
     loadPage('postProject', data);
 };
 
+// load my profile page
 var loadProfilePage = function(projectType){
     $.get(
         projectType=="favorites"?'/users/myfavorites':'/users/myprojects'
@@ -184,6 +182,7 @@ var loadProfilePage = function(projectType){
     });
 };
 
+// load profile page of another user
 var loadUserPage = function(username) {
     if (username === currentUser) loadProfilePage();
     else {
@@ -203,6 +202,7 @@ var loadUserPage = function(username) {
     }
 };
 
+// load edit project page
 var loadEditProjectPage = function(projID){
     $.get('/projects/'+projID, function(response){
         loadPage('edit-project', {
@@ -235,6 +235,7 @@ $(document).ready(function() {
     Parse.initialize("8jPwCfzXBGpPR2WVW935pey0C66bWtjMLRZPIQc8", "zgB9cjo7JifswwYBTtSvU1MSJCMVZMwEZI3Etw4d");
 });
 
+// view project
 $(document).on('click', '.project-link', function(evt) {
     evt.preventDefault();
     var item = $(this).parent();
@@ -242,31 +243,37 @@ $(document).on('click', '.project-link', function(evt) {
     loadProjectPage(id);
 });
 
+// post new project
 $(document).on('click', '#post-project-link', function(event){
     event.preventDefault();
     loadPostProjectPage();
 });
 
+// view my profile
 $(document).on('click', '.profile-link', function(event){
     event.preventDefault();
     loadProfilePage();
 });
 
+// view my projects
 $(document).on('click', '#view-myprojects', function(event){
     event.preventDefault();
     loadProfilePage();
 });
 
+// view favorited projects
 $(document).on('click', '#view-favorites', function(event){
     event.preventDefault();
     loadProfilePage("favorites");
 });
 
+// load home page
 $(document).on('click', '.home-link', function(event){
     event.preventDefault();
     loadHomePage();
 });
 
+// load activity feed page
 $(document).on('click', '.act-feed-link', function(event) {
     event.preventDefault();
     loadActFeedPage();

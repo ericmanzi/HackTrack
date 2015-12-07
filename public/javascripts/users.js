@@ -141,6 +141,9 @@ var files = [];
         });
     });
 
+    /**
+     * Update files array when new files selected
+     */
     $(document).on('change', '#fileselect', function(evt) {
         files = $(this).get(0).files;
     });
