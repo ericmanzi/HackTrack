@@ -197,7 +197,7 @@ router.post('/:projID', common.requireAuthentication, function(req, res) {
 router.post('/:projID/discussion', common.requireAuthentication, function(req, res) {
     Post.addDiscussion(req.params.projID, req.currentUser.id, req.body.content, function(err, discussion){
         if (err){
-            utils.sendErrResponse(res, utils.STATUS_CODE_UNKNOWN_ERROR, 'Error adding discussion: ' + err.message + '.');
+            utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Error adding discussion: ' + err.message + '.');
         } else {
             utils.sendSuccessResponse(res, {discussion: discussion});
         }
@@ -216,7 +216,7 @@ router.post('/:projID/discussion', common.requireAuthentication, function(req, r
 router.post('/:projID/discussions/:discussionID/comment', common.requireAuthentication, function(req, res) {
     Post.addComment(req.params.projID, req.params.discussionID, req.currentUser.id, req.body.content, function(err, comment){
         if (err){
-            utils.sendErrResponse(res, utils.STATUS_CODE_UNKNOWN_ERROR, 'Error adding comment: ' + err.message + '.');
+            utils.sendErrResponse(res, utils.STATUS_CODE_BAD_REQUEST, 'Error adding comment: ' + err.message + '.');
         } else {
             utils.sendSuccessResponse(res, {comment: comment});
         }
