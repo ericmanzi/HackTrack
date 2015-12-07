@@ -2,7 +2,7 @@
 
 // An Activity represents a user action, such as creating a new post or project.
 // Activities are primarily used to generate the Activity Feed.
-// REP INVARIANTS: The |Activities| = |Projects| + |Posts|; |Activities| >= |Users|
+// REP INVARIANTS: The |Activities| = |Projects| + |Posts|;
 
 var mongoose = require("mongoose"),
     Schema = mongoose.Schema;
