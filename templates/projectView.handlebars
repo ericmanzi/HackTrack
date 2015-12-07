@@ -16,13 +16,13 @@
             </div>
             <div style="display:inline-block;">
             {{#if user_logged_in}}
-            	
+
             	{{#ifAlreadyVoted project.upvoterUsernames }}
             	<span id="myButton-upvote" class="vote on glyphicon glyphicon-chevron-up" style="font-size:3em;"> </span>
             	{{else}}
             		<span id="myButton-upvote" class="vote glyphicon glyphicon-chevron-up" style="font-size:3em;"> </span>
             	{{/ifAlreadyVoted}}
-                
+
             {{else}}
             	<span id="myButton-upvote" data-toggle="modal" data-target=".bs-example-modal-sm" class="not-logged-in-vote glyphicon glyphicon-chevron-up" style="font-size:3em;"> </span>
 
@@ -59,7 +59,7 @@
         </header>
         <div class="project-body">
             <div class="project-body-left">
-                <div class="project-error-div alert alert-danger">
+                <div class="project-error-div alert alert-danger" style="display:none;">
                 </div>
                 <div class="project-content project-media">
                     <div class="project-media">
