@@ -1,0 +1,21 @@
+Overall communication was good and there were only very minor issues with code quality.
+
+Non-specific
+* Probably should have abstracted loading new pages / loading new content, the resulting code to handle that was a bit messy, and it made it harder to deal with error responses (needed separate handlers for each error)
+* Some last-minute issues came up like missing search bar, having code review system might help with this (but probably too much energy for small project)
+* Some meetings and presentation times got moved / rescheduled last-minute, would be good to agree in advance on time / place
+* Maintain some documentation on how we are doing modal transitions, links, etc.
+
+George
+* Good work on the design
+* Resolve conflicts in merge commit instead of having additional commits
+
+Eric
+* Resolve conflicts in merge commit instead of having additional commits
+* Avoid long "****** XYZ ******" comments in code; if code block is too long, should be moved out to a separate function, possibly in another module
+* In mocha test, if multiple things need to be done asynchronously before the test, can have multiple before function (5280438e21a21f851f186ed044300beb7577e82d)
+
+Kairat
+* The tagging UI was very nice
+* Would be good to start off with consistent code style across the application (IIRC project stuff started using tabs initially but we agreed on four spaces indentation)
+* For design document, would have been better if data model was editable diagram instead of moving it to static image that only one team member has access to
