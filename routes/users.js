@@ -217,7 +217,6 @@ router.get('/current', function(req, res) {
  - content: on success, ID of project that was favorited
  - error msg: 'Cannot favorite own project' if user tries to favorite own project
               'This project has already been favorited' if already favorited
-              'There is no user currently logged in.' if user not logged in
  */
 router.post('/myfavorites', common.requireAuthentication, function(req, res) {
     User.findByUsername(req.currentUser.username, function(err, user) {
@@ -248,7 +247,6 @@ router.post('/myfavorites', common.requireAuthentication, function(req, res) {
  - content: on success, ID of project that was removed from favorites
  - error msg: 'Invalid project' if project does not exist
               'This project is not among your favorites' if project was not favorited
-              'There is no user currently logged in.' if user not logged in
  */
 router.delete('/myfavorites', common.requireAuthentication, function(req, res) {
     User.findByUsername(req.currentUser.username, function(err, user) {
@@ -276,7 +274,6 @@ router.delete('/myfavorites', common.requireAuthentication, function(req, res) {
  - success: true if the server succeeded in finding the user's projects
  - content: on success, an object with a single field 'projects', all of the current user's projects
  - error msg: 'Something went wrong while retrieving your projects' if there was an error retrieving the user's projects.
-              'There is no user currently logged in.' if user not logged in
  */
 router.get('/myprojects', common.requireAuthentication, function(req, res) {
     User.findByUsername(req.currentUser.username, function(err, user) {
@@ -305,7 +302,6 @@ router.get('/myprojects', common.requireAuthentication, function(req, res) {
  - success: true if the server succeeded in finding the user's favorites
  - content: on success, an object with a single field 'projects', all of the current user's favorite projects
  - error msg: 'Something went wrong while retrieving your projects' if there was an error retrieving the user's favorited projects.
-              'There is no user currently logged in.' if user not logged in
 
  */
 router.get('/myfavorites', common.requireAuthentication, function(req, res) {
@@ -335,7 +331,6 @@ router.get('/myfavorites', common.requireAuthentication, function(req, res) {
  - success: true if the server succeeded in finding activities by users this user follows
  - content: on success, an object with a single field 'activities', all of the activities by users that the current user follows
  - error msg: 'Something went wrong while retrieving your projects' if there was an error retrieving the user's favorited projects.
- 'There is no user currently logged in.' if user not logged in
 
  */
 router.get('/myfeed', function(req, res) {
@@ -411,7 +406,6 @@ router.get('/profiles/:username', function(req, res) {
  Response:
  - success: true if saving the profile picture succeeded
  - err: on error, 'Invalid username' if user does not exist
-                  'There is no user currently logged in.' if user not logged in
 
  */
 router.put('/profiles/:username', common.requireAuthentication, function(req, res) {
@@ -438,7 +432,6 @@ router.put('/profiles/:username', common.requireAuthentication, function(req, re
  - content: on success, username of user that is now being followed
  - error msg:   'No such username' if attempting to follow user that does not exist
                 'You are already following this user' if user already followed
-                'There is no user currently logged in.' if user not logged in
  */
 router.post('/following', common.requireAuthentication, function(req, res) {
     User.findByUsername(req.currentUser.username, function(err, user) {
@@ -474,7 +467,6 @@ router.post('/following', common.requireAuthentication, function(req, res) {
  - content: on success, username of user that is now being followed
  - error msg:   'No such username' if attempting to unfollow user that does not exist
                 'You are not following this user.' if attempting to unfollow user that is not followed
-                'There is no user currently logged in.' if user not logged in
 
  */
 router.delete('/following', common.requireAuthentication, function(req, res) {

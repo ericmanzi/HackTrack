@@ -166,7 +166,7 @@ router.post('/:projID/edit', common.requireAuthentication, function(req, res) {
  Request body:
  - content: projectID
  Response:
- - success: true if the server succeeded upvoting the project
+ - success: true if the server succeeded upvoting the project or removing previous vote
  - err: on failure, an error message
  */
 router.post('/:projID', common.requireAuthentication, function(req, res) {
