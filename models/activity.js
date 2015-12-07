@@ -2,6 +2,7 @@
 
 // An Activity represents a user action, such as creating a new post or project.
 // Activities are primarily used to generate the Activity Feed.
+// REP INVARIANT: The size of activities is exactly equal to sum of sizes of the projects and the posts
 
 var mongoose = require("mongoose"),
     Schema = mongoose.Schema;
