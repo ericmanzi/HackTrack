@@ -1,10 +1,4 @@
-
-
-Non-specific
-* Probably should have abstracted loading new pages / loading new content, the resulting code to handle that was a bit messy, and it made it harder to deal with error responses (needed separate handlers for each error)
-* Some last-minute issues came up like missing search bar, having code review system might help with this (but probably too much energy for small project)
-* Some meetings and presentation times got moved / rescheduled last-minute, would be good to agree in advance on time / place
-* Maintain some documentation on how we are doing modal transitions, links, etc.
+Reviewer: Kairat Ashim
 
 George
 * Overall, the design of the project was pretty good.
