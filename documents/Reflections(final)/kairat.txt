@@ -3,10 +3,13 @@ Reviewer: Kairat Ashim
 George
 * Overall, the design of the project was pretty good.
 * Discussions could be designed to look a bit better.
+* Area to improve would be to start working on the task as early as possible, since there were some design/css problems near the deadline.
 
 Eric
 * Modal for logging in and registering is really good.
+* Area to improve would be to more active in discussions of the features and implementation.
 
 Favyen
 * @mentioning in discussion was really well done.
 * Make sure to notify the author of the model if you edited something.
+* Area to improve would be communication, basically notify whenever there are some changes made in other people's code.
